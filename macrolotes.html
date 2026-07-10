@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PPP Macro Lotes · Potenciales · YoDesarrollo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
+  :root{--bg:#0a0a0c;--card:#131317;--surface:rgba(255,255,255,.045);--text:#f4f1ea;--muted:#8a8780;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
+    --gold:#c9a96e;--goldc:#e0c590;--blue:#8ab8ff;--teal:#7fd4e8;--pink:#ff8aa1;--orange:#D9A45B;--purple:#a9a4f5;--green:#8FBF8B;--red:#E0605A;--dark:#0a0a0c}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Manrope',-apple-system,sans-serif;color:var(--text);margin:0;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,var(--bg)}
+  .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+  a{color:var(--goldc)}
+  /* ===== Gate ===== */
+  #gate{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+  #gate.off{display:none}
+  .gate-box{width:min(360px,92vw);text-align:center}
+  .gate-box img{height:34px;filter:brightness(0) invert(.92);margin-bottom:22px}
+  .gate-box h1{font-size:30px;margin:0 0 4px}
+  .gate-box p{color:var(--muted);font-size:12px;margin:0 0 22px}
+  .gate-box input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:12px;padding:13px 14px;color:var(--text);font:inherit;font-size:15px;text-align:center;letter-spacing:.06em}
+  .gate-box input:focus{outline:2px solid #c9a96e66;border-color:var(--gold)}
+  .gate-box button{width:100%;margin-top:10px;background:var(--gold);color:#0a0a0c;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .gate-err{color:var(--red);font-size:12px;min-height:18px;margin-top:10px;font-weight:700}
+  .gate-local{margin-top:16px;font-size:11px;color:var(--muted);text-decoration:underline;cursor:pointer;background:none;border:0;font-family:inherit}
+  /* ===== Header pegajoso (HUD) ===== */
+  .sticky-header{position:sticky;top:0;z-index:100;background:rgba(10,10,12,.94);backdrop-filter:blur(15px);padding:10px 16px 12px;border-bottom:1px solid #c9a96e59;box-shadow:0 4px 24px #0006}
+  .header-inner,.container{max-width:940px;margin:0 auto}.container{padding:16px 16px 80px}
+  .brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .brandrow img{height:20px;filter:brightness(0) invert(.92)}
+  .brandrow .kick{font-size:9px;font-weight:800;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+  .hud-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #ffffff14;font-size:12px;font-weight:600;color:#d8d4ca}
+  .hud-row:last-child{border:0;margin:0;padding:0}
+  .hud-item{display:flex;align-items:center;gap:5px;white-space:nowrap}.hud-val{font-size:14px;font-weight:800;letter-spacing:.3px}
+  .c-green{color:var(--green)}.c-pink{color:var(--pink)}.c-blue{color:var(--blue)}.c-orange{color:var(--orange)}.c-red{color:var(--red)}.c-purple{color:var(--purple)}.c-gold{color:var(--goldc)}
+  .urban-hud{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;row-gap:9px;margin:9px 0 7px;padding:8px 0;border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14}
+  .urban-item{min-width:0;text-align:center}
+  .urban-item span{display:block;color:#8a8780;font-size:9px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .urban-item b{display:block;color:#fff;font-size:13px;margin-top:2px;white-space:nowrap}
+  .urban-item:nth-child(1) b{color:var(--purple)}.urban-item:nth-child(2) b{color:var(--purple)}.urban-item:nth-child(3) b{color:var(--goldc)}.urban-item:nth-child(4) b{color:var(--green)}.urban-item:nth-child(5) b{color:var(--teal)}.urban-item:nth-child(6) b{color:var(--goldc)}.urban-item:nth-child(7) b{color:var(--green)}.urban-item:nth-child(8) b{color:var(--orange)}.urban-item:nth-child(9) b{color:var(--green)}.urban-item:nth-child(10) b{color:var(--blue)}
+  .split-bar{height:16px;background:#ffffff14;border-radius:8px;overflow:hidden;display:flex;margin-top:7px;box-shadow:inset 0 2px 4px #0006}
+  .split{height:100%;display:flex;justify-content:center;align-items:center;color:#0a0a0c;font-size:9px;font-weight:800;transition:width .25s;overflow:hidden}
+  /* ===== Hero del caso ===== */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#121218,#0c0c0f);border:1px solid var(--linea);border-radius:22px;padding:20px 20px 16px;margin-bottom:14px}
+  .hero::after{content:"";position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,#c9a96e2b,transparent 65%);pointer-events:none}
+  .hero .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  .hero h1{font-size:clamp(26px,5vw,38px);margin:6px 0 2px;line-height:1.05}
+  .hero .hsub{color:var(--muted);font-size:12px;margin:0 0 14px}
+  .hero .hsub b{color:var(--suave)}
+  .estado-pill{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--gold);color:var(--goldc);border-radius:12px;padding:4px 10px;margin-left:8px;vertical-align:middle}
+  .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .hcard{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 14px;min-width:0}
+  .hcard .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .hcard .big{font-size:clamp(22px,4vw,32px);line-height:1.1;margin:4px 0 2px;color:var(--goldc)}
+  .hcard .sub2{font-size:10.5px;color:var(--muted);line-height:1.4}
+  .lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14.5px;line-height:1.55;color:#d8d0bd;margin:12px 2px 2px;max-width:64ch}
+  .lectura b{color:var(--goldc);font-style:normal}
+  .hero-viz{display:grid;grid-template-columns:5fr 6fr;gap:10px;margin-top:12px}
+  .viz-card{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 12px 8px;min-width:0}
+  .viz-card .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .viz-svg{margin-top:6px}.viz-svg svg{display:block;width:100%;height:auto}
+  .viz-svg text{font-family:'Manrope',sans-serif}
+  .mixbar-wrap{margin:4px 0 10px}
+  .mixbar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--lineaf)}
+  .mixbar span{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#0a0a0c;white-space:nowrap;overflow:hidden;min-width:0;transition:width .3s}
+  .mixbar-leyenda{display:flex;gap:12px;flex-wrap:wrap;font-size:9.5px;color:var(--muted);margin-top:5px;font-weight:700}
+  .mixbar-leyenda i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+  .gauge{position:relative;height:14px;border-radius:7px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
+  .gauge-be{position:absolute;left:0;top:0;bottom:0;background:#e0605a55;border-right:2px solid var(--red)}
+  .gauge-col{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,#8fbf8b88,#8FBF8B)}
+  /* ===== Lentes de foco ===== */
+  .lentes{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+  .lentes::-webkit-scrollbar{display:none}
+  .lchip{flex-shrink:0;border:1px solid var(--lineaf);border-radius:20px;padding:8px 14px;font-size:11px;font-weight:800;color:var(--suave);background:transparent;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .lchip.on{background:var(--gold);color:#0a0a0c;border-color:var(--gold)}
+  .lchip .cnt{background:#00000033;border-radius:10px;padding:1px 7px;margin-left:5px;font-size:10px}
+  .lchip:not(.on) .cnt{background:#ffffff14;color:var(--goldc)}
+  .dimmed{opacity:.28;transition:opacity .25s}
+  /* ===== Barra del caso + seguimiento ===== */
+  .caso-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--card);border:1px solid var(--linea);border-radius:14px;flex-wrap:wrap}
+  .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+  .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+  .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
+  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#0a0a0c;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
+  .small-btn.danger{background:#e0605a26;color:var(--red)}
+  .small-btn:disabled{opacity:.4;cursor:default}
+  .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
+  .seguimiento.on{display:block}
+  .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+  .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+  .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
+  .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
+  .sync-dot{font-size:10px;color:var(--muted);font-weight:700}
+  .sync-dot.err{color:var(--orange)}
+  /* ===== Tarjetas del modelo ===== */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+  .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 4px 16px #00000040;border:1px solid var(--linea);transition:.25s;cursor:pointer;overflow:hidden}
+  .card:active{transform:scale(.985)}.card.open{box-shadow:0 12px 32px #00000070;border-color:var(--gold)}
+  .wide{grid-column:1/-1}
+  .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+  .title-wrap{display:flex;gap:10px;align-items:center}
+  .icon-box{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .card-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .edit-pill{background:rgba(255,255,255,.08);color:var(--muted);font-size:10px;font-weight:800;padding:6px 10px;border-radius:12px}
+  .card.open .edit-pill{background:var(--gold);color:#0a0a0c}
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .kpi-grid.tres{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:700px){.kpi-grid.tres{grid-template-columns:1fr 1fr}}
+  .kpi-box{background:var(--box);padding:10px 12px;border-radius:12px;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(255,255,255,.055);min-height:57px}
+  .kpi-box.full{grid-column:span 2}
+  .kpi-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+  .kpi-val{font-size:14px;font-weight:800;letter-spacing:-.3px}
+  .drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease;background:#0e0e12;margin:0 -16px -16px;padding:0 16px}
+  .drawer.active{max-height:3800px;opacity:1;padding:16px;border-top:1px solid var(--linea);margin-top:16px}
+  .input-group{margin-bottom:15px}.input-group:last-child{margin-bottom:4px}
+  .input-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}
+  .input-header label{font-size:11px;font-weight:800;color:var(--suave);text-transform:uppercase}
+  .val-display{font-size:12px;font-weight:800;color:var(--text);background:rgba(255,255,255,.08);padding:4px 8px;border-radius:6px;min-width:70px;text-align:right;cursor:text;border:1px solid transparent}
+  .val-display:hover{border-color:var(--lineaf);background:rgba(255,255,255,.12)}
+  .val-display:focus{outline:2px solid #c9a96e55;background:rgba(255,255,255,.12);border-color:var(--gold)}
+  input[type=range]{appearance:none;-webkit-appearance:none;width:100%;height:24px;background:transparent}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;height:24px;width:24px;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;margin-top:-9px;cursor:grab}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
+  input[type=range]::-moz-range-thumb{height:24px;width:24px;border:0;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;cursor:grab}
+  input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
+  .input-help{font-size:10.5px;line-height:1.4;color:var(--muted);margin-top:6px;padding:8px 10px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.18);border-radius:10px}
+  .subheading{font-size:10px;text-transform:uppercase;font-weight:800;color:var(--goldc);letter-spacing:.7px;margin:16px 0 8px;border-bottom:1px solid var(--linea);padding-bottom:6px}
+  .micro-readout{font-size:11px;line-height:1.45;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 10px;margin:10px 0}
+  .status-ok{color:#8FBF8B!important}.status-warn{color:#D9A45B!important}.status-bad{color:#E0605A!important}
+  details.advanced{background:rgba(255,255,255,.025);border:1px solid var(--linea);border-radius:12px;margin:16px 0 0;padding:0 12px}
+  details.advanced summary{padding:11px 0;cursor:pointer;color:var(--suave);font-size:11px;font-weight:800;text-transform:uppercase}
+  .advanced-content{padding:0 0 12px}
+  .help-legend{font-size:10px;color:var(--muted);margin:0 0 10px}.help-legend b{color:var(--suave)}
+  /* ===== Tratamiento del terreno / waterfall ===== */
+  .partner-guide{background:#c9a96e14;border:1px solid #c9a96e4d;border-radius:10px;padding:9px 10px;font-size:10.5px;line-height:1.45;color:#d9c9a8;margin-bottom:12px}
+  .partner-guide b{color:var(--goldc)}
+  .land-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0 12px}
+  .land-mode{border:1px solid var(--lineaf);border-radius:10px;background:rgba(255,255,255,.03);text-align:left;padding:9px;cursor:pointer;color:var(--suave);font-family:inherit}
+  .land-mode b{display:block;font-size:11px;color:var(--text)}
+  .land-mode span{display:block;margin-top:3px;font-size:9px;line-height:1.3;color:var(--muted)}
+  .land-mode.active{border-color:var(--gold);background:#c9a96e1c;box-shadow:0 0 0 1px #c9a96e55}
+  .land-deal-summary{background:#c9a96e10;border:1px solid #c9a96e40;border-radius:10px;padding:10px;font-size:11px;line-height:1.5;color:#d8d4ca;margin:10px 0}
+  .land-deal-summary b{color:var(--goldc)}
+  .waterfall-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0}
+  .waterfall-step{border-radius:8px;padding:7px 6px;background:rgba(255,255,255,.04);color:var(--muted);font-size:9px;line-height:1.25}
+  .waterfall-step b{display:block;font-size:10px;color:var(--suave);margin-bottom:2px}
+  .waterfall-step:nth-child(1){border-top:3px solid var(--red)}.waterfall-step:nth-child(2){border-top:3px solid var(--blue)}.waterfall-step:nth-child(3){border-top:3px solid var(--gold)}.waterfall-step:nth-child(4){border-top:3px solid var(--orange)}
+  /* ===== Ayudas (tooltips de factores) ===== */
+  .label-help{display:inline-flex;align-items:center;gap:5px;min-width:0}
+  .factor-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;padding:0;border:1px solid #c9a96e66;border-radius:50%;background:transparent;color:var(--goldc);font-size:11px;font-weight:900;cursor:help;font-family:inherit}
+  .factor-tooltip{display:none;position:absolute;z-index:200;left:-5px;top:23px;width:min(310px,70vw);padding:10px;border-radius:10px;background:#1c1c22;border:1px solid var(--lineaf);color:#f2ede2;box-shadow:0 8px 22px #000a;font:10.5px/1.42 'Manrope',sans-serif;text-transform:none;letter-spacing:0;text-align:left}
+  .factor-tooltip b{color:#fff}
+  .factor-tooltip .help-type{display:inline-block;margin:0 0 5px;padding:2px 5px;border-radius:5px;background:#c9a96e26;color:var(--goldc);font-size:9px;font-weight:800;text-transform:uppercase}
+  .factor-tooltip p{margin:4px 0}.factor-tooltip a{color:var(--goldc);text-decoration:underline}
+  .factor-help:hover .factor-tooltip,.factor-help:focus .factor-tooltip,.factor-help.open .factor-tooltip{display:block}
+  .kpi-box[data-kpi-help]{cursor:help}
+  /* ===== Herramientas avanzadas ===== */
+  .advanced-board{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:14px}
+  .advanced-board summary{cursor:pointer;font-weight:800;font-size:12px;color:var(--suave)}
+  .advanced-board[open] summary{margin-bottom:12px}
+  .two-advanced{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .formula-list{font-size:11px}
+  .formula-row{display:grid;grid-template-columns:132px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linea)}
+  .formula-row b{color:var(--text)}
+  .formula-row code{font-size:10px;color:var(--muted);white-space:normal}
+  .formula-btn{border:0;background:#c9a96e22;color:var(--goldc);border-radius:8px;font-size:10px;font-weight:800;padding:5px;cursor:pointer;font-family:inherit}
+  .formula-detail{background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:10px;font-size:11px;line-height:1.45;color:var(--suave);margin-top:9px}
+  .chip{border:0;background:#c9a96e22;color:var(--goldc);border-radius:12px;padding:4px 7px;margin:5px 4px 0 0;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
+  .flow-table{width:100%;border-collapse:collapse;font-size:11px;color:var(--suave)}
+  .flow-table th,.flow-table td{padding:7px 5px;border-bottom:1px solid var(--linea);text-align:right}
+  .flow-table th:first-child,.flow-table td:first-child{text-align:left}
+  .flow-scroll{max-height:420px;overflow:auto;border:1px solid var(--linea);border-radius:10px;padding:0 8px}
+  .year-row td{color:var(--goldc);font-weight:900;text-align:left!important;padding-top:12px;font-size:10px;letter-spacing:.08em}
+  .tot-row td{border-top:1px solid var(--lineaf);font-weight:900;color:var(--text)}
+  .json-editor{width:100%;min-height:190px;border:1px solid var(--lineaf);border-radius:10px;padding:10px;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical;background:#0e0e12;color:#d8d4ca}
+  .note{font-size:10px;line-height:1.45;color:var(--muted);margin:6px 0}
+  .proforma-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 15px}
+  .proforma-card{background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:12px;padding:11px}
+  .proforma-card h3{margin:0 0 7px;font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}
+  .mini-table{width:100%;border-collapse:collapse;font-size:10.5px;color:var(--suave)}
+  .mini-table td{padding:5px 0;border-bottom:1px solid var(--linea)}
+  .mini-table td:last-child{text-align:right;font-weight:800;color:var(--text)}
+  .mini-table .section-row td{padding-top:10px;border-bottom:0;color:var(--goldc);font-size:9px;font-weight:900;letter-spacing:.45px}
+  .mini-table .total-row td{border-top:1px solid var(--lineaf);color:var(--text);font-weight:900}
+  .covenant-line{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--linea);font-size:10.5px;color:var(--suave)}
+  .covenant-line b{white-space:nowrap}
+  .covenant-ok{color:#8FBF8B}.covenant-bad{color:#E0605A}.covenant-warn{color:#D9A45B}
+  .reference-strip{margin:-2px 0 16px;padding:9px 10px;border:1px solid #8fbf8b40;border-radius:11px;background:#8fbf8b0d;color:#b9c4b4;font-size:10.5px;line-height:1.45}
+  .reference-strip b{color:#a9d3a5}.reference-strip a{color:var(--goldc);font-weight:700}
+  /* ===== Modales y toast ===== */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto}
+  .overlay.on{display:flex}
+  .sheet{background:var(--card);border:1px solid var(--lineaf);border-radius:18px;max-width:480px;width:100%;padding:18px;margin:auto 0}
+  .sheet h2{font-size:22px;margin:0 0 2px}
+  .sheet .sh-sub{color:var(--muted);font-size:11.5px;margin:0 0 14px;line-height:1.45}
+  .fld{margin-bottom:11px}
+  .fld label{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}
+  .fld input,.fld textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:10px;padding:11px 12px;color:var(--text);font:inherit;font-size:13px}
+  .fld input:focus,.fld textarea:focus{outline:2px solid #c9a96e55;border-color:var(--gold)}
+  .fld textarea{min-height:56px;resize:vertical;font-size:12px}
+  .fld .hint{font-size:10px;color:var(--muted);margin-top:4px}
+  .sheet-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+  .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+  .caso-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--linea);cursor:pointer}
+  .caso-item:hover{background:rgba(255,255,255,.03)}
+  .caso-item .ci-n{font-size:13px;font-weight:700;color:var(--text)}
+  .caso-item .ci-m{font-size:10px;color:var(--muted);margin-top:2px}
+  .caso-item .ci-kpi{text-align:right;font-size:11px;font-weight:800;color:var(--goldc);white-space:nowrap}
+  .caso-item .ci-kpi span{display:block;font-size:9px;color:var(--muted);font-weight:700}
+  .badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:9px;padding:2px 7px;background:#c9a96e26;color:var(--goldc);margin-left:6px;vertical-align:1px}
+  #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1d1d22;border:1px solid var(--gold);color:var(--text);font-size:12px;font-weight:700;border-radius:12px;padding:11px 18px;z-index:600;transition:transform .3s;max-width:88vw;text-align:center;box-shadow:0 10px 30px #000a}
+  #toast.on{transform:translateX(-50%) translateY(0)}
+  .clave-banner{display:none;background:#d9a45b1a;border:1px solid #d9a45b55;color:#e8c896;border-radius:12px;padding:10px 12px;font-size:11.5px;margin-bottom:12px;line-height:1.5}
+  .clave-banner.on{display:block}
+  /* ===== Móvil ===== */
+  @media(max-width:700px){
+    .grid-2,.two-advanced,.proforma-grid{grid-template-columns:1fr}.wide{grid-column:auto}
+    .formula-row{grid-template-columns:1fr}
+    .hud-row{font-size:10px;flex-wrap:wrap;row-gap:3px}.hud-val{font-size:12px}
+    .brandrow .kick{overflow:hidden;text-overflow:ellipsis;max-width:52vw;letter-spacing:.12em}
+    .sticky-header{padding-left:11px;padding-right:11px}.container{padding-left:11px;padding-right:11px}
+    .urban-hud{grid-template-columns:repeat(3,1fr)}
+    .hero-grid{grid-template-columns:1fr}
+    .hero-viz{grid-template-columns:1fr}
+    .caso-bar{align-items:flex-start}.caso-actions{justify-content:flex-end}
+    .land-modes{grid-template-columns:1fr}.waterfall-steps{grid-template-columns:1fr 1fr}
+    .factor-tooltip{position:fixed;left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:55vh;overflow:auto}
+    .factor-help:hover .factor-tooltip{display:none}.factor-help.open .factor-tooltip{display:block}
+  }
+</style>
+<style>
+  /* ===== Extras del módulo Macro Lotes ===== */
+  .areas-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--lineaf);margin:10px 0 5px}
+  .areas-bar span{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#0a0a0c;overflow:hidden;white-space:nowrap;min-width:0;transition:width .3s}
+  .gate-agua{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:12px;padding:4px 10px;margin-left:6px;vertical-align:middle}
+  .gate-agua.g0{border:1px solid var(--red);color:#f4b8b3;background:#e0605a1f}
+  .gate-agua.g1{border:1px solid var(--orange);color:#e8c896;background:#d9a45b1f}
+  .gate-agua.g2{border:1px solid var(--green);color:#b5dcb1;background:#8fbf8b1f}
+  .esc-chips{display:flex;gap:7px;margin:10px 0 2px;flex-wrap:wrap}
+  .esc-chip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:7px 13px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .esc-chip.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+  .esc-chip.p.on{background:var(--red);border-color:var(--red);color:#fff}
+  .esc-chip.o.on{background:var(--green);border-color:var(--green);color:#0a0a0c}
+  .breadcrumb{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:6px}
+  .breadcrumb a{color:var(--goldc);text-decoration:none}
+</style>
+</head>
+<body>
+<div id="gate"><div class="gate-box">
+  <img src="img/yod-logo.png" alt="YoDesarrollo">
+  <h1 class="serif">PPP Macro Lotes</h1>
+  <p>Parque industrial / polo horizontal · acceso del equipo</p>
+  <input type="password" id="gateClave" placeholder="Clave del board" autocomplete="current-password">
+  <button id="gateBtn">Entrar</button>
+  <div class="gate-err" id="gateErr"></div>
+  <button class="gate-local" id="gateLocal">Trabajar sin conexión (no guarda en la nube)</button>
+</div></div>
+
+<div class="sticky-header"><div class="header-inner">
+  <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · PPP Macro Lotes</span></div>
+  <div class="hud-row"><div class="hud-item">Ventas: <span id="hudIngresos" class="hud-val c-green">$0 M</span></div><div class="hud-item">Costo total: <span id="hudCostos" class="hud-val c-red">$0 M</span></div><div class="hud-item">Pico deuda: <span id="hudDeuda" class="hud-val c-purple">$0 M</span></div></div>
+  <div class="hud-row"><div class="hud-item">Utilidad neta: <span id="hudUtilidad" class="hud-val c-gold" style="font-size:18px">$0 M</span></div><div class="hud-item">Margen: <span id="hudMargen" class="hud-val c-gold">0.0%</span></div><div class="hud-item">TIR Dev: <span id="hudTir" class="hud-val c-blue">—</span></div></div>
+  <div class="urban-hud"><div class="urban-item"><span>Superficie</span><b id="hudSuperficie">0 ha</b></div><div class="urban-item"><span>Vendible</span><b id="hudVendible">0 ha</b></div><div class="urban-item"><span>Naves PyME</span><b id="hudNaves">0</b></div><div class="urban-item"><span>Macro-lotes</span><b id="hudMacro">0</b></div><div class="urban-item"><span>Lotes com.</span><b id="hudCom">0</b></div><div class="urban-item"><span>Lotes viv.</span><b id="hudViv">0</b></div><div class="urban-item"><span>Vialidades</span><b id="hudVialidades">0 ml</b></div><div class="urban-item"><span>Empleos est.</span><b id="hudEmpleos">0</b></div><div class="urban-item"><span>Agua / día</span><b id="hudAgua">0 m³</b></div><div class="urban-item"><span>Gate agua</span><b id="hudGate">—</b></div></div>
+  <div class="split-bar"><div id="barDueno" class="split" style="background:var(--blue);width:25%">Dueño</div><div id="barDes" class="split" style="background:var(--orange);width:75%">Developer</div></div>
+  <div class="hud-row" style="margin-top:4px;border:0"><div class="hud-item" style="color:var(--blue);font-size:10px">Dueño total: <span id="lblCajaDueno">$0 M</span></div><div class="hud-item" style="color:var(--orange);font-size:10px">Developer total: <span id="lblCajaDes">$0 M</span></div><div class="hud-item" style="color:var(--goldc);font-size:10px">Terreno implícito: <span id="hudValorTierra">—</span></div></div>
+</div></div>
+
+<main class="container">
+  <div class="breadcrumb"><a href="./">← Planificador de Potencial Inmobiliario</a></div>
+  <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
+
+  <section class="hero">
+    <span class="kick">¿Qué da este terreno?</span>
+    <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span><span class="gate-agua g0" id="heroGate">⚠ agua: en veda</span></h1>
+    <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
+    <div class="hero-grid">
+      <div class="hcard"><span class="k">Utilidad neta antes de reparto</span><div class="big serif" id="heroUtil">$0 M</div><div class="sub2" id="heroUtilSub">margen —</div></div>
+      <div class="hcard"><span class="k">Lo que gana el dueño</span><div class="big serif" id="heroDueno">$0 M</div><div class="sub2" id="heroDuenoSub">$/m² de terreno</div></div>
+      <div class="hcard"><span class="k">TIR Developer · pico deuda</span><div class="big serif" id="heroTir">—</div><div class="sub2" id="heroTirSub">con el calendario capturado</div></div>
+    </div>
+    <div class="esc-chips"><span style="font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;align-self:center">Escenario:</span><button class="esc-chip p" data-esc="p">Pesimista</button><button class="esc-chip on" data-esc="b">Base</button><button class="esc-chip o" data-esc="o">Optimista</button><span class="sync-dot" id="escNota" style="align-self:center"></span></div>
+    <p class="lectura" id="heroLectura"></p>
+    <div class="hero-viz">
+      <div class="viz-card"><span class="k">Master plan esquemático</span><div id="vizPlan" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">Deuda mes a mes · cobros</span><div id="vizCurva" class="viz-svg"></div></div>
+    </div>
+  </section>
+
+  <div class="caso-bar">
+    <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
+    <div class="caso-actions">
+      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
+      <button class="small-btn" id="btnGuardar">Guardar</button>
+    </div>
+  </div>
+
+  <section class="seguimiento" id="segPanel">
+    <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
+    <div class="estado-chips" id="estadoChips"></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. gestoría CONAGUA, cita urbanista…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="notas-log" id="segLog">Sin notas todavía.</div>
+  </section>
+
+  <div class="reference-strip"><b>Caso de referencia · La Cercada v4 (Carr. a Kino, 50 ha).</b> Valores del PPP corregido por el enjambre (30-jun): COS de naves 47.5% (comparable NOWUS real), eficiencia de subdivisión 92%, contingencia 12%, partidas de agua CONDICIONALES (pozo nuevo ilegal bajo veda: la partida correcta es adquisición de derechos CONAGUA, sin cotizar). Los 18 costos de urbanización son estimación de ingeniería — pedir presupuesto a constructor local antes de decidir.</div>
+
+  <section class="grid-2">
+    <article class="card" data-card="dTerreno"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">📐</div><div class="card-title">Terreno &amp; Cuadro de Áreas</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Frente × Fondo</span><span class="kpi-val" id="lblFxF">500 × 1,000 m</span></div><div class="kpi-box"><span class="kpi-lbl">Superficie / Perímetro</span><span class="kpi-val" id="lblSupPer">50 ha · 3,000 ml</span></div><div class="kpi-box"><span class="kpi-lbl">Área Vendible</span><span class="kpi-val c-green" id="lblVendible">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Vialidades</span><span class="kpi-val c-orange" id="lblVialidades">0 m²</span></div></div>
+      <div class="areas-bar" id="vizAreas"></div><div class="mixbar-leyenda" id="vizAreasLey"></div>
+      <div class="drawer" id="dTerreno"><div class="subheading">Geometría</div>
+        <div class="input-group"><div class="input-header"><label>Frente sobre carretera (m)</label><div class="val-display" data-input="inFrente">500</div></div><input type="range" id="inFrente" min="50" max="3000" step="10" value="500" data-color="var(--purple)"></div>
+        <div class="input-group"><div class="input-header"><label>Fondo (m)</label><div class="val-display" data-input="inFondo">1000</div></div><input type="range" id="inFondo" min="50" max="3000" step="10" value="1000" data-color="var(--purple)"></div>
+        <div class="input-group"><div class="input-header"><label>Ancho promedio de vialidad (m)</label><div class="val-display" data-input="inAnchoVialidad">12</div></div><input type="range" id="inAnchoVialidad" min="8" max="30" step="1" value="12" data-color="var(--orange)"></div>
+        <div class="input-group"><div class="input-header"><label>Separación entre luminarias (m)</label><div class="val-display" data-input="inSepLuminarias">30</div></div><input type="range" id="inSepLuminarias" min="15" max="60" step="5" value="30" data-color="var(--orange)"></div>
+        <div class="subheading">Cuadro de áreas · % del terreno (el vendible es lo que sobra)</div>
+        <div class="input-group"><div class="input-header"><label>Vialidades (%)</label><div class="val-display" data-input="inPctVialidades">18%</div></div><input type="range" id="inPctVialidades" min="5" max="35" step="1" value="18" data-color="var(--orange)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Banquetas y guarniciones (%)</label><div class="val-display" data-input="inPctBanquetas">4%</div></div><input type="range" id="inPctBanquetas" min="0" max="12" step="1" value="4" data-color="var(--orange)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Áreas verdes y donación municipal (%)</label><div class="val-display" data-input="inPctVerdes">12%</div></div><input type="range" id="inPctVerdes" min="0" max="30" step="1" value="12" data-color="var(--green)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Equipamiento e infraestructura (%)</label><div class="val-display" data-input="inPctEquipamiento">3%</div></div><input type="range" id="inPctEquipamiento" min="0" max="15" step="1" value="3" data-color="var(--purple)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Retención pluvial / cuerpos de agua (%)</label><div class="val-display" data-input="inPctRetencion">3%</div></div><input type="range" id="inPctRetencion" min="0" max="15" step="1" value="3" data-color="var(--blue)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Derecho de vía / restricción carretera (%)</label><div class="val-display" data-input="inPctDDV">2%</div></div><input type="range" id="inPctDDV" min="0" max="15" step="1" value="2" data-color="var(--red)" data-format="pct"></div>
+        <div class="micro-readout" id="readAreas">Calculando cuadro de áreas…</div></div></article>
+
+    <article class="card" data-card="dMezcla"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">🏭</div><div class="card-title">Mezcla de Producto e Ingresos</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Naves PyME</span><span class="kpi-val c-gold" id="lblNaves">0 → $0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Macro-lotes</span><span class="kpi-val c-blue" id="lblMacro">0 → $0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Comercial</span><span class="kpi-val" style="color:var(--teal)" id="lblCom">0 → $0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Lotes vivienda</span><span class="kpi-val c-green" id="lblViv">0 → $0 M</span></div><div class="kpi-box full"><span class="kpi-lbl">Ingreso / m² vendible</span><span class="kpi-val c-green" id="lblIngresoM2">$0</span></div></div>
+      <div class="mixbar-wrap"><div class="mixbar" id="vizMezcla"></div><div class="mixbar-leyenda" id="vizMezclaLey"></div></div>
+      <div class="drawer" id="dMezcla"><div class="subheading">Reparto del área vendible (%) · debe sumar 100</div>
+        <div class="input-group"><div class="input-header"><label>Naves PyME (%)</label><div class="val-display" data-input="inMixNaves">50%</div></div><input type="range" id="inMixNaves" min="0" max="100" step="1" value="50" data-color="var(--gold)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Macro-lotes industriales (%)</label><div class="val-display" data-input="inMixMacro">30%</div></div><input type="range" id="inMixMacro" min="0" max="100" step="1" value="30" data-color="var(--blue)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Comercial (%)</label><div class="val-display" data-input="inMixCom">20%</div></div><input type="range" id="inMixCom" min="0" max="100" step="1" value="20" data-color="var(--teal)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Lotes de vivienda (%) · para polos mixtos</label><div class="val-display" data-input="inMixViv">0%</div></div><input type="range" id="inMixViv" min="0" max="100" step="1" value="0" data-color="var(--green)" data-format="pct"></div>
+        <div class="subheading">Producto</div>
+        <div class="input-group"><div class="input-header"><label>COS de naves (% construible del terreno de naves)</label><div class="val-display" data-input="inCosNaves">47.5%</div></div><input type="range" id="inCosNaves" min="20" max="80" step=".5" value="47.5" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Eficiencia de subdivisión de lotes (%)</label><div class="val-display" data-input="inEfSubdiv">92%</div></div><input type="range" id="inEfSubdiv" min="70" max="100" step="1" value="92" data-color="var(--blue)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>m² por nave PyME</label><div class="val-display" data-input="inM2Nave">250</div></div><input type="range" id="inM2Nave" min="100" max="1000" step="10" value="250" data-color="var(--gold)"></div>
+        <div class="input-group"><div class="input-header"><label>m² por macro-lote</label><div class="val-display" data-input="inM2Macro">5000</div></div><input type="range" id="inM2Macro" min="1000" max="20000" step="500" value="5000" data-color="var(--blue)"></div>
+        <div class="input-group"><div class="input-header"><label>m² por lote comercial</label><div class="val-display" data-input="inM2LoteCom">2000</div></div><input type="range" id="inM2LoteCom" min="200" max="10000" step="100" value="2000" data-color="var(--teal)"></div>
+        <div class="input-group"><div class="input-header"><label>m² por lote de vivienda</label><div class="val-display" data-input="inM2LoteViv">160</div></div><input type="range" id="inM2LoteViv" min="90" max="500" step="10" value="160" data-color="var(--green)"></div>
+        <div class="subheading">Precios de venta · por validar con comparables</div>
+        <div class="input-group"><div class="input-header"><label>Nave PyME ($/m² construido)</label><div class="val-display" data-input="inPreNave">$14,000</div></div><input type="range" id="inPreNave" min="6000" max="30000" step="250" value="14000" data-color="var(--gold)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Macro-lote ($/m² terreno urbanizado)</label><div class="val-display" data-input="inPreMacro">$2,200</div></div><input type="range" id="inPreMacro" min="500" max="8000" step="50" value="2200" data-color="var(--blue)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Lote comercial ($/m²)</label><div class="val-display" data-input="inPreCom">$4,500</div></div><input type="range" id="inPreCom" min="1000" max="15000" step="100" value="4500" data-color="var(--teal)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Lote de vivienda ($/m²)</label><div class="val-display" data-input="inPreVivLote">$1,800</div></div><input type="range" id="inPreVivLote" min="500" max="6000" step="50" value="1800" data-color="var(--green)" data-format="money"></div>
+        <div class="micro-readout" id="readMezcla">Calculando mezcla…</div></div></article>
+
+    <article class="card" data-card="dUrb"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)">🚧</div><div class="card-title">Urbanización (obra de cabecera)</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Subtotal Urbanización</span><span class="kpi-val c-red" id="lblUrbTotal">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">$ / m² vendible</span><span class="kpi-val" id="lblUrbM2">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Luminarias / Barda</span><span class="kpi-val c-orange" id="lblLumBarda">0 · 0 ml</span></div><div class="kpi-box"><span class="kpi-lbl">Obra fija (PTAR, subest., agua…)</span><span class="kpi-val" id="lblObraFija">$0 M</span></div></div>
+      <div class="drawer" id="dUrb"><div class="subheading">Partidas por m² (cantidad calculada del cuadro de áreas)</div>
+        <div class="input-group"><div class="input-header"><label>Despalme y limpieza ($/m² terreno)</label><div class="val-display" data-input="inPuDespalme">$20</div></div><input type="range" id="inPuDespalme" min="0" max="100" step="5" value="20" data-color="var(--red)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Terracerías ($/m² de vialidades + vendible)</label><div class="val-display" data-input="inPuTerracerias">$45</div></div><input type="range" id="inPuTerracerias" min="0" max="300" step="5" value="45" data-color="var(--red)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Pavimentación ($/m² vialidad)</label><div class="val-display" data-input="inPuPavimento">$450</div></div><input type="range" id="inPuPavimento" min="100" max="1500" step="25" value="450" data-color="var(--red)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Guarniciones y banquetas ($/m² banqueta)</label><div class="val-display" data-input="inPuGuarniciones">$350</div></div><input type="range" id="inPuGuarniciones" min="100" max="1200" step="25" value="350" data-color="var(--red)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Jardinería con riego ($/m² verde)</label><div class="val-display" data-input="inPuJardineria">$180</div></div><input type="range" id="inPuJardineria" min="0" max="600" step="10" value="180" data-color="var(--green)" data-format="money"></div>
+        <div class="subheading">Redes por metro lineal de vialidad</div>
+        <div class="input-group"><div class="input-header"><label>Red de agua potable ($/ml)</label><div class="val-display" data-input="inPuRedAgua">$900</div></div><input type="range" id="inPuRedAgua" min="200" max="3000" step="50" value="900" data-color="var(--blue)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Drenaje sanitario ($/ml)</label><div class="val-display" data-input="inPuDrenaje">$1,200</div></div><input type="range" id="inPuDrenaje" min="300" max="4000" step="50" value="1200" data-color="var(--blue)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Drenaje pluvial y retención ($/ml)</label><div class="val-display" data-input="inPuPluvial">$800</div></div><input type="range" id="inPuPluvial" min="0" max="3000" step="50" value="800" data-color="var(--blue)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Red eléctrica media tensión ($/ml)</label><div class="val-display" data-input="inPuMT">$1,100</div></div><input type="range" id="inPuMT" min="300" max="4000" step="50" value="1100" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Telecom / fibra ($/ml)</label><div class="val-display" data-input="inPuFibra">$300</div></div><input type="range" id="inPuFibra" min="0" max="1500" step="25" value="300" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Alumbrado ($/luminaria)</label><div class="val-display" data-input="inPuAlumbrado">$18,000</div></div><input type="range" id="inPuAlumbrado" min="5000" max="60000" step="1000" value="18000" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Barda perimetral ($/ml)</label><div class="val-display" data-input="inPuBarda">$1,500</div></div><input type="range" id="inPuBarda" min="0" max="6000" step="100" value="1500" data-color="var(--red)" data-format="money"></div>
+        <div class="subheading">Obra fija (importe por lote)</div>
+        <div class="input-group"><div class="input-header"><label>Planta de tratamiento PTAR ($)</label><div class="val-display" data-input="inPuPtar">$3,500,000</div></div><input type="range" id="inPuPtar" min="0" max="20000000" step="250000" value="3500000" data-color="var(--blue)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Subestación y transformadores ($)</label><div class="val-display" data-input="inPuSubestacion">$4,000,000</div></div><input type="range" id="inPuSubestacion" min="0" max="20000000" step="250000" value="4000000" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Derechos de agua / fuente CONAGUA ($) · CONDICIONAL</label><div class="val-display" data-input="inPuDerechosAgua">$2,500,000</div></div><input type="range" id="inPuDerechosAgua" min="0" max="30000000" step="250000" value="2500000" data-color="var(--red)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Cisterna / tanque elevado ($)</label><div class="val-display" data-input="inPuCisterna">$1,800,000</div></div><input type="range" id="inPuCisterna" min="0" max="10000000" step="100000" value="1800000" data-color="var(--blue)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Caseta de acceso y control ($)</label><div class="val-display" data-input="inPuCaseta">$800,000</div></div><input type="range" id="inPuCaseta" min="0" max="5000000" step="100000" value="800000" data-color="var(--muted)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Señalética y nomenclatura ($)</label><div class="val-display" data-input="inPuSenaletica">$400,000</div></div><input type="range" id="inPuSenaletica" min="0" max="3000000" step="50000" value="400000" data-color="var(--muted)" data-format="money"></div>
+        <div class="micro-readout" id="readUrb">Calculando urbanización…</div></div></article>
+
+    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#c9a96e1f;color:var(--gold)">🏗️</div><div class="card-title">Construcción de Naves + Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Construcción de Naves</span><span class="kpi-val c-red" id="lblConstNaves">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Blandos e Indirectos</span><span class="kpi-val" id="lblBlandos">$0 M</span></div><div class="kpi-box full"><span class="kpi-lbl">Costo Total del Proyecto</span><span class="kpi-val c-red" id="lblCostoTotal">$0 M · $0/m² vendible</span></div></div>
+      <div class="drawer" id="dCostos"><div class="subheading">Construcción</div>
+        <div class="input-group"><div class="input-header"><label>Costo de construcción de nave ($/m²)</label><div class="val-display" data-input="inCostoNave">$7,800</div></div><input type="range" id="inCostoNave" min="4000" max="16000" step="100" value="7800" data-color="var(--red)" data-format="money"></div>
+        <div class="subheading">Blandos sobre costo directo</div>
+        <div class="input-group"><div class="input-header"><label>Estudios y proyectos (%)</label><div class="val-display" data-input="inEstudios">5.0%</div></div><input type="range" id="inEstudios" min="0" max="15" step=".5" value="5" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Licencias, permisos y derechos (%)</label><div class="val-display" data-input="inLicencias">3.0%</div></div><input type="range" id="inLicencias" min="0" max="12" step=".5" value="3" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Supervisión y dirección (%)</label><div class="val-display" data-input="inSupervision">4.0%</div></div><input type="range" id="inSupervision" min="0" max="12" step=".5" value="4" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Imprevistos / contingencia (%)</label><div class="val-display" data-input="inImprevistos">12.0%</div></div><input type="range" id="inImprevistos" min="0" max="30" step=".5" value="12" data-color="var(--red)" data-format="pct1"></div>
+        <div class="subheading">Blandos sobre ingresos</div>
+        <div class="input-group"><div class="input-header"><label>Legal, notarial y condominio (%)</label><div class="val-display" data-input="inLegalPct">2.0%</div></div><input type="range" id="inLegalPct" min="0" max="8" step=".5" value="2" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Administración del proyecto (%)</label><div class="val-display" data-input="inAdminPct">3.0%</div></div><input type="range" id="inAdminPct" min="0" max="10" step=".5" value="3" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Comisión de ventas (%)</label><div class="val-display" data-input="inComisionPct">4.0%</div></div><input type="range" id="inComisionPct" min="0" max="10" step=".5" value="4" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Mercadotecnia (%)</label><div class="val-display" data-input="inMktPct">2.0%</div></div><input type="range" id="inMktPct" min="0" max="8" step=".5" value="2" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="micro-readout" id="readCostos">Calculando costos…</div></div></article>
+
+    <article class="card" data-card="dCapital"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)">🌍</div><div class="card-title">Capital, Calendario &amp; Reparto</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Tratamiento del terreno</span><span class="kpi-val" id="lblTierraModo">Aporta · 25% utilidad</span></div><div class="kpi-box"><span class="kpi-lbl">Etapas de urbanización</span><span class="kpi-val c-orange" id="lblEtapas">3 × 10 meses</span></div><div class="kpi-box"><span class="kpi-lbl">Absorción</span><span class="kpi-val c-green" id="lblAbsorcion">—</span></div><div class="kpi-box"><span class="kpi-lbl">Meses totales del caso</span><span class="kpi-val" id="lblMesesTotales">0</span></div><div class="kpi-box full"><span class="kpi-lbl">Condición de crédito</span><span class="kpi-val" id="lblCondPIK">—</span></div></div>
+      <div class="drawer" id="dCapital"><div class="partner-guide"><b>El PPP reparte utilidad, no caja:</b> el dueño aporta el terreno y recibe su % de la utilidad del proyecto <b>antes de costos financieros</b> (el crédito puente y sus intereses corren por cuenta del developer, igual que en el PPP presentado). Si el dueño vende (no aporta), el terreno se paga al cierre y su % baja a 0.</div>
+        <div class="subheading">1. Tratamiento del terreno</div>
+        <div class="land-modes"><button type="button" class="land-mode" data-land-mode="0"><b>Dueño vende</b><span>El proyecto paga la tierra a valor de mercado; el dueño no participa.</span></button><button type="button" class="land-mode active" data-land-mode="100"><b>Dueño aporta</b><span>La tierra entra al proyecto; el dueño recibe % de la utilidad.</span></button><button type="button" class="land-mode" data-land-mode="50"><b>Acuerdo mixto</b><span>Parte pagada al cierre, parte aportada con % proporcional.</span></button></div>
+        <div class="input-group"><div class="input-header"><label>Porción de terreno aportada (%)</label><div class="val-display" data-input="inAporteTierra">100%</div></div><input type="range" id="inAporteTierra" min="0" max="100" step="1" value="100" data-color="var(--orange)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Valor de mercado del terreno ($/m²)</label><div class="val-display" data-input="inValorTierraM2">$150</div></div><input type="range" id="inValorTierraM2" min="0" max="2000" step="10" value="150" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>% de utilidad para el dueño</label><div class="val-display" data-input="inPctDueno">25%</div></div><input type="range" id="inPctDueno" min="0" max="60" step="1" value="25" data-color="var(--blue)" data-format="pct"></div>
+        <div class="land-deal-summary" id="landDealSummary">Calculando tratamiento del terreno…</div>
+        <div class="subheading">2. Calendario y absorción</div>
+        <div class="input-group"><div class="input-header"><label>Etapas de urbanización</label><div class="val-display" data-input="inEtapas">3</div></div><input type="range" id="inEtapas" min="1" max="8" step="1" value="3" data-color="var(--orange)"></div>
+        <div class="input-group"><div class="input-header"><label>Meses de obra por etapa</label><div class="val-display" data-input="inMesesUrbEtapa">10</div></div><input type="range" id="inMesesUrbEtapa" min="4" max="24" step="1" value="10" data-color="var(--orange)"></div>
+        <div class="input-group"><div class="input-header"><label>Mes de inicio de ventas</label><div class="val-display" data-input="inInicioVentas">4</div></div><input type="range" id="inInicioVentas" min="1" max="24" step="1" value="4" data-color="var(--green)"></div>
+        <div class="input-group"><div class="input-header"><label>Naves vendidas por mes</label><div class="val-display" data-input="inAbsNaves">6.0</div></div><input type="range" id="inAbsNaves" min=".5" max="30" step=".5" value="6" data-color="var(--gold)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Macro-lotes vendidos por mes</label><div class="val-display" data-input="inAbsMacro">0.5</div></div><input type="range" id="inAbsMacro" min=".1" max="5" step=".1" value="0.5" data-color="var(--blue)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Lotes comerciales por mes</label><div class="val-display" data-input="inAbsCom">1.0</div></div><input type="range" id="inAbsCom" min=".1" max="10" step=".1" value="1" data-color="var(--teal)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Lotes de vivienda por mes</label><div class="val-display" data-input="inAbsViv">4.0</div></div><input type="range" id="inAbsViv" min=".5" max="40" step=".5" value="4" data-color="var(--green)" data-format="decimal"></div>
+        <div class="subheading">3. Esquema de cobro</div>
+        <div class="input-group"><div class="input-header"><label>Naves: enganche al vender (%)</label><div class="val-display" data-input="inEngNave">30%</div></div><input type="range" id="inEngNave" min="0" max="100" step="5" value="30" data-color="var(--gold)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Naves: meses de venta a entrega</label><div class="val-display" data-input="inMesesEntregaNave">8</div></div><input type="range" id="inMesesEntregaNave" min="2" max="24" step="1" value="8" data-color="var(--gold)"></div>
+        <div class="input-group"><div class="input-header"><label>Lotes: enganche al vender (%)</label><div class="val-display" data-input="inEngLote">50%</div></div><input type="range" id="inEngLote" min="0" max="100" step="5" value="50" data-color="var(--blue)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Lotes: meses para el saldo</label><div class="val-display" data-input="inMesesSaldoLote">6</div></div><input type="range" id="inMesesSaldoLote" min="1" max="36" step="1" value="6" data-color="var(--blue)"></div>
+        <div class="subheading">4. Financiamiento (motor PIK)</div>
+        <div class="input-group"><div class="input-header"><label>Capital máximo del developer ($)</label><div class="val-display" data-input="inEquity">$80,000,000</div></div><input type="range" id="inEquity" min="0" max="1000000000" step="5000000" value="80000000" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Límite absoluto de deuda ($)</label><div class="val-display" data-input="inMaxDeuda">$400,000,000</div></div><input type="range" id="inMaxDeuda" min="0" max="1500000000" step="10000000" value="400000000" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>LTC máximo (%)</label><div class="val-display" data-input="inLTC">60%</div></div><input type="range" id="inLTC" min="0" max="90" step="1" value="60" data-color="var(--orange)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Tasa PIK anual (%)</label><div class="val-display" data-input="inPIK">14.0%</div></div><input type="range" id="inPIK" min="0" max="40" step=".5" value="14" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Comisión por disposición (%)</label><div class="val-display" data-input="inFeeDeuda">1.5%</div></div><input type="range" id="inFeeDeuda" min="0" max="15" step=".1" value="1.5" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>TIR objetivo developer (%)</label><div class="val-display" data-input="inTirObjetivo">25.0%</div></div><input type="range" id="inTirObjetivo" min="0" max="100" step=".5" value="25" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="micro-readout" id="readCapital">Calculando flujo…</div></div></article>
+
+    <article class="card" data-card="dAgua"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)">🚰</div><div class="card-title">Agua, Energía &amp; Escenarios</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box full" id="boxGate" style="border-color:#e0605a66;background:#e0605a12"><span class="kpi-lbl" style="color:#f4b8b3">Gate del agua — bloqueante</span><span class="kpi-val c-red" id="lblGate">EN VEDA · sin resolver</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda de agua</span><span class="kpi-val c-blue" id="lblAguaDia">0 m³/día</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda eléctrica</span><span class="kpi-val c-orange" id="lblKva">0 kVA</span></div><div class="kpi-box"><span class="kpi-lbl">Empleos estimados</span><span class="kpi-val c-green" id="lblEmpleos">0</span></div><div class="kpi-box"><span class="kpi-lbl">Escenario activo</span><span class="kpi-val c-gold" id="lblEscenario">BASE</span></div></div>
+      <div class="drawer" id="dAgua"><div class="subheading">Gate del agua (veda Costa de Hermosillo)</div>
+        <div class="land-modes"><button type="button" class="gate-mode land-mode active" data-gate="0"><b>⚠ En veda · sin resolver</b><span>Pozo nuevo es ilegal. El caso queda en rojo.</span></button><button type="button" class="gate-mode land-mode" data-gate="1"><b>En trámite</b><span>Gestoría CONAGUA / derechos en proceso.</span></button><button type="button" class="gate-mode land-mode" data-gate="2"><b>Derechos asignados</b><span>Fuente de agua resuelta y documentada.</span></button></div>
+        <div class="subheading">Dotaciones del polo</div>
+        <div class="input-group"><div class="input-header"><label>Agua (L/m² construido/día)</label><div class="val-display" data-input="inAguaM2Const">1.5</div></div><input type="range" id="inAguaM2Const" min=".2" max="8" step=".1" value="1.5" data-color="var(--blue)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Carga eléctrica (W/m² construido)</label><div class="val-display" data-input="inWm2Const">40</div></div><input type="range" id="inWm2Const" min="10" max="150" step="5" value="40" data-color="var(--orange)"></div>
+        <div class="input-group"><div class="input-header"><label>Factor de demanda (%)</label><div class="val-display" data-input="inFactorDemanda">60%</div></div><input type="range" id="inFactorDemanda" min="20" max="100" step="5" value="60" data-color="var(--orange)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>m² de nave por empleo</label><div class="val-display" data-input="inM2Empleo">40</div></div><input type="range" id="inM2Empleo" min="15" max="150" step="5" value="40" data-color="var(--green)"></div>
+        <div class="subheading">Escenarios (variación global)</div>
+        <div class="input-group"><div class="input-header"><label>Variación de precios de venta (%)</label><div class="val-display" data-input="inVarPrecios">0%</div></div><input type="range" id="inVarPrecios" min="-25" max="25" step="1" value="0" data-color="var(--gold)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Variación de costos de obra (%)</label><div class="val-display" data-input="inVarCostos">0%</div></div><input type="range" id="inVarCostos" min="-20" max="20" step="1" value="0" data-color="var(--red)" data-format="pct"></div>
+        <div class="micro-readout" id="readAgua">Calculando dotaciones…</div></div></article>
+  </section>
+
+  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, corrida y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo (8 pasos del PPP)</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity</th><th>PIK + fee</th><th>Deuda</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson">Actualizar JSON</button><button class="small-btn" id="applyJson">Aplicar JSON</button><button class="small-btn secondary" id="exportJson">Descargar JSON</button></div><p class="note">Cada renglón de la hoja MACROLOTES del Sheet es un caso; la corrida completa vive en la hoja FLUJO.</p></details>
+</main>
+
+<div class="overlay" id="ovGuardar"><div class="sheet">
+  <h2 class="serif">Guardar caso</h2>
+  <p class="sh-sub">El caso se guarda como un renglón en la hoja MACROLOTES del Sheet. Elige una <b>palabra</b> para volver a él; si pones correo, te mandamos la palabra con el enlace directo.</p>
+  <div class="fld"><label>Nombre del caso</label><input id="gNombre" placeholder="ej. La Cercada · Carr. a Kino"></div>
+  <div class="fld"><label>Palabra para volver</label><input id="gPalabra" placeholder="ej. la-cercada-50ha" autocapitalize="none"><div class="hint">Una palabra por caso.</div></div>
+  <div class="fld"><label>Correo (opcional)</label><input id="gCorreo" type="email" placeholder="tucorreo@…"></div>
+  <div class="fld"><label>Notas del caso</label><textarea id="gNotas" placeholder="Fuente, dueño, condición por verificar…"></textarea></div>
+  <input class="hp" id="gWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar">Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar">Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo">Guardar</button></div>
+</div></div>
+
+<div class="overlay" id="ovCasos"><div class="sheet">
+  <h2 class="serif">Mis casos</h2>
+  <p class="sh-sub">Casos de Macro Lotes. Toca uno para cargarlo, o ábrelo con su palabra.</p>
+  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra">Abrir</button></div>
+  <div id="listaCasos" style="margin-top:6px"><p class="note">Cargando…</p></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar">Cerrar</button></div>
+</div></div>
+
+<div id="toast"></div>
+<script>
+(() => {
+  /* ================== CONFIG DE NUBE ================== */
+  const NUBE={ENDPOINT:'https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec',TIPO:'macrolotes',SITE:'https://alexpueblag.github.io/potenciales-yod/',PAGE:'macrolotes.html'};
+  const cloudOn=/^https:\/\//.test(NUBE.ENDPOINT);
+  const LS={clave:'pyod_clave_v1',draft:'pyodm_draft_v1',cola:'pyodm_postq_v1'};
+  const ESTADOS=['EXPLORACIÓN','ANÁLISIS','PROPUESTA','NEGOCIACIÓN','CERRADO','DESCARTADO'];
+  let clave=localStorage.getItem(LS.clave)||'';
+  let caso={caso_id:'',palabra:'',correo:'',nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};
+  let cfgBoard={}, casosCache=[], modoLocal=!cloudOn;
+
+  const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
+  const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>'$'+((n||0)/1e6).toFixed(1)+' M'; const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%'; const fmtHa=n=>((n||0)/10000).toFixed(1)+' ha';
+  // Prellenado oficial: La Cercada v4 (PPP corregido 30-jun-2026)
+  const PRELLENADO={inFrente:500,inFondo:1000,inAnchoVialidad:12,inSepLuminarias:30,inPctVialidades:18,inPctBanquetas:4,inPctVerdes:12,inPctEquipamiento:3,inPctRetencion:3,inPctDDV:2,inMixNaves:50,inMixMacro:30,inMixCom:20,inMixViv:0,inCosNaves:47.5,inEfSubdiv:92,inM2Nave:250,inM2Macro:5000,inM2LoteCom:2000,inM2LoteViv:160,inPreNave:14000,inPreMacro:2200,inPreCom:4500,inPreVivLote:1800,inPuDespalme:20,inPuTerracerias:45,inPuPavimento:450,inPuGuarniciones:350,inPuRedAgua:900,inPuDrenaje:1200,inPuPluvial:800,inPuMT:1100,inPuFibra:300,inPuAlumbrado:18000,inPuJardineria:180,inPuBarda:1500,inPuPtar:3500000,inPuSubestacion:4000000,inPuDerechosAgua:2500000,inPuCisterna:1800000,inPuCaseta:800000,inPuSenaletica:400000,inCostoNave:7800,inEstudios:5,inLicencias:3,inSupervision:4,inLegalPct:2,inAdminPct:3,inComisionPct:4,inMktPct:2,inImprevistos:12,inEtapas:3,inMesesUrbEtapa:10,inInicioVentas:4,inAbsNaves:6,inAbsMacro:0.5,inAbsCom:1,inAbsViv:4,inEngNave:30,inMesesEntregaNave:8,inEngLote:50,inMesesSaldoLote:6,inEquity:80000000,inMaxDeuda:400000000,inLTC:60,inPIK:14,inFeeDeuda:1.5,inTirObjetivo:25,inValorTierraM2:150,inAporteTierra:100,inPctDueno:25,inGateAgua:0,inVarPrecios:0,inVarCostos:0,inM2Empleo:40,inAguaM2Const:1.5,inWm2Const:40,inFactorDemanda:60};
+  const ESCENARIOS={p:{inVarPrecios:-22,inVarCostos:15},b:{inVarPrecios:0,inVarCostos:0},o:{inVarPrecios:20,inVarCostos:-10}};
+  const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),PRELLENADO);
+  Object.entries(DEFAULTS).forEach(([id,v])=>{const c=$(id);if(c)c.value=v});
+  let gateAgua=PRELLENADO.inGateAgua;
+
+  const factorHelp={
+    inFrente:{t:'Frente',k:'Dato verificable',q:'Metros de frente sobre la carretera.',m:'Mueve superficie, perímetro (barda) y el master plan.',d:'Escritura y levantamiento topográfico.'},
+    inFondo:{t:'Fondo',k:'Dato verificable',q:'Profundidad del predio en metros.',m:'Mueve superficie y perímetro.',d:'Escritura y levantamiento.'},
+    inAnchoVialidad:{t:'Ancho de vialidad',k:'Norma por validar',q:'Ancho promedio de calle (arroyo + camellón).',m:'Convierte m² de vialidad en metros lineales: manda sobre redes y alumbrado.',d:'Norma municipal para parque industrial (camiones).'},
+    inSepLuminarias:{t:'Luminarias',k:'Criterio de diseño',q:'Metros entre luminarias.',m:'Define cuántas luminarias paga el proyecto.',d:'Nivel de iluminación exigido y tipo de vialidad.'},
+    inPctVialidades:{t:'Vialidades',k:'Diseño / norma',q:'% del terreno destinado a calles.',m:'Resta vendible y suma pavimento y redes.',d:'Traza, tamaño de manzana y radios para tractocamión.'},
+    inPctBanquetas:{t:'Banquetas',k:'Diseño / norma',q:'% del terreno en banquetas y guarniciones.',m:'Resta vendible y suma obra.',d:'Norma municipal.'},
+    inPctVerdes:{t:'Verdes y donación',k:'Norma por validar',q:'% en áreas verdes + donación municipal.',m:'Resta vendible; la donación REAL la fija el municipio.',d:'Ley de fraccionamientos / RDUEP · confirmar con urbanista.'},
+    inPctEquipamiento:{t:'Equipamiento',k:'Norma por validar',q:'% para equipamiento e infraestructura.',m:'Resta vendible.',d:'Norma y necesidades del polo (subestación, PTAR, caseta).'},
+    inPctRetencion:{t:'Retención pluvial',k:'Diseño / norma',q:'% para lagunas de retención / cuerpos de agua.',m:'Resta vendible; clave en zona de arroyos.',d:'Estudio hidrológico y CONAGUA.'},
+    inPctDDV:{t:'Derecho de vía',k:'Norma por validar',q:'% de restricción federal sobre la carretera.',m:'Resta vendible.',d:'SICT: ancho de derecho de vía de la Carr. a Kino.'},
+    inMixNaves:{t:'Naves PyME',k:'Producto / mercado',q:'% del vendible para naves en condominio (modelo NOWUS).',m:'Mueve unidades, construcción e ingresos.',d:'Demanda PyME, absorción y competencia.'},
+    inMixMacro:{t:'Macro-lotes',k:'Producto / mercado',q:'% del vendible para macro-lotes industriales (BTS).',m:'Mueve lotes e ingresos; sin costo de construcción.',d:'Demanda industrial, Solili: vacancia norte <2%.'},
+    inMixCom:{t:'Comercial',k:'Producto / mercado',q:'% del vendible para lotes comerciales (esquina).',m:'Mueve lotes e ingresos.',d:'Tráfico de carretera y esquina Blvd. Sta. Lucía.'},
+    inMixViv:{t:'Lotes de vivienda',k:'Producto / mercado',q:'% del vendible para lotes habitacionales (polo mixto).',m:'Activa el 4º producto.',d:'Uso de suelo mixto autorizado y demanda de vivienda obrera.'},
+    inCosNaves:{t:'COS de naves',k:'Comparable verificado',q:'% del terreno de naves que se construye (v4: 47.5% del comparable NOWUS real: bodega 207.71 m² + 4 cajones).',m:'Mueve m² construidos, unidades, ingresos y construcción — el hallazgo #1 del enjambre (65% sobreestimaba ~$355 M).',d:'Prototipo de nave, cajones por bodega y maniobras.'},
+    inEfSubdiv:{t:'Eficiencia de subdivisión',k:'Anteproyecto',q:'% del terreno de macro-lotes/comercial/vivienda que queda vendible tras vialidades internas.',m:'Corrige la sobreestimación de lotes (v4: 92%).',d:'Traza interna de cada súper-manzana.'},
+    inM2Nave:{t:'m² por nave',k:'Producto',q:'Tamaño construido de la nave tipo.',m:'Mueve número de naves y ticket.',d:'NOWUS ~207-250 m²; validar contra demanda.'},
+    inM2Macro:{t:'m² por macro-lote',k:'Producto',q:'Tamaño del macro-lote tipo.',m:'Mueve número de lotes.',d:'Demanda BTS local (5,000-20,000 m²).'},
+    inM2LoteCom:{t:'m² por lote comercial',k:'Producto',q:'Tamaño del lote comercial tipo.',m:'Mueve número de lotes.',d:'Frente de carretera y giros.'},
+    inM2LoteViv:{t:'m² por lote vivienda',k:'Producto',q:'Tamaño del lote habitacional tipo.',m:'Mueve número de lotes.',d:'Segmento (interés social 90-160 m²).'},
+    inPreNave:{t:'Precio de nave',k:'Comparable por validar',q:'$/m² CONSTRUIDO de nave en venta.',m:'Manda sobre el ingreso principal.',d:'Comparables Hmo: Balderrama ~$15k, deal $26M~$16k, Lamudi (Fuentes).'},
+    inPreMacro:{t:'Precio macro-lote',k:'Comparable por validar',q:'$/m² de terreno industrial urbanizado.',m:'Mueve ingresos de macro-lotes.',d:'Kinetec $1,950-2,500; Clase A $60-90 USD (Fuentes).'},
+    inPreCom:{t:'Precio comercial',k:'Comparable por validar',q:'$/m² de lote comercial sobre carretera.',m:'Mueve ingresos comerciales.',d:'Esquinas comerciales de salida a Kino.'},
+    inPreVivLote:{t:'Precio lote vivienda',k:'Comparable por validar',q:'$/m² de lote habitacional con servicios.',m:'Mueve ingresos de vivienda.',d:'Comparables de lotes con servicios en el poniente.'},
+    inPuDespalme:{t:'Despalme',k:'PU por cotizar',q:'$/m² de limpieza sobre TODO el terreno.',m:'Suma a urbanización.',d:'Estimación de ingeniería — pedir presupuesto local.'},
+    inPuTerracerias:{t:'Terracerías',k:'PU por cotizar',q:'$/m² de nivelación sobre vialidades + área vendible (base del PPP; verdes y retención no se nivelan).',m:'Suma a urbanización.',d:'Topografía real del predio.'},
+    inPuPavimento:{t:'Pavimento',k:'PU por cotizar',q:'$/m² de vialidad pavimentada.',m:'Cantidad = m² de vialidades del cuadro.',d:'Concreto vs asfalto para tráfico pesado.'},
+    inPuGuarniciones:{t:'Guarniciones',k:'PU por cotizar',q:'$/m² de banqueta.',m:'Cantidad = m² de banquetas.',d:'Especificación municipal.'},
+    inPuRedAgua:{t:'Red de agua',k:'PU por cotizar',q:'$/ml de red hidráulica.',m:'Cantidad = ml de vialidad.',d:'Diámetro y material.'},
+    inPuDrenaje:{t:'Drenaje sanitario',k:'PU por cotizar',q:'$/ml de red sanitaria.',m:'Cantidad = ml de vialidad.',d:'Pendientes y profundidad — o PTAR propia.'},
+    inPuPluvial:{t:'Pluvial',k:'PU por cotizar',q:'$/ml de drenaje pluvial y obras de retención.',m:'Cantidad = ml de vialidad.',d:'Estudio hidrológico (monzón).'},
+    inPuMT:{t:'Media tensión',k:'PU por cotizar',q:'$/ml de red eléctrica MT.',m:'Cantidad = ml de vialidad.',d:'Factibilidad CFE — cuello de botella regional.'},
+    inPuFibra:{t:'Fibra',k:'PU por cotizar',q:'$/ml de canalización telecom.',m:'Cantidad = ml de vialidad.',d:'Proveedor local.'},
+    inPuAlumbrado:{t:'Alumbrado',k:'PU por cotizar',q:'$ por luminaria instalada.',m:'Cantidad = ml / separación.',d:'Tipo de luminaria y poste.'},
+    inPuJardineria:{t:'Jardinería',k:'PU por cotizar',q:'$/m² de área verde con riego.',m:'Cantidad = m² de verdes del cuadro.',d:'Paisaje desértico vs riego intensivo.'},
+    inPuBarda:{t:'Barda perimetral',k:'PU por cotizar',q:'$/ml de barda.',m:'Cantidad = perímetro del terreno.',d:'Tipo de barda / malla.'},
+    inPuPtar:{t:'PTAR',k:'PU por cotizar',q:'Planta de tratamiento (importe fijo).',m:'Obra de cabecera de la etapa 1.',d:'Capacidad según demanda de agua del polo.'},
+    inPuSubestacion:{t:'Subestación',k:'PU por cotizar',q:'Subestación y transformadores (importe fijo).',m:'Obra de cabecera.',d:'Demanda kVA del polo y factibilidad CFE.'},
+    inPuDerechosAgua:{t:'Derechos de agua',k:'CONDICIONAL · gate',q:'Adquisición / transmisión de derechos CONAGUA — NO pozo nuevo (ilegal bajo veda).',m:'Obra de cabecera; el gate del agua manda sobre todo el caso.',d:'Gestoría CONAGUA / Agua de Hermosillo — PENDIENTE COTIZAR.'},
+    inPuCisterna:{t:'Cisterna',k:'PU por cotizar',q:'Cisterna / tanque elevado (importe fijo).',m:'Obra de cabecera.',d:'Reserva y presión del polo.'},
+    inPuCaseta:{t:'Caseta',k:'PU por cotizar',q:'Caseta de acceso y control (importe fijo).',m:'Obra de cabecera.',d:'Nivel de control del parque.'},
+    inPuSenaletica:{t:'Señalética',k:'PU por cotizar',q:'Señalética y nomenclatura (importe fijo).',m:'Obra de cabecera.',d:'Identidad del parque.'},
+    inCostoNave:{t:'Costo de nave',k:'Comparable por validar',q:'$/m² de construcción de nave.',m:'Multiplica los m² construidos de naves.',d:'Kinetec local $7,800; CMIC ~$10,642 (Fuentes).'},
+    inEstudios:{t:'Estudios y proyectos',k:'Blando s/directo',q:'Topografía, mecánica, ejecutivo, MIA, vial.',m:'% sobre costo directo, erogado al inicio.',d:'Alcance de estudios; MIA y CUSTF si aplica.'},
+    inLicencias:{t:'Licencias',k:'Blando s/directo',q:'Permisos y derechos municipales/estatales.',m:'% sobre costo directo.',d:'RDUEP y tarifas municipales.'},
+    inSupervision:{t:'Supervisión',k:'Blando s/directo',q:'Dirección y supervisión de obra.',m:'% sobre directo, durante la urbanización.',d:'Estructura de obra propia o tercerizada.'},
+    inImprevistos:{t:'Imprevistos',k:'Riesgo',q:'Contingencia sobre costo directo (v4: 12%).',m:'Protege el margen con tantos PU sin cotizar.',d:'Madurez del proyecto: aún sin presupuesto real.'},
+    inLegalPct:{t:'Legal y condominio',k:'Blando s/ingresos',q:'Notarial, escrituración y régimen de condominio.',m:'% sobre ingresos.',d:'Número de escrituras (276 naves = mucho trámite).'},
+    inAdminPct:{t:'Administración',k:'Blando s/ingresos',q:'Administración del proyecto.',m:'% sobre ingresos, uniforme en el plazo.',d:'Estructura del developer.'},
+    inComisionPct:{t:'Comisión de ventas',k:'Blando s/ingresos',q:'Comisión al canal de ventas.',m:'Sale con cada cobro.',d:'Broker industrial vs equipo propio.'},
+    inMktPct:{t:'Mercadotecnia',k:'Blando s/ingresos',q:'Publicidad y promoción.',m:'Sale con cada cobro.',d:'Estrategia comercial.'},
+    inEtapas:{t:'Etapas',k:'Estrategia',q:'Número de etapas de urbanización secuenciales.',m:'Reparte la obra en el tiempo: baja el pico de deuda.',d:'Capital disponible y absorción.'},
+    inMesesUrbEtapa:{t:'Meses por etapa',k:'Calendario',q:'Duración de obra de cada etapa.',m:'Mueve el calendario de costos e intereses.',d:'Rendimiento del contratista.'},
+    inInicioVentas:{t:'Inicio de ventas',k:'Calendario',q:'Mes en que arranca la comercialización.',m:'Mueve la caja temprana.',d:'Permisos y material de venta.'},
+    inAbsNaves:{t:'Absorción naves',k:'Mercado por validar',q:'Naves vendidas por mes.',m:'Define el plazo del proyecto y la TIR.',d:'Absorción industrial Hmo (Solili) y NOWUS Qro.'},
+    inAbsMacro:{t:'Absorción macro-lotes',k:'Mercado por validar',q:'Macro-lotes vendidos por mes.',m:'Mueve plazo y caja.',d:'Demanda BTS local.'},
+    inAbsCom:{t:'Absorción comercial',k:'Mercado por validar',q:'Lotes comerciales por mes.',m:'Mueve plazo y caja.',d:'Demanda de esquinas de carretera.'},
+    inAbsViv:{t:'Absorción vivienda',k:'Mercado por validar',q:'Lotes de vivienda por mes.',m:'Mueve plazo y caja.',d:'Demanda habitacional del poniente.'},
+    inEngNave:{t:'Enganche de nave',k:'Política comercial',q:'% cobrado al vender la nave; el saldo a la entrega.',m:'Mueve caja temprana y deuda.',d:'Preventa tipo NOWUS.'},
+    inMesesEntregaNave:{t:'Entrega de nave',k:'Calendario',q:'Meses de la venta a la entrega (construcción de la nave).',m:'La construcción se eroga en esa ventana.',d:'Programa de obra por paquete de naves.'},
+    inEngLote:{t:'Enganche de lote',k:'Política comercial',q:'% cobrado al vender un lote.',m:'Mueve caja temprana.',d:'Lotes suelen venderse de contado o corto plazo.'},
+    inMesesSaldoLote:{t:'Saldo de lote',k:'Política comercial',q:'Meses en que se cobra el saldo del lote.',m:'Mueve la cola de cobranza.',d:'Financiamiento directo al comprador.'},
+    inEquity:{t:'Capital del developer',k:'Estructura de capital',q:'Efectivo disponible antes de disponer deuda.',m:'Mueve deuda, intereses y TIR.',d:'Caja de Aurum/YoD e inversionistas.'},
+    inMaxDeuda:{t:'Límite de deuda',k:'Término de crédito',q:'Tope nominal de crédito.',m:'Limita disposiciones.',d:'Term sheet bancario o privado.'},
+    inLTC:{t:'LTC máximo',k:'Término de crédito',q:'% máximo del costo financiable con deuda.',m:'Define la deuda disponible.',d:'Apetito del financiador por suelo industrial.'},
+    inPIK:{t:'Tasa PIK',k:'Término de deuda',q:'Interés anual capitalizable.',m:'Mueve intereses y utilidad final.',d:'Mercado de deuda puente.'},
+    inFeeDeuda:{t:'Comisión de deuda',k:'Término de deuda',q:'% por disposición.',m:'Encarece cada disposición.',d:'Term sheet.'},
+    inTirObjetivo:{t:'TIR objetivo',k:'Meta de inversión',q:'Meta del developer.',m:'Solo se compara: no altera el flujo.',d:'Costo de oportunidad.'},
+    inValorTierraM2:{t:'Valor del terreno',k:'Avalúo / negociación',q:'$/m² de mercado del terreno EN BRUTO.',m:'Define el pago si el dueño vende (total o parcial).',d:'Avalúo — el dueño hoy no tiene cifra.'},
+    inAporteTierra:{t:'Terreno aportado',k:'Acuerdo de socios',q:'% del terreno que el dueño aporta (no se le paga al cierre).',m:'Separa pago de tierra vs participación.',d:'Negociación del co-desarrollo.'},
+    inPctDueno:{t:'% del dueño',k:'Acuerdo de socios',q:'% de la utilidad neta para el dueño que aporta tierra.',m:'Mueve el reparto (PPP: 25/75).',d:'Negociación; escala con el % aportado.'},
+    inGateAgua:{t:'Gate del agua',k:'Riesgo #1',q:'Estatus de la fuente de agua (veda Costa de Hermosillo).',m:'Pinta el semáforo del caso; no altera números.',d:'Gestoría CONAGUA / Agua de Hermosillo.'},
+    inVarPrecios:{t:'Variación de precios',k:'Escenario',q:'Ajuste global a precios de venta (P/B/O).',m:'Recalcula ingresos con el rango de Fuentes.',d:'Rangos comparables documentados.'},
+    inVarCostos:{t:'Variación de costos',k:'Escenario',q:'Ajuste global a costos de obra (P/B/O).',m:'Recalcula urbanización + construcción.',d:'Rangos de costos documentados.'},
+    inM2Empleo:{t:'Empleos',k:'Indicador urbano',q:'m² de nave por empleo.',m:'Estima empleos del polo (dato para gobierno).',d:'Ratio industrial ligero ~30-60 m²/empleo.'},
+    inAguaM2Const:{t:'Agua del polo',k:'Criterio',q:'L/m² construido/día.',m:'Estima demanda para dimensionar derechos y PTAR.',d:'Industria ligera consume poco — ventaja bajo veda.'},
+    inWm2Const:{t:'Carga eléctrica',k:'Criterio',q:'W/m² construido.',m:'Estima kVA para la subestación.',d:'Giro de las naves.'},
+    inFactorDemanda:{t:'Factor de demanda',k:'Criterio eléctrico',q:'% de la carga que coincide en el pico.',m:'Convierte carga en demanda (FP 0.9).',d:'CFE define el contractual.'}
+  };
+  function get(id){return Number($(id).value)||0} function txt(id,value){const e=$(id);if(e)e.textContent=value}
+  function inputValues(){const o=Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]));o.inGateAgua=gateAgua;return o}
+  function updateColor(c){const min=Number(c.min),max=Number(c.max),v=Number(c.value),x=Math.max(0,Math.min(100,(v-min)/(max-min)*100));c.style.background=`linear-gradient(to right, ${c.dataset.color||'var(--gold)'} ${x}%, rgba(255,255,255,.14) ${x}%)`}
+  function displayValue(c){const v=Number(c.value),f=c.dataset.format||'';if(f==='pct')return pct(v,0);if(f==='pct1')return pct(v,1);if(f==='money')return fmtMoney(v);if(f==='decimal')return v.toFixed(1);return fmtN(v)}
+  function setControl(id,value){if(id==='inGateAgua'){gateAgua=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
+  function readPills(){document.querySelectorAll('.val-display[data-input]').forEach(p=>{p.contentEditable='true';p.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();p.blur()}});p.addEventListener('blur',()=>{const raw=p.textContent.replace(/[^0-9.\-]/g,''),n=Number(raw);if(Number.isFinite(n))setControl(p.dataset.input,n);calculate()})})}
+  function syncPills(){controls.forEach(c=>{const p=document.querySelector(`.val-display[data-input="${c.id}"]`);if(p&&document.activeElement!==p)p.textContent=displayValue(c);updateColor(c)})}
+  function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open')})})}
+  function irr(flows){if(!flows.some(x=>x<0)||!flows.some(x=>x>0))return null;let lo=-.999,hi=4;const npv=r=>flows.reduce((s,x,i)=>s+x/Math.pow(1+r,i),0);while(npv(hi)>0&&hi<500)hi*=2;for(let i=0;i<100;i++){const mid=(lo+hi)/2;if(npv(mid)>0)lo=mid;else hi=mid}return Math.pow(1+(lo+hi)/2,12)-1}
+
+  /* ================== MOTOR (8 pasos del PPP) ================== */
+  function calculate(){
+    const p={frente:get('inFrente'),fondo:get('inFondo'),anchoVial:Math.max(1,get('inAnchoVialidad')),sepLum:Math.max(5,get('inSepLuminarias')),
+      pctVial:get('inPctVialidades')/100,pctBanq:get('inPctBanquetas')/100,pctVerdes:get('inPctVerdes')/100,pctEquip:get('inPctEquipamiento')/100,pctRet:get('inPctRetencion')/100,pctDDV:get('inPctDDV')/100,
+      mixNaves:get('inMixNaves')/100,mixMacro:get('inMixMacro')/100,mixCom:get('inMixCom')/100,mixViv:get('inMixViv')/100,cosNaves:get('inCosNaves')/100,efSubdiv:get('inEfSubdiv')/100,
+      m2Nave:Math.max(1,get('inM2Nave')),m2Macro:Math.max(1,get('inM2Macro')),m2LoteCom:Math.max(1,get('inM2LoteCom')),m2LoteViv:Math.max(1,get('inM2LoteViv')),
+      preNave:get('inPreNave'),preMacro:get('inPreMacro'),preCom:get('inPreCom'),preVivLote:get('inPreVivLote'),
+      puDespalme:get('inPuDespalme'),puTerracerias:get('inPuTerracerias'),puPavimento:get('inPuPavimento'),puGuarniciones:get('inPuGuarniciones'),puRedAgua:get('inPuRedAgua'),puDrenaje:get('inPuDrenaje'),puPluvial:get('inPuPluvial'),puMT:get('inPuMT'),puFibra:get('inPuFibra'),puAlumbrado:get('inPuAlumbrado'),puJardineria:get('inPuJardineria'),puBarda:get('inPuBarda'),
+      puPtar:get('inPuPtar'),puSubestacion:get('inPuSubestacion'),puDerechosAgua:get('inPuDerechosAgua'),puCisterna:get('inPuCisterna'),puCaseta:get('inPuCaseta'),puSenaletica:get('inPuSenaletica'),
+      costoNave:get('inCostoNave'),
+      estudios:get('inEstudios')/100,licencias:get('inLicencias')/100,supervision:get('inSupervision')/100,imprevistos:get('inImprevistos')/100,
+      legalPct:get('inLegalPct')/100,adminPct:get('inAdminPct')/100,comisionPct:get('inComisionPct')/100,mktPct:get('inMktPct')/100,
+      etapas:Math.max(1,Math.round(get('inEtapas'))),mesesUrbEtapa:Math.max(1,Math.round(get('inMesesUrbEtapa'))),inicioVentas:Math.max(1,Math.round(get('inInicioVentas'))),
+      absNaves:Math.max(.01,get('inAbsNaves')),absMacro:Math.max(.01,get('inAbsMacro')),absCom:Math.max(.01,get('inAbsCom')),absViv:Math.max(.01,get('inAbsViv')),
+      engNave:get('inEngNave')/100,mesesEntregaNave:Math.max(1,Math.round(get('inMesesEntregaNave'))),engLote:get('inEngLote')/100,mesesSaldoLote:Math.max(1,Math.round(get('inMesesSaldoLote'))),
+      equity:get('inEquity'),maxDeuda:get('inMaxDeuda'),ltc:get('inLTC')/100,pik:get('inPIK')/100,feeDeuda:get('inFeeDeuda')/100,tirTarget:get('inTirObjetivo')/100,
+      valorTierraM2:get('inValorTierraM2'),aporteTierra:get('inAporteTierra')/100,pctDueno:get('inPctDueno')/100,
+      gateAgua:gateAgua,varPrecios:get('inVarPrecios')/100,varCostos:get('inVarCostos')/100,
+      m2Empleo:Math.max(1,get('inM2Empleo')),aguaM2:get('inAguaM2Const'),wm2:get('inWm2Const'),factorDemanda:get('inFactorDemanda')/100};
+    const fP=1+p.varPrecios,fC=1+p.varCostos;
+    // 1-3) terreno y cuadro de áreas
+    const superficie=p.frente*p.fondo,perimetro=2*(p.frente+p.fondo),sumaCesiones=p.pctVial+p.pctBanq+p.pctVerdes+p.pctEquip+p.pctRet+p.pctDDV,vendiblePct=Math.max(0,1-sumaCesiones),vendible=superficie*vendiblePct,m2Vial=superficie*p.pctVial,m2Banq=superficie*p.pctBanq,m2Verdes=superficie*p.pctVerdes,m2Equip=superficie*p.pctEquip,m2Ret=superficie*p.pctRet,m2DDV=superficie*p.pctDDV,mlVial=m2Vial/p.anchoVial,luminarias=Math.ceil(mlVial/p.sepLum);
+    // 4) mezcla e ingresos
+    const mixTotal=p.mixNaves+p.mixMacro+p.mixCom+p.mixViv,mixValid=Math.abs(mixTotal-1)<.001;
+    const terrNaves=vendible*p.mixNaves,navesConstPosible=terrNaves*p.cosNaves,nNaves=Math.floor(navesConstPosible/p.m2Nave),m2NavesConst=nNaves*p.m2Nave,ingNaves=m2NavesConst*p.preNave*fP;
+    const terrMacro=vendible*p.mixMacro,macroVend=terrMacro*p.efSubdiv,nMacro=Math.floor(macroVend/p.m2Macro),m2MacroVend=nMacro*p.m2Macro,ingMacro=m2MacroVend*p.preMacro*fP;
+    const terrCom=vendible*p.mixCom,comVend=terrCom*p.efSubdiv,nCom=Math.floor(comVend/p.m2LoteCom),m2ComVend=nCom*p.m2LoteCom,ingCom=m2ComVend*p.preCom*fP;
+    const terrViv=vendible*p.mixViv,vivVend=terrViv*p.efSubdiv,nViv=Math.floor(vivVend/p.m2LoteViv),m2VivVend=nViv*p.m2LoteViv,ingViv=m2VivVend*p.preVivLote*fP;
+    const ingresos=ingNaves+ingMacro+ingCom+ingViv;
+    // 5) urbanización
+    const obraFija=(p.puPtar+p.puSubestacion+p.puDerechosAgua+p.puCisterna+p.puCaseta+p.puSenaletica)*fC;
+    // terracerías sobre vialidades + vendible (base del PPP, fila 43 del Modelo); despalme sí sobre todo el terreno
+    const urbVariable=(superficie*p.puDespalme+(m2Vial+vendible)*p.puTerracerias+m2Vial*p.puPavimento+m2Banq*p.puGuarniciones+mlVial*(p.puRedAgua+p.puDrenaje+p.puPluvial+p.puMT+p.puFibra)+luminarias*p.puAlumbrado+m2Verdes*p.puJardineria+perimetro*p.puBarda)*fC;
+    const urbanizacion=obraFija+urbVariable;
+    // 6) construcción de naves
+    const construccion=m2NavesConst*p.costoNave*fC,directo=urbanizacion+construccion;
+    // 7) blandos
+    const blandosDirecto=directo*(p.estudios+p.licencias+p.supervision+p.imprevistos),blandosIngresos=ingresos*(p.legalPct+p.adminPct+p.comisionPct+p.mktPct),blandos=blandosDirecto+blandosIngresos;
+    // 8) resumen económico
+    const tierraPago=superficie*p.valorTierraM2*(1-p.aporteTierra),costoProyecto=directo+blandos+tierraPago,utilidadPre=ingresos-costoProyecto,margenPre=ingresos?utilidadPre/ingresos:0;
+    // ---- calendario y flujo mensual ----
+    const mesesUrb=p.etapas*p.mesesUrbEtapa;
+    const finVentaNaves=p.inicioVentas+(nNaves?nNaves/p.absNaves:0),finNaves=finVentaNaves+p.mesesEntregaNave;
+    const finMacro=p.inicioVentas+(nMacro?nMacro/p.absMacro:0)+p.mesesSaldoLote,finCom=p.inicioVentas+(nCom?nCom/p.absCom:0)+p.mesesSaldoLote,finViv=p.inicioVentas+(nViv?nViv/p.absViv:0)+p.mesesSaldoLote;
+    const mesesNecesarios=Math.ceil(Math.max(mesesUrb,finNaves,finMacro,finCom,finViv))+1,totalMonths=Math.min(240,Math.max(6,mesesNecesarios)),ventasTruncadas=mesesNecesarios>240;
+    const rev=Array(totalMonths).fill(0),cost=Array(totalMonths).fill(0),constSerie=Array(totalMonths).fill(0),urbSerie=Array(totalMonths).fill(0);
+    // tierra al cierre inicial
+    cost[0]+=tierraPago;
+    // urbanización por etapas (cabecera en etapa 1)
+    for(let e=0;e<p.etapas;e++){const ini=e*p.mesesUrbEtapa,gasto=urbVariable/p.etapas+(e===0?obraFija:0);for(let m=0;m<p.mesesUrbEtapa;m++){const mm=ini+m;if(mm<totalMonths)urbSerie[mm]+=gasto/p.mesesUrbEtapa}}
+    // ventas y cobros por producto
+    const ventaSerie=(n,abs,precioU,eng,saldoMeses,esNave)=>{let vendidas=0;for(let m=p.inicioVentas-1;m<totalMonths&&vendidas<n;m++){const u=Math.min(abs,n-vendidas);vendidas+=u;const total=u*precioU;rev[m]+=total*eng;if(esNave){const saldo=total*(1-eng),entrega=m+p.mesesEntregaNave;if(entrega<totalMonths)rev[entrega]+=saldo;else rev[totalMonths-1]+=saldo;const costoU=u*p.m2Nave*p.costoNave*fC;for(let k=0;k<p.mesesEntregaNave;k++){const mm=m+k;if(mm<totalMonths)constSerie[mm]+=costoU/p.mesesEntregaNave;else constSerie[totalMonths-1]+=costoU/p.mesesEntregaNave}}else{const saldo=total*(1-eng);for(let k=1;k<=saldoMeses;k++){const mm=m+k;if(mm<totalMonths)rev[mm]+=saldo/saldoMeses;else rev[totalMonths-1]+=saldo/saldoMeses}}}};
+    const precioNaveU=p.m2Nave*p.preNave*fP,precioMacroU=p.m2Macro*p.preMacro*fP,precioComU=p.m2LoteCom*p.preCom*fP,precioVivU=p.m2LoteViv*p.preVivLote*fP;
+    ventaSerie(nNaves,p.absNaves,precioNaveU,p.engNave,0,true);
+    ventaSerie(nMacro,p.absMacro,precioMacroU,p.engLote,p.mesesSaldoLote,false);
+    ventaSerie(nCom,p.absCom,precioComU,p.engLote,p.mesesSaldoLote,false);
+    ventaSerie(nViv,p.absViv,precioVivU,p.engLote,p.mesesSaldoLote,false);
+    // blandos en el tiempo
+    const directoSerieTotal=urbVariable+obraFija+construccion;
+    const mesesIniciales=Math.min(6,totalMonths);
+    for(let m=0;m<mesesIniciales;m++)cost[m]+=directo*(p.estudios+p.licencias)/mesesIniciales;
+    for(let m=0;m<Math.min(mesesUrb,totalMonths);m++)cost[m]+=directo*p.supervision/Math.min(mesesUrb,totalMonths);
+    for(let m=0;m<totalMonths;m++){
+      const duroMes=urbSerie[m]+constSerie[m];
+      cost[m]+=duroMes+(directoSerieTotal?duroMes/directoSerieTotal*directo*p.imprevistos:0);
+      cost[m]+=ingresos*(p.legalPct+p.adminPct)/totalMonths;
+      cost[m]+=rev[m]*(p.comisionPct+p.mktPct);
+    }
+    // financiamiento (motor PIK, idéntico al vertical)
+    const debtCap=Math.min(p.maxDeuda,costoProyecto*p.ltc);
+    let cash=0,debt=0,equityLeft=p.equity,equityUsed=0,interest=0,cashInterest=0,feeDebt=0,peak=0,peakMonth=0,fundingGap=0,debtDraws=0,debtRepayments=0;const flows=[],devFlows=[];
+    for(let i=0;i<totalMonths;i++){
+      const potentialPik=debt*p.pik/12,pikRoom=Math.max(0,debtCap-debt),capitalizedPik=Math.min(potentialPik,pikRoom),cashPik=potentialPik-capitalizedPik;interest+=potentialPik;cashInterest+=cashPik;debt+=capitalizedPik;cash+=rev[i]-cost[i]-cashPik;
+      let equity=0,fee=0,gap=0;
+      if(cash<0&&equityLeft>0){equity=Math.min(-cash,equityLeft);equityLeft-=equity;equityUsed+=equity;cash+=equity}
+      if(cash<0){const need=-cash,available=Math.max(0,debtCap-debt),draw=Math.min(need,available/(1+p.feeDeuda));fee=draw*p.feeDeuda;feeDebt+=fee;debtDraws+=draw;debt+=draw+fee;cash+=draw;if(cash<0){gap=-cash;fundingGap+=gap;cash=0}}
+      if(cash>0&&debt>0){const repay=Math.min(cash,debt);debt-=repay;debtRepayments+=repay;cash-=repay}
+      if(cash>0&&fundingGap>0){const cure=Math.min(cash,fundingGap);fundingGap-=cure;cash-=cure}
+      if(debt>peak){peak=debt;peakMonth=i+1}
+      flows.push({m:i+1,rev:rev[i],cost:cost[i],equity,pik:potentialPik,fee,debt,caja:cash});devFlows.push(-equity);
+    }
+    const revTotal=rev.reduce((a,b)=>a+b,0),costTotal=cost.reduce((a,b)=>a+b,0),cashSourceTotal=revTotal+equityUsed+debtDraws+fundingGap,cashUsesTotal=costTotal+cashInterest+debtRepayments+cash,cashReconciliation=cashSourceTotal-cashUsesTotal;
+    const utilidadFinal=ingresos-costoProyecto-interest-feeDebt,margenFinal=ingresos?utilidadFinal/ingresos:0;
+    // Reparto FIEL AL PPP: el % del dueño se calcula sobre la utilidad ANTES de costos
+    // financieros (el crédito puente es del developer); con deuda cero ambas bases coinciden.
+    const duenoUtilidad=Math.max(0,utilidadPre)*p.pctDueno,ownerTotal=tierraPago+duenoUtilidad;
+    const distribuible=debt<1&&fundingGap<1?cash:0,devDist=Math.max(0,distribuible-duenoUtilidad);
+    devFlows[devFlows.length-1]+=devDist;const devIrr=irr(devFlows),devMoic=equityUsed?devDist/equityUsed:null;
+    const valorTerrenoM2=superficie?ownerTotal/superficie:0;
+    // indicadores urbanos
+    const m2ConstTotal=m2NavesConst,empleos=Math.round(m2ConstTotal/p.m2Empleo),aguaDia=(m2ConstTotal*p.aguaM2+(m2MacroVend+m2ComVend+m2VivVend)*.3)/1000,cargaKw=(m2ConstTotal*p.wm2+(m2MacroVend+m2ComVend)*10)/1000,demandaKva=cargaKw*p.factorDemanda/0.9;
+    state={p,superficie,perimetro,sumaCesiones,vendiblePct,vendible,m2Vial,m2Banq,m2Verdes,m2Equip,m2Ret,m2DDV,mlVial,luminarias,mixTotal,mixValid,
+      terrNaves,nNaves,m2NavesConst,ingNaves,terrMacro,nMacro,m2MacroVend,ingMacro,terrCom,nCom,m2ComVend,ingCom,terrViv,nViv,m2VivVend,ingViv,ingresos,
+      obraFija,urbVariable,urbanizacion,construccion,directo,blandosDirecto,blandosIngresos,blandos,tierraPago,costoProyecto,utilidadPre,margenPre,
+      mesesUrb,totalMonths,flows,debtCap,peak,peakMonth,fundingGap,interest,cashInterest,feeDebt,debt,cash,equityUsed,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,
+      utilidadFinal,margenFinal,duenoUtilidad,ownerTotal,devDist,devIrr,devMoic,valorTerrenoM2,distribuible,
+      empleos,aguaDia,demandaKva,cargaKw,ventasTruncadas,buildStart:0,buildFinish:mesesUrb};
+    render();guardarDraft();return state}
+
+  /* ================== RENDER ================== */
+  function render(){
+    const r=state;syncPills();
+    txt('hudIngresos',fmtM(r.ingresos));txt('hudCostos',fmtM(r.costoProyecto+r.interest+r.feeDebt));txt('hudDeuda',fmtM(r.peak));txt('hudUtilidad',fmtM(r.utilidadFinal));txt('hudMargen',pct(r.margenFinal*100,1));txt('hudTir',r.devIrr===null?'—':pct(r.devIrr*100,1));
+    txt('hudSuperficie',fmtHa(r.superficie));txt('hudVendible',fmtHa(r.vendible)+' · '+pct(r.vendiblePct*100,0));txt('hudNaves',fmtN(r.nNaves));txt('hudMacro',fmtN(r.nMacro));txt('hudCom',fmtN(r.nCom));txt('hudViv',fmtN(r.nViv));txt('hudVialidades',fmtN(r.mlVial)+' ml');txt('hudEmpleos','~'+fmtN(r.empleos));txt('hudAgua',r.aguaDia.toFixed(1)+' m³');
+    const gInfo=[['⚠ en veda','var(--red)'],['en trámite','var(--orange)'],['resuelta','var(--green)']][r.p.gateAgua];const hg=$('hudGate');hg.textContent=gInfo[0];hg.style.color=gInfo[1];
+    const own=Math.max(0,Math.min(100,(r.ownerTotal)/Math.max(1,r.ownerTotal+r.devDist)*100));$('barDueno').style.width=own+'%';$('barDes').style.width=(100-own)+'%';txt('barDueno','Dueño '+pct(r.p.pctDueno*100,0));txt('barDes','Developer '+pct((1-r.p.pctDueno)*100,0));txt('lblCajaDueno',fmtM(r.ownerTotal));txt('lblCajaDes',fmtM(r.devDist));txt('hudValorTierra',fmtMoney(r.valorTerrenoM2)+'/m²');
+    txt('heroUtil',fmtM(r.utilidadFinal));txt('heroUtilSub','margen '+pct(r.margenFinal*100,1)+' · antes de financiar '+fmtM(r.utilidadPre)+' ('+pct(r.margenPre*100,1)+')');
+    txt('heroDueno',fmtM(r.ownerTotal));txt('heroDuenoSub',fmtMoney(r.valorTerrenoM2)+' por m² de terreno · '+pct(r.p.pctDueno*100,0)+' de la utilidad');
+    const tirEl=$('heroTir');tirEl.textContent=(r.devIrr===null?'—':pct(r.devIrr*100,1))+' · '+fmtM(r.peak);tirEl.className='big serif '+(r.devIrr===null?'':r.devIrr>=r.p.tirTarget?'status-ok':'status-bad');txt('heroTirSub','vs objetivo '+pct(r.p.tirTarget*100,1)+' · MOIC '+(r.devMoic===null?'—':r.devMoic.toFixed(2)+'x')+' · '+r.totalMonths+' meses');
+    const hgate=$('heroGate');hgate.textContent=['⚠ agua: en veda','agua: en trámite','agua: resuelta'][r.p.gateAgua];hgate.className='gate-agua g'+r.p.gateAgua;
+    txt('lblFxF',fmtN(r.p.frente)+' × '+fmtN(r.p.fondo)+' m');txt('lblSupPer',fmtHa(r.superficie)+' · '+fmtN(r.perimetro)+' ml');txt('lblVendible',fmtN(r.vendible)+' m² · '+pct(r.vendiblePct*100,0));txt('lblVialidades',fmtN(r.m2Vial)+' m² · '+fmtN(r.mlVial)+' ml');
+    txt('lblNaves',fmtN(r.nNaves)+' → '+fmtM(r.ingNaves));txt('lblMacro',fmtN(r.nMacro)+' → '+fmtM(r.ingMacro));txt('lblCom',fmtN(r.nCom)+' → '+fmtM(r.ingCom));txt('lblViv',fmtN(r.nViv)+' → '+fmtM(r.ingViv));txt('lblIngresoM2',fmtMoney(r.vendible?r.ingresos/r.vendible:0)+' /m²');
+    txt('lblUrbTotal',fmtM(r.urbanizacion));txt('lblUrbM2',fmtMoney(r.vendible?r.urbanizacion/r.vendible:0));txt('lblLumBarda',fmtN(r.luminarias)+' · '+fmtN(r.perimetro)+' ml');txt('lblObraFija',fmtM(r.obraFija));
+    txt('lblConstNaves',fmtM(r.construccion));txt('lblBlandos',fmtM(r.blandos));txt('lblCostoTotal',fmtM(r.costoProyecto)+' · '+fmtMoney(r.vendible?r.costoProyecto/r.vendible:0)+'/m² vendible');
+    const modoT=r.p.aporteTierra>=.999?'Aporta':r.p.aporteTierra<=.001?'Vende':'Mixto';txt('lblTierraModo',modoT+' · '+pct(r.p.pctDueno*100,0)+' utilidad');txt('lblEtapas',r.p.etapas+' × '+r.p.mesesUrbEtapa+' meses');txt('lblAbsorcion',r.p.absNaves+' naves/mes · '+r.p.absMacro+' macro/mes');txt('lblMesesTotales',r.totalMonths+' meses');
+    txt('lblCondPIK',pct(r.p.pik*100,1)+' anual · '+(r.peak>1?'pico '+fmtM(r.peak)+' mes '+r.peakMonth:'sin deuda dispuesta: los enganches fondean la obra')+' · límite '+fmtM(r.debtCap)+(r.fundingGap>1?' · FALTAN '+fmtM(r.fundingGap):''));
+    txt('lblGate',['EN VEDA · sin resolver','EN TRÁMITE · gestoría CONAGUA','DERECHOS ASIGNADOS ✓'][r.p.gateAgua]);const bg=$('boxGate');if(bg){const c=[['#e0605a66','#e0605a12'],['#d9a45b66','#d9a45b12'],['#8fbf8b66','#8fbf8b12']][r.p.gateAgua];bg.style.borderColor=c[0];bg.style.background=c[1];const v=bg.querySelector('.kpi-val');v.className='kpi-val '+['c-red','c-orange','c-green'][r.p.gateAgua]}
+    txt('lblAguaDia',r.aguaDia.toFixed(1)+' m³/día');txt('lblKva',fmtN(r.demandaKva)+' kVA');txt('lblEmpleos','~'+fmtN(r.empleos));
+    const escAct=Object.entries(ESCENARIOS).find(([k,v])=>v.inVarPrecios===Math.round(r.p.varPrecios*100)&&v.inVarCostos===Math.round(r.p.varCostos*100));
+    txt('lblEscenario',escAct?{p:'PESIMISTA',b:'BASE',o:'OPTIMISTA'}[escAct[0]]:'PERSONALIZADO ('+(r.p.varPrecios>=0?'+':'')+pct(r.p.varPrecios*100,0)+' precios, '+(r.p.varCostos>=0?'+':'')+pct(r.p.varCostos*100,0)+' costos)');
+    document.querySelectorAll('.esc-chip').forEach(ch=>ch.classList.toggle('on',escAct&&ch.dataset.esc===escAct[0]));
+    txt('escNota',escAct&&escAct[0]==='b'?'':'· los números de TODO el tablero están en este escenario');
+    document.querySelectorAll('.gate-mode').forEach(b=>b.classList.toggle('active',Number(b.dataset.gate)===r.p.gateAgua));
+    $('readAreas').innerHTML=`<b>Cuadro de áreas:</b> cesiones ${pct(r.sumaCesiones*100,0)} (vialidades ${fmtN(r.m2Vial)} m² · banquetas ${fmtN(r.m2Banq)} · verdes/donación ${fmtN(r.m2Verdes)} · equipamiento ${fmtN(r.m2Equip)} · retención ${fmtN(r.m2Ret)} · derecho de vía ${fmtN(r.m2DDV)}) → <b>vendible ${fmtN(r.vendible)} m² (${pct(r.vendiblePct*100,1)})</b>. ${fmtN(r.mlVial)} ml de calles → ${fmtN(r.luminarias)} luminarias. La donación real la fija el urbanista.`;
+    $('readMezcla').innerHTML=`<b>Mezcla ${r.mixValid?'válida':'⚠ debe sumar 100%'} (${pct(r.mixTotal*100,0)}):</b> naves ${fmtN(r.terrNaves)} m² de terreno × COS ${pct(r.p.cosNaves*100,1)} = ${fmtN(r.m2NavesConst)} m² construidos (${fmtN(r.nNaves)} naves de ${r.p.m2Nave} m²) · macro ${fmtN(r.m2MacroVend)} m² vendibles (${fmtN(r.nMacro)}) · comercial ${fmtN(r.m2ComVend)} m² (${fmtN(r.nCom)}) · vivienda ${fmtN(r.m2VivVend)} m² (${fmtN(r.nViv)}). Ingreso por m² vendible ${fmtMoney(r.vendible?r.ingresos/r.vendible:0)}.`;
+    $('readUrb').innerHTML=`<b>Urbanización ${fmtM(r.urbanizacion)}:</b> variable ${fmtM(r.urbVariable)} (pavimento ${fmtM(r.m2Vial*r.p.puPavimento)}, redes ${fmtM(r.mlVial*(r.p.puRedAgua+r.p.puDrenaje+r.p.puPluvial+r.p.puMT+r.p.puFibra))}, terracerías+despalme ${fmtM(r.superficie*(r.p.puDespalme+r.p.puTerracerias))}, barda ${fmtM(r.perimetro*r.p.puBarda)}) + obra fija ${fmtM(r.obraFija)} (PTAR, subestación, derechos de agua, cisterna, caseta, señalética). Equivale a ${fmtMoney(r.vendible?r.urbanizacion/r.vendible:0)}/m² vendible.`;
+    $('readCostos').innerHTML=`<b>Costo total ${fmtM(r.costoProyecto)}:</b> urbanización ${fmtM(r.urbanizacion)} + naves ${fmtM(r.construccion)} + blandos ${fmtM(r.blandos)} (${fmtM(r.blandosDirecto)} s/directo + ${fmtM(r.blandosIngresos)} s/ingresos)${r.tierraPago>0?' + tierra '+fmtM(r.tierraPago):''}. Utilidad ANTES de financiar ${fmtM(r.utilidadPre)} (${pct(r.margenPre*100,1)}) — comparable directo con el PPP.`;
+    $('readCapital').innerHTML=`<b>Flujo:</b> ${r.totalMonths} meses · urbanización ${r.p.etapas} etapas × ${r.p.mesesUrbEtapa} m · deuda pico ${fmtM(r.peak)} (mes ${r.peakMonth}) contra límite ${fmtM(r.debtCap)} · intereses+fees ${fmtM(r.interest+r.feeDebt)} · ${r.fundingGap>1?'<b class="status-bad">faltan '+fmtM(r.fundingGap)+' de capital</b>':'fondeo completo'} · deuda al cierre ${fmtM(r.debt)}.<br><b>Reparto:</b> dueño ${fmtM(r.duenoUtilidad)} de utilidad${r.tierraPago>0?' + '+fmtM(r.tierraPago)+' por tierra vendida':''} = <b>${fmtM(r.ownerTotal)}</b> (${fmtMoney(r.valorTerrenoM2)}/m²) · developer ${fmtM(r.devDist)} · TIR ${r.devIrr===null?'—':pct(r.devIrr*100,1)} vs ${pct(r.p.tirTarget*100,1)} objetivo.`;
+    $('readAgua').innerHTML=`<b>Dotaciones del polo:</b> agua ~${r.aguaDia.toFixed(1)} m³/día (industria ligera consume poco — la ventaja del giro bajo veda) · carga ${fmtN(r.cargaKw)} kW → demanda ~${fmtN(r.demandaKva)} kVA (dimensiona la subestación de ${fmtM(r.p.puSubestacion)}) · ~${fmtN(r.empleos)} empleos estimados. La factibilidad real la firman CONAGUA/Agua de Hermosillo y CFE.`;
+    // semáforo
+    const warnings=[];
+    if(r.p.gateAgua===0)warnings.push('GATE: el agua está en veda y sin resolver — gestoría CONAGUA antes de invertir en obra');
+    if(r.p.gateAgua===1)warnings.push('GATE: derechos de agua en trámite — no comprometer obra hasta asignación');
+    if(r.ventasTruncadas)warnings.push('La absorción capturada no alcanza a vender todo el inventario en 240 meses: sube la absorción o baja unidades');
+    if(!r.mixValid)warnings.push('La mezcla de producto debe sumar 100% (va en '+pct(r.mixTotal*100,0)+')');
+    if(r.sumaCesiones>=.7)warnings.push('Las cesiones ('+pct(r.sumaCesiones*100,0)+') dejan muy poco vendible');
+    if(Math.abs(r.revTotal-r.ingresos)>1)warnings.push('Cobros no concilian con ingresos');
+    if(Math.abs(r.costTotal-r.costoProyecto)>1)warnings.push('Costos de caja no concilian con el presupuesto');
+    if(Math.abs(r.cashReconciliation)>1)warnings.push('Fuentes y usos de caja no concilian');
+    if(r.fundingGap>1)warnings.push('Faltan '+fmtM(r.fundingGap)+' de capital para fondear el calendario');
+    if(r.debt>1)warnings.push('La deuda no se repaga al cierre');
+    if(r.utilidadFinal<0)warnings.push('El caso da PÉRDIDA en este escenario: '+fmtM(r.utilidadFinal));
+    if(r.devIrr!==null&&r.devIrr<r.p.tirTarget)warnings.push('TIR developer debajo de su meta: '+pct(r.devIrr*100,1)+' vs '+pct(r.p.tirTarget*100,1));
+    if(!warnings.length)warnings.push('Controles de mezcla, caja, deuda y retorno pasan con los supuestos capturados.');
+    $('checks').innerHTML=warnings.map(w=>`<div class="${w.includes('pasan')?'status-ok':(w.startsWith('GATE')||w.includes('PÉRDIDA'))?'status-bad':'status-warn'}">${w}</div>`).join('');
+    const fc=$('flujoCaption');if(fc)fc.textContent=`Corrida completa: ${r.totalMonths} meses · urbanización 1–${r.mesesUrb} · ventas desde ${r.p.inicioVentas} · desplaza la tabla para verla toda`;
+    const filasF=[];r.flows.forEach((x,i)=>{if(i%12===0)filasF.push(`<tr class="year-row"><td colspan="7">AÑO ${Math.floor(i/12)+1}</td></tr>`);filasF.push(`<tr><td>${x.m}</td><td>${fmtM(x.rev)}</td><td>${fmtM(x.cost)}</td><td>${fmtM(x.equity)}</td><td>${fmtM(x.pik+x.fee)}</td><td>${fmtM(x.debt)}</td><td>${fmtM(x.caja)}</td></tr>`)});
+    filasF.push(`<tr class="tot-row"><td>Σ ${r.totalMonths} meses</td><td>${fmtM(r.revTotal)}</td><td>${fmtM(r.costTotal)}</td><td>${fmtM(r.equityUsed)}</td><td>${fmtM(r.interest+r.feeDebt)}</td><td>${fmtM(r.debt)}</td><td>${fmtM(r.cash)}</td></tr>`);
+    $('flowRows').innerHTML=filasF.join('');
+    renderProforma(r);renderLandDeal(r);dibujaAreas(r);dibujaMezcla(r);dibujaPlan(r);dibujaCurva(r);dibujaLectura(r);renderFormulas();refreshJson();
+  }
+  function renderProforma(r){
+    const row=(l,v,k='')=>`<tr class="${k}"><td>${l}</td><td>${v}</td></tr>`,section=l=>`<tr class="section-row"><td colspan="2">${l}</td></tr>`,cashOk=Math.abs(r.cashReconciliation)<1;
+    $('sourcesUses').innerHTML=[section('USOS'),row('Tierra pagada al cierre',fmtM(r.tierraPago)),row('Urbanización',fmtM(r.urbanizacion)),row('Construcción de naves',fmtM(r.construccion)),row('Blandos e indirectos',fmtM(r.blandos)),row('Costo del proyecto',fmtM(r.costoProyecto),'total-row'),row('Interés PIK + comisiones',fmtM(r.interest+r.feeDebt)),row('Costo económico total',fmtM(r.costoProyecto+r.interest+r.feeDebt),'total-row'),section('FUENTES DE CAJA'),row('Cobros de clientes',fmtM(r.revTotal)),row('Equity developer usado',fmtM(r.equityUsed)),row('Disposiciones de deuda',fmtM(r.debtDraws)),row('Capital adicional pendiente',fmtM(r.fundingGap),r.fundingGap>1?'total-row':''),row('Fuentes de caja',fmtM(r.cashSourceTotal),'total-row'),row('Usos + deuda pagada + caja final',fmtM(r.cashUsesTotal),'total-row'),row(cashOk?'Conciliación de caja':'Diferencia',cashOk?'Correcta':fmtM(r.cashReconciliation),cashOk?'total-row status-ok':'total-row status-bad'),section('EXCLUSIONES A CERRAR'),row('ISR / IVA','No modelados'),row('Derechos de agua, MIA, CUSTF, CFE','Cotización pendiente')].join('');
+    const line=(l,v,k)=>`<div class="covenant-line"><span>${l}</span><b class="${k}">${v}</b></div>`;
+    $('covenantPanel').innerHTML=[line('Gate del agua',['EN VEDA','EN TRÁMITE','RESUELTO'][r.p.gateAgua],['covenant-bad','covenant-warn','covenant-ok'][r.p.gateAgua]),line('Mezcla de producto',pct(r.mixTotal*100,0),r.mixValid?'covenant-ok':'covenant-bad'),line('Deuda pico',`${fmtM(r.peak)} / ${fmtM(r.debtCap)}`,r.fundingGap<1?'covenant-ok':'covenant-bad'),line('Deuda al cierre',fmtM(r.debt),r.debt<1?'covenant-ok':'covenant-bad'),line('Utilidad neta',fmtM(r.utilidadFinal),r.utilidadFinal>0?'covenant-ok':'covenant-bad'),line('TIR developer vs meta',`${r.devIrr===null?'—':pct(r.devIrr*100,1)} / ${pct(r.p.tirTarget*100,1)}`,r.devIrr!==null&&r.devIrr>=r.p.tirTarget?'covenant-ok':'covenant-bad'),line('Plazo total',r.totalMonths+' meses','covenant-warn')].join('')+'<p class="note">Term sheet, avalúo, presupuesto de constructor, MIA/CUSTF, factibilidad CFE y derechos de agua siguen pendientes de validación.</p>';
+  }
+  function renderLandDeal(r){const pctA=r.p.aporteTierra*100,mode=pctA===0?'venta':pctA===100?'aporte':'mixto';const text=mode==='venta'?`<b>Venta de terreno.</b> El proyecto paga <b>${fmtM(r.tierraPago)}</b> al dueño al cierre (a ${fmtMoney(r.p.valorTierraM2)}/m²); el dueño no participa en la utilidad (pon su % en 0).`:mode==='aporte'?`<b>Aportación.</b> El dueño no cobra al cierre; recibe <b>${pct(r.p.pctDueno*100,0)}</b> de la utilidad neta = <b>${fmtM(r.duenoUtilidad)}</b>.`:`<b>Acuerdo mixto.</b> Cobra <b>${fmtM(r.tierraPago)}</b> al cierre por la porción vendida y ${pct(r.p.pctDueno*100,0)} de utilidad por la aportada.`;$('landDealSummary').innerHTML=`${text}<br><b>Resultado total del dueño: ${fmtM(r.ownerTotal)}</b> = ${fmtMoney(r.valorTerrenoM2)} por m² de su terreno (contra ${fmtMoney(r.p.valorTierraM2)}/m² de mercado en bruto).`;document.querySelectorAll('[data-land-mode]').forEach(b=>{b.classList.toggle('active',(mode==='venta'&&b.dataset.landMode==='0')||(mode==='aporte'&&b.dataset.landMode==='100')||(mode==='mixto'&&b.dataset.landMode==='50'));b.onclick=()=>{setControl('inAporteTierra',Number(b.dataset.landMode));if(b.dataset.landMode==='0')setControl('inPctDueno',0);calculate()}})}
+  /* ================== INFOGRAFÍA ================== */
+  function dibujaAreas(r){const bar=$('vizAreas'),ley=$('vizAreasLey');if(!bar)return;const defs=[['vialidades',r.p.pctVial,'#D9A45B'],['banquetas',r.p.pctBanq,'#b98d4e'],['verdes/donación',r.p.pctVerdes,'#8FBF8B'],['equipamiento',r.p.pctEquip,'#a9a4f5'],['retención',r.p.pctRet,'#8ab8ff'],['derecho de vía',r.p.pctDDV,'#E0605A'],['VENDIBLE',r.vendiblePct,'#c9a96e']];bar.innerHTML=defs.map(d=>`<span style="width:${Math.max(0,d[1]*100)}%;background:${d[2]}" title="${d[0]}: ${pct(d[1]*100,0)}">${d[1]>.09?pct(d[1]*100,0):''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} ${pct(d[1]*100,0)}</span>`).join('')}
+  function dibujaMezcla(r){const bar=$('vizMezcla'),ley=$('vizMezclaLey');if(!bar)return;const defs=[['Naves',r.p.mixNaves,'#c9a96e',`${fmtN(r.nNaves)} naves · ${fmtN(r.m2NavesConst)} m²`],['Macro',r.p.mixMacro,'#8ab8ff',`${fmtN(r.nMacro)} lotes · ${fmtN(r.m2MacroVend)} m²`],['Comercial',r.p.mixCom,'#7fd4e8',`${fmtN(r.nCom)} lotes · ${fmtN(r.m2ComVend)} m²`],['Vivienda',r.p.mixViv,'#8FBF8B',`${fmtN(r.nViv)} lotes · ${fmtN(r.m2VivVend)} m²`]].filter(d=>d[1]>0);const tot=Math.max(.0001,defs.reduce((a,d)=>a+d[1],0));bar.innerHTML=defs.map(d=>`<span style="width:${d[1]/tot*100}%;background:${d[2]}" title="${d[0]}: ${d[3]}">${d[1]/tot>.14?d[0]:''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} · ${d[3]}</span>`).join('')}
+  function dibujaPlan(r){
+    const el=$('vizPlan');if(!el)return;const W=330,H=252;
+    const aspect=r.p.fondo/Math.max(1,r.p.frente),lw=Math.min(280,240/Math.max(.4,Math.min(aspect,2.4))),lh=Math.min(190,lw*Math.min(aspect,2.4)*.7+40);
+    const x0=(W-lw)/2,y0=16,yG=y0+lh;
+    let s='';
+    // franjas superiores: verdes+equip+retención (proporcional al % sobre cesiones no viales)
+    const topPct=r.p.pctVerdes+r.p.pctEquip+r.p.pctRet,topH=Math.min(lh*.24,lh*topPct*1.6)||0;
+    const wV=r.p.pctVerdes/(topPct||1)*lw,wE=r.p.pctEquip/(topPct||1)*lw,wR=r.p.pctRet/(topPct||1)*lw;
+    if(topH>3){s+=`<rect x="${x0}" y="${y0}" width="${wR}" height="${topH}" fill="#8ab8ff14" stroke="#8ab8ff" stroke-dasharray="3 2"/><rect x="${x0+wR}" y="${y0}" width="${wV}" height="${topH}" fill="#8fbf8b1c" stroke="#8FBF8B"/><rect x="${x0+wR+wV}" y="${y0}" width="${wE}" height="${topH}" fill="#a9a4f51c" stroke="#a9a4f5"/>`;
+      if(wR>28)s+=`<text x="${x0+wR/2}" y="${y0+topH/2+3}" font-size="7.5" fill="#8ab8ff" text-anchor="middle">retención</text>`;
+      if(wV>34)s+=`<text x="${x0+wR+wV/2}" y="${y0+topH/2+3}" font-size="7.5" fill="#8FBF8B" text-anchor="middle">verdes+donación</text>`;
+      if(wE>26)s+=`<text x="${x0+wR+wV+wE/2}" y="${y0+topH/2+3}" font-size="7.5" fill="#a9a4f5" text-anchor="middle">equip.</text>`}
+    // vialidad principal
+    const vy=y0+topH+2,vh=Math.max(5,lh*r.p.pctVial*.5);
+    s+=`<rect x="${x0}" y="${vy}" width="${lw}" height="${vh}" fill="#0a0a0c" stroke="#8a8780"/><text x="${x0+lw/2}" y="${vy+vh/2+2.5}" font-size="7" fill="#b6b3aa" text-anchor="middle">vialidad ${r.p.anchoVial} m · redes bajo calle · ${fmtN(r.mlVial)} ml</text>`;
+    // manzanas de producto (área restante proporcional a la mezcla)
+    const py=vy+vh+2,ph=Math.max(24,yG-py-14);
+    const prods=[['naves',r.p.mixNaves,'#c9a96e',`${fmtN(r.nNaves)} naves PyME`],['macro',r.p.mixMacro,'#8ab8ff',`${fmtN(r.nMacro)} macro-lotes`],['com',r.p.mixCom,'#7fd4e8',`${fmtN(r.nCom)} comercial`],['viv',r.p.mixViv,'#8FBF8B',`${fmtN(r.nViv)} viv.`]].filter(d=>d[1]>0.001);
+    const totMix=Math.max(.0001,prods.reduce((a,d)=>a+d[1],0));let px=x0;
+    prods.forEach(d=>{const w=d[1]/totMix*lw;s+=`<rect x="${px}" y="${py}" width="${w}" height="${ph}" fill="${d[2]}14" stroke="${d[2]}" stroke-width="1.2"/>`;
+      const cols=Math.max(1,Math.round(w/26)),rows=Math.max(1,Math.round(ph/22));
+      for(let i=1;i<cols;i++)s+=`<line x1="${px+i*w/cols}" y1="${py}" x2="${px+i*w/cols}" y2="${py+ph}" stroke="${d[2]}30"/>`;
+      for(let j=1;j<rows;j++)s+=`<line x1="${px}" y1="${py+j*ph/rows}" x2="${px+w}" y2="${py+j*ph/rows}" stroke="${d[2]}30"/>`;
+      if(w>46)s+=`<text x="${px+w/2}" y="${py+ph/2+3}" font-size="8" font-weight="800" fill="${d[2]}" text-anchor="middle">${d[3]}</text>`;px+=w});
+    // derecho de vía + carretera (frente)
+    s+=`<rect x="${x0}" y="${yG-10}" width="${lw}" height="10" fill="#e0605a1a" stroke="#E0605A66" stroke-dasharray="3 2"/>`;
+    s+=`<line x1="${x0-8}" y1="${yG+8}" x2="${x0+lw+8}" y2="${yG+8}" stroke="#f4f1ea" stroke-width="1.6"/><text x="${x0+lw/2}" y="${yG+20}" font-size="8" fill="#cf7a74" text-anchor="middle">Carr. Hermosillo–Kino · frente ${fmtN(r.p.frente)} m · derecho de vía ${pct(r.p.pctDDV*100,0)}</text>`;
+    s+=`<rect x="${x0}" y="${y0}" width="${lw}" height="${lh}" fill="none" stroke="#f4f1ea" stroke-width="1.4"/>`;
+    s+=`<text x="${x0-6}" y="${(y0+yG)/2}" font-size="7.5" fill="#8a8780" text-anchor="middle" transform="rotate(-90 ${x0-6} ${(y0+yG)/2})">fondo ${fmtN(r.p.fondo)} m</text>`;
+    s+=`<text x="${x0}" y="${H-6}" font-size="8.5" fill="#8a8780">${fmtHa(r.superficie)} · vendible ${fmtHa(r.vendible)} (${pct(r.vendiblePct*100,0)}) · ${r.p.etapas} etapas</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Master plan esquemático">${s}</svg>`;
+  }
+  function dibujaCurva(r){
+    const el=$('vizCurva');if(!el)return;const W=330,H=196,mL=8,mR=8,mT=16,mB=26,n=r.flows.length;
+    const capMax=Math.max(r.debtCap,r.peak,1),X=i=>mL+(W-mL-mR)*(n>1?i/(n-1):0),Y=v=>mT+(H-mT-mB)*(1-v/capMax);
+    const maxRev=Math.max(...r.flows.map(f=>f.rev),1);let s='',dl='';
+    r.flows.forEach((f,i)=>{const h=(f.rev/maxRev)*34;if(h>.5)s+=`<rect x="${X(i)-1.1}" y="${H-mB-h}" width="2.2" height="${h}" fill="#8FBF8B4d"/>`});
+    const yCap=Y(r.debtCap);s+=`<line x1="${mL}" y1="${yCap}" x2="${W-mR}" y2="${yCap}" stroke="#D9A45B" stroke-width="1" stroke-dasharray="4 3"/><text x="${mL+2}" y="${yCap-4}" font-size="8.5" fill="#D9A45B">límite ${fmtM(r.debtCap)}</text>`;
+    r.flows.forEach((f,i)=>{dl+=(i?' L':'M')+X(i).toFixed(1)+' '+Y(f.debt).toFixed(1)});
+    s+=`<path d="${dl} L${X(n-1)} ${H-mB} L${X(0)} ${H-mB} Z" fill="#a9a4f51e"/><path d="${dl}" fill="none" stroke="#a9a4f5" stroke-width="1.8"/>`;
+    if(r.peak>1){const xp=X(r.peakMonth-1),yp=Y(r.peak),der=xp>W*.55;
+      s+=`<circle cx="${xp}" cy="${yp}" r="3.4" fill="#a9a4f5"/><text x="${der?xp-6:xp+6}" y="${Math.max(yp-6,12)}" font-size="9" font-weight="800" fill="#cbc7ff" text-anchor="${der?'end':'start'}">pico ${fmtM(r.peak)} · mes ${r.peakMonth}</text>`}
+    else s+=`<text x="${(W)/2}" y="${mT+26}" font-size="9" font-weight="800" fill="#8FBF8B" text-anchor="middle">sin deuda: los enganches fondean la obra</text>`;
+    for(let e=1;e<=r.p.etapas;e++){const xe=X(Math.min((e-1)*r.p.mesesUrbEtapa,n-1));s+=`<line x1="${xe}" y1="${mT}" x2="${xe}" y2="${H-mB}" stroke="#e0605a33" stroke-width="1"/>`;if(e<=3)s+=`<text x="${xe+2}" y="${H-mB-4}" font-size="7" fill="#cf7a74">E${e}</text>`}
+    s+=`<line x1="${mL}" y1="${H-mB}" x2="${W-mR}" y2="${H-mB}" stroke="#ffffff22" stroke-width="1"/>`;
+    for(let m=12;m<=n;m+=12)s+=`<text x="${X(m-1)}" y="${H-mB+11}" font-size="7.5" fill="#8a8780" text-anchor="middle">${m}</text>`;
+    s+=`<text x="${mL}" y="${H-4}" font-size="8.5" fill="#8a8780">meses · barras verdes = cobros · ${r.debt<1?'deuda liquidada al cierre':'⚠ deuda viva al cierre'}</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva de deuda y cobros">${s}</svg>`;
+  }
+  function dibujaLectura(r){
+    const el=$('heroLectura');if(!el)return;
+    el.innerHTML=`Las ${fmtHa(r.superficie)} dan <b>${fmtHa(r.vendible)} vendibles</b> (${pct(r.vendiblePct*100,0)}) que producen <b>${fmtN(r.nNaves)} naves</b>, ${fmtN(r.nMacro)} macro-lotes y ${fmtN(r.nCom)} lotes comerciales por <b>${fmtM(r.ingresos)}</b>. Utilidad neta <b>${fmtM(r.utilidadFinal)}</b> en ${r.totalMonths} meses; el dueño se lleva <b>${fmtM(r.ownerTotal)}</b> (${fmtMoney(r.valorTerrenoM2)}/m²). ${r.p.gateAgua===2?'El agua está resuelta.':'<b style="color:var(--red)">El caso vive o muere por el agua (veda)</b> — es el paso 1.'}`;
+  }
+  const formulaDefs=[
+    ['Superficie','Frente × Fondo',['inFrente','inFondo'],r=>`${fmtN(r.p.frente)} × ${fmtN(r.p.fondo)} = ${fmtN(r.superficie)} m² (${fmtHa(r.superficie)})`],
+    ['Área vendible','Terreno − cesiones (% del cuadro)',['inPctVialidades','inPctBanquetas','inPctVerdes','inPctEquipamiento','inPctRetencion','inPctDDV'],r=>`${fmtN(r.superficie)} × (1 − ${pct(r.sumaCesiones*100,0)}) = ${fmtN(r.vendible)} m²`],
+    ['Metros de calle','m² de vialidad ÷ ancho',['inPctVialidades','inAnchoVialidad'],r=>`${fmtN(r.m2Vial)} ÷ ${r.p.anchoVial} = ${fmtN(r.mlVial)} ml → ${fmtN(r.luminarias)} luminarias`],
+    ['Naves PyME','Vendible × %naves × COS ÷ m²/nave',['inMixNaves','inCosNaves','inM2Nave','inPreNave'],r=>`${fmtN(r.terrNaves)} × ${pct(r.p.cosNaves*100,1)} = ${fmtN(r.m2NavesConst)} m² = ${fmtN(r.nNaves)} naves → ${fmtM(r.ingNaves)}`],
+    ['Lotes','Vendible × %producto × ef. subdivisión ÷ m²/lote',['inMixMacro','inMixCom','inMixViv','inEfSubdiv'],r=>`macro ${fmtN(r.nMacro)} (${fmtM(r.ingMacro)}) · com ${fmtN(r.nCom)} (${fmtM(r.ingCom)}) · viv ${fmtN(r.nViv)} (${fmtM(r.ingViv)})`],
+    ['Urbanización','Σ cantidad(cuadro) × PU + obra fija',['inPuPavimento','inPuRedAgua','inPuBarda','inPuPtar','inPuDerechosAgua'],r=>`variable ${fmtM(r.urbVariable)} + fija ${fmtM(r.obraFija)} = ${fmtM(r.urbanizacion)} (${fmtMoney(r.vendible?r.urbanizacion/r.vendible:0)}/m² vend.)`],
+    ['Construcción','m² de naves × costo',['inCostoNave'],r=>`${fmtN(r.m2NavesConst)} × ${fmtMoney(r.p.costoNave)} = ${fmtM(r.construccion)}`],
+    ['Blandos','% s/directo + % s/ingresos',['inEstudios','inImprevistos','inComisionPct','inAdminPct'],r=>`${fmtM(r.blandosDirecto)} + ${fmtM(r.blandosIngresos)} = ${fmtM(r.blandos)}`],
+    ['Utilidad y reparto','Ingresos − costos − financieros → % dueño',['inPctDueno','inAporteTierra','inPIK'],r=>`${fmtM(r.ingresos)} − ${fmtM(r.costoProyecto)} − ${fmtM(r.interest+r.feeDebt)} = ${fmtM(r.utilidadFinal)} → dueño ${fmtM(r.ownerTotal)}`],
+    ['Pico de deuda','Déficit tras equity, limitado por LTC',['inEquity','inMaxDeuda','inLTC','inEtapas','inAbsNaves'],r=>`${fmtM(r.peak)} en el mes ${r.peakMonth} contra límite ${fmtM(r.debtCap)}`]
+  ];
+  function labelFor(id){const input=$(id);return input?.closest('.input-group')?.querySelector('label')?.textContent||id}
+  function renderFormulas(){$('formulaList').innerHTML=formulaDefs.map((f,i)=>`<div class="formula-row"><b>${f[0]}</b><code>${f[1]}</code><button class="formula-btn" data-formula="${i}">ver</button></div>`).join('');document.querySelectorAll('[data-formula]').forEach(b=>b.onclick=e=>openFormula(Number(e.currentTarget.dataset.formula)))}
+  function openFormula(i){const f=formulaDefs[i],r=state;$('formulaDetail').innerHTML=`<b>${f[0]}</b><br><code>${f[1]}</code><p>${f[3](r)}</p>${f[2].map(id=>`<button class="chip" data-jump="${id}">${labelFor(id)}</button>`).join('')}`;document.querySelectorAll('.chip[data-jump]').forEach(b=>b.onclick=()=>{const el=$(b.dataset.jump);const card=el?.closest('.card');if(card){card.scrollIntoView({behavior:'smooth',block:'center'});el.focus()}})}
+  function toggleDrawer(card){const drawer=$(card.dataset.card),was=drawer.classList.contains('active');document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'));document.querySelectorAll('.edit-pill').forEach(e=>e.textContent='AJUSTAR');if(!was){drawer.classList.add('active');card.classList.add('open');card.querySelector('.edit-pill').textContent='CERRAR';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),150)}}
+  /* ================== JSON / RESUMEN ================== */
+  function resumenActual(){const r=state||calculate();const num=(v,d=0)=>v===null||v===undefined||!isFinite(v)?'':Number(v.toFixed(d));return{ventas:num(r.ingresos),costo_proyecto:num(r.costoProyecto),utilidad:num(r.utilidadFinal),margen_pct:num(r.margenFinal*100,2),tir_dev_pct:r.devIrr===null?'':num(r.devIrr*100,2),moic_dev:r.devMoic===null?'':num(r.devMoic,2),pico_deuda:num(r.peak),faltante_capital:num(r.fundingGap),resultado_dueno:num(r.ownerTotal),resultado_dev:num(r.devDist),meses_totales:r.totalMonths,pico_mes:r.peakMonth,deuda_cierre:num(r.debt),intereses_mas_fee:num(r.interest+r.feeDebt),superficie_ha:num(r.superficie/10000,2),vendible_m2:num(r.vendible),vendible_pct:num(r.vendiblePct*100,1),naves:r.nNaves,macrolotes_n:r.nMacro,lotes_com_n:r.nCom,lotes_viv_n:r.nViv,ml_vialidades:num(r.mlVial),luminarias:r.luminarias,barda_ml:num(r.perimetro),urbanizacion_total:num(r.urbanizacion),urb_m2_vendible:num(r.vendible?r.urbanizacion/r.vendible:0),construccion_total:num(r.construccion),blandos_total:num(r.blandos),obra_fija_total:num(r.obraFija),ingreso_m2_vendible:num(r.vendible?r.ingresos/r.vendible:0),costo_m2_vendible:num(r.vendible?r.costoProyecto/r.vendible:0),utilidad_pre_fin:num(r.utilidadPre),valor_terreno_m2:num(r.valorTerrenoM2),empleos:r.empleos,agua_m3_dia:num(r.aguaDia,1),demanda_kva:num(r.demandaKva),gate_agua:r.p.gateAgua,var_precios_pct:num(r.p.varPrecios*100,0),var_costos_pct:num(r.p.varCostos*100,0)}}
+  function refreshJson(){if(!$('jsonEditor')||!state)return;$('jsonEditor').value=JSON.stringify({schema:'potenciales-yod/macrolotes/v1',caso:{caso_id:caso.caso_id,nombre_caso:caso.nombre_caso,palabra:caso.palabra},inputs:inputValues(),resumen:resumenActual()},null,2)}
+  function applyJson(){try{const data=JSON.parse($('jsonEditor').value);if(data.schema&&data.schema!=='potenciales-yod/macrolotes/v1')throw Error();const vals=data.inputs||data;let n=0;Object.entries(vals).forEach(([id,v])=>{if((id==='inGateAgua'||$(id))&&Number.isFinite(Number(v))){setControl(id,v);n++}});if(!n)throw Error();calculate();$('checks').innerHTML='<div class="status-ok">JSON aplicado: '+n+' variables.</div>'}catch{$('checks').innerHTML='<div class="status-bad">JSON inválido.</div>'}}
+  function exportJson(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('jsonEditor').value],{type:'application/json'}));a.download=(caso.palabra||'macrolotes')+'-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+  /* ================== CAPA DE NUBE (idéntica al mixto) ================== */
+  let toastTimer=null;
+  function toast(msg,ms=3200){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('on'),ms)}
+  function apiGet(params){const q=new URLSearchParams(Object.assign({k:clave,tipo:NUBE.TIPO},params));return fetch(NUBE.ENDPOINT+'?'+q.toString()).then(r=>r.json())}
+  function apiPost(body){body=Object.assign({k:clave,tipo_desarrollo:NUBE.TIPO},body);return fetch(NUBE.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(r=>r.json())}
+  function nuevoRequestId(){return (crypto.randomUUID?.()||Date.now()+'-'+Math.random())}
+  function guardarDraft(){try{localStorage.setItem(LS.draft,JSON.stringify({inputs:inputValues(),caso}))}catch(e){}}
+  function cargarDraft(){try{const d=JSON.parse(localStorage.getItem(LS.draft)||'null');if(!d)return;if(d.inputs)Object.entries(d.inputs).forEach(([id,v])=>setControl(id,v));if(d.caso)caso=Object.assign(caso,d.caso)}catch(e){}}
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function fechaCorta(ts){const d=new Date(ts);return isNaN(d)?'':d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'2-digit'})}
+  function pintaCaso(){
+    const nombre=caso.nombre_caso||'Caso nuevo';
+    const h=$('heroNombre');h.innerHTML='';h.append(document.createTextNode(nombre));
+    const pill=document.createElement('span');pill.className='estado-pill';pill.id='heroEstado';pill.textContent=caso.estado||'EXPLORACIÓN';h.append(pill);
+    const g=document.createElement('span');g.id='heroGate';g.className='gate-agua g'+gateAgua;g.textContent=['⚠ agua: en veda','agua: en trámite','agua: resuelta'][gateAgua];h.append(g);
+    txt('heroSub',caso.caso_id?`palabra: ${caso.palabra} · v${caso.version||1}${caso.siguiente_paso?' · siguiente: '+caso.siguiente_paso:''}`:'Mueve los supuestos y guarda el caso con una palabra para volver.');
+    txt('casoNombreBar',caso.caso_id?`${nombre} · ${caso.palabra}`:'Caso nuevo (sin guardar)');
+    const dot=$('syncDot');dot.className='sync-dot';dot.textContent=modoLocal?'· sin nube':caso.caso_id?'· guardado en Sheet v'+(caso.version||1):'· sin guardar';
+    $('estadoChips').innerHTML=ESTADOS.map(e=>`<button class="echip${(caso.estado||'EXPLORACIÓN')===e?' on':''}" data-estado="${e}">${e}</button>`).join('');
+    document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>cambiarEstado(b.dataset.estado));
+    $('segSiguiente').value=caso.siguiente_paso||'';
+    $('segLog').textContent=caso.notas_seguimiento||'Sin notas todavía.'+(caso.caso_id?'':' Guarda el caso primero.');
+  }
+  function aplicarCasoRemoto(obj){
+    Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
+    caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',version:Number(obj.version||1)};
+    calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado')
+  }
+  async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
+  async function abrirPorPalabra(palabra){if(!palabra.trim())return;try{const r=await apiGet({recurso:'caso',palabra:palabra.trim()});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'No hay caso con esa palabra':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir')}}
+  async function cargarLista(){const cont=$('listaCasos');cont.innerHTML='<p class="note">Cargando…</p>';try{const r=await apiGet({recurso:'lista'});if(!r.ok){cont.innerHTML='<p class="note">Error: '+r.error+'</p>';if(r.error==='clave')reabrirGate();return}casosCache=r.casos||[];cfgBoard=r.config||cfgBoard;if(!casosCache.length){cont.innerHTML='<p class="note">Aún no hay casos de Macro Lotes. Guarda el primero.</p>';return}cont.innerHTML=casosCache.map(c=>`<div class="caso-item" data-id="${c.caso_id}"><div><div class="ci-n">${esc(c.nombre_caso||c.palabra)}<span class="badge">${esc(c.estado||'—')}</span></div><div class="ci-m">palabra: ${esc(c.palabra)} · v${c.version||1} · ${fechaCorta(c.ts_actualizado)}${c.source==='test'?' · PRUEBA':''}</div></div><div class="ci-kpi">${c.utilidad!==''&&c.utilidad!==undefined?fmtM(Number(c.utilidad)):'—'}<span>utilidad · TIR ${c.tir_dev_pct!==''&&c.tir_dev_pct!==undefined?Number(c.tir_dev_pct).toFixed(1)+'%':'—'}</span></div></div>`).join('');cont.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>abrirPorId(el.dataset.id))}catch(e){cont.innerHTML='<p class="note">Sin conexión. Reintenta.</p>'}}
+  async function guardarCaso(enviarCorreo){
+    if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}
+    const nombre=$('gNombre').value.trim(),palabra=$('gPalabra').value.trim(),correo=$('gCorreo').value.trim(),notas=$('gNotas').value;
+    if(!palabra){toast('Elige una palabra para volver a tu caso');return}
+    if(enviarCorreo&&!correo){toast('Pon un correo para enviarte la palabra');return}
+    const btns=[$('gGuardarSolo'),$('gGuardarEnviar')];btns.forEach(b=>b.disabled=true);
+    const rSt=state||calculate();
+    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.pik+f.fee),Math.round(f.debt),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
+    try{
+      const r=await apiPost(payload);
+      btns.forEach(b=>b.disabled=false);
+      if(!r.ok){
+        if(r.error==='palabra_ocupada')toast('Esa palabra ya es de otro caso: elige otra');
+        else if(r.error==='clave'){toast('La clave del board cambió');reabrirGate()}
+        else toast('No se guardó: '+r.error);
+        return}
+      if(!r.caso_id){$('gWeb').value='';toast('No se guardó: vuelve a intentar');return}
+      caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.correo=correo;caso.nombre_caso=nombre||'Caso sin nombre';caso.notas_caso=notas;caso.version=r.version;
+      pintaCaso();guardarDraft();cerrarOverlays();
+      toast(r.emailed?'Caso guardado · correo con la palabra enviado':'Caso guardado · palabra: '+caso.palabra)
+    }catch(e){btns.forEach(b=>b.disabled=false);encolar(payload);toast('Sin conexión: se guardará al reconectar')}
+  }
+  async function cambiarEstado(nuevo){
+    caso.estado=nuevo;pintaCaso();guardarDraft();
+    if(!caso.caso_id||modoLocal){toast(modoLocal?'Estado local (sin nube)':'Guarda el caso para que el estado viva en el Sheet');return}
+    await postSeguimiento({tipo:'estado',caso_id:caso.caso_id,estado:nuevo,request_id:nuevoRequestId()},'Estado: '+nuevo)
+  }
+  async function postSeguimiento(payload,okMsg){try{const r=await apiPost(payload);if(r.ok){toast(okMsg)}else if(r.error==='clave'){reabrirGate()}else toast('No se registró: '+r.error)}catch(e){encolar(payload);toast('Sin conexión: se registrará al reconectar')}}
+  function encolar(payload){try{let q=JSON.parse(localStorage.getItem(LS.cola)||'[]');
+    if(payload.tipo==='guardar')q=q.filter(x=>!(x.tipo==='guardar'&&((x.caso_id&&x.caso_id===payload.caso_id)||(!x.caso_id&&!payload.caso_id&&x.palabra===payload.palabra))));
+    q.push(payload);localStorage.setItem(LS.cola,JSON.stringify(q));const dot=$('syncDot');dot.className='sync-dot err';dot.textContent='· pendiente de sincronizar'}catch(e){}}
+  let drenando=false;
+  async function drenarCola(){if(drenando||modoLocal)return;let q;try{q=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){q=[]}
+    if(!q.length)return;
+    drenando=true;const resto=[];let claveVieja=false,conflicto=false;
+    try{
+      for(let i=0;i<q.length;i++){const payload=q[i];
+        try{const r=await apiPost(payload);
+          if(r.ok){if(payload.tipo==='guardar'&&!caso.caso_id){caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.version=r.version;pintaCaso()}}
+          else if(r.error==='clave'){resto.push(...q.slice(i));claveVieja=true;break}
+          else if(r.error==='palabra_ocupada'&&payload.tipo==='guardar'){conflicto=true;toast('La palabra "'+payload.palabra+'" quedó ocupada: ese guardado pendiente NO se aplicó.',6000)}
+          else if(r.error!=='no_existe'&&r.error!=='palabra_ocupada'){resto.push(payload)}
+        }catch(e){resto.push(payload)}}
+      let actual;try{actual=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){actual=q}
+      localStorage.setItem(LS.cola,JSON.stringify(resto.concat(actual.slice(q.length))));
+      if(claveVieja)reabrirGate();
+      else if(!resto.length&&!conflicto){toast('Cambios pendientes sincronizados');pintaCaso()}
+    }finally{drenando=false}}
+  function whatsApp(){
+    const r=state||calculate();
+    const linea=[`*${caso.nombre_caso||'PPP Macro Lotes'}* · Potenciales YOD`,`${fmtHa(r.superficie)} · vendible ${fmtHa(r.vendible)} (${pct(r.vendiblePct*100,0)})`,`${fmtN(r.nNaves)} naves · ${fmtN(r.nMacro)} macro-lotes · ${fmtN(r.nCom)} comercial`,`Ingresos ${fmtM(r.ingresos)} · Utilidad ${fmtM(r.utilidadFinal)} (${pct(r.margenFinal*100,1)})`,`Dueño ${fmtM(r.ownerTotal)} (${fmtMoney(r.valorTerrenoM2)}/m²) · TIR dev ${r.devIrr===null?'—':pct(r.devIrr*100,1)}`,`Agua: ${['EN VEDA ⚠','en trámite','resuelta ✓'][r.p.gateAgua]}`,caso.caso_id?`Abrir: ${NUBE.SITE}${NUBE.PAGE}?open=${caso.caso_id}`:''].filter(Boolean).join('\n');
+    const num=String(cfgBoard.whatsapp_num||'').replace(/\D/g,'');
+    window.open('https://wa.me/'+(num?num:'')+'?text='+encodeURIComponent(linea),'_blank')
+  }
+  /* ================== GATE / MODALES ================== */
+  function reabrirGate(){localStorage.removeItem(LS.clave);clave='';$('gate').classList.remove('off');$('gateErr').textContent='La clave cambió o es incorrecta'}
+  async function intentarEntrar(){
+    const v=$('gateClave').value.trim();if(!v){$('gateErr').textContent='Escribe la clave';return}
+    $('gateBtn').disabled=true;$('gateErr').textContent='';
+    const previa=clave;clave=v;
+    try{const r=await apiGet({recurso:'lista'});
+      if(r.ok){localStorage.setItem(LS.clave,clave);modoLocal=false;casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');$('modoLocalBanner').classList.remove('on');pintaCaso();drenarCola();procesarOpen();toast('Bienvenido · PPP Macro Lotes')}
+      else{clave=previa;$('gateErr').textContent=r.error==='clave'?'Clave incorrecta':'Error: '+r.error}
+    }catch(e){clave=previa;$('gateErr').textContent='Sin conexión con el Sheet.'}
+    $('gateBtn').disabled=false
+  }
+  function modoSinConexion(){modoLocal=true;$('gate').classList.add('off');$('modoLocalBanner').classList.add('on');pintaCaso()}
+  function procesarOpen(){const id=new URLSearchParams(location.search).get('open');if(id&&!modoLocal)abrirPorId(id)}
+  function abrirOverlay(id){$(id).classList.add('on')}
+  function cerrarOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on'))}
+  /* ================== ARRANQUE ================== */
+  document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
+  controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();
+  document.querySelectorAll('.gate-mode').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();gateAgua=Number(b.dataset.gate);calculate();pintaCaso()}));
+  document.querySelectorAll('.esc-chip').forEach(ch=>ch.onclick=()=>{const e=ESCENARIOS[ch.dataset.esc];setControl('inVarPrecios',e.inVarPrecios);setControl('inVarCostos',e.inVarCostos);calculate()});
+  $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
+  $('gGuardarSolo').onclick=()=>guardarCaso(false);$('gGuardarEnviar').onclick=()=>guardarCaso(true);$('gCancelar').onclick=cerrarOverlays;
+  $('btnMisCasos').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave');return}abrirOverlay('ovCasos');cargarLista()};
+  $('casosCerrar').onclick=cerrarOverlays;
+  $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
+  $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
+  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));gateAgua=PRELLENADO.inGateAgua;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de La Cercada v4')};
+  $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
+  $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
+  $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
+  $('btnWhats').onclick=whatsApp;
+  $('refreshJson').onclick=refreshJson;$('applyJson').onclick=applyJson;$('exportJson').onclick=exportJson;
+  $('gateBtn').onclick=intentarEntrar;$('gateClave').addEventListener('keydown',e=>{if(e.key==='Enter')intentarEntrar()});
+  $('gateLocal').onclick=modoSinConexion;
+  document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)cerrarOverlays()}));
+  window.addEventListener('online',drenarCola);setInterval(drenarCola,25000);
+  cargarDraft();calculate();pintaCaso();
+  if(modoLocal){$('gate').classList.add('off');$('modoLocalBanner').classList.add('on')}
+  else if(clave){apiGet({recurso:'lista'}).then(r=>{if(r.ok){casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');drenarCola();procesarOpen()}else{reabrirGate()}}).catch(()=>{modoSinConexion();toast('Sin conexión: trabajando en modo local')})}
+})();
+</script>
+</body>
+</html>
