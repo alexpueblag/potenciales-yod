@@ -585,8 +585,9 @@
   }
   async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
   async function abrirPorPalabra(palabra){if(!palabra.trim())return;try{const r=await apiGet({recurso:'caso',palabra:palabra.trim()});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'No hay caso con esa palabra':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir')}}
-  async function cargarLista(){const cont=$('listaCasos');cont.innerHTML='<p class="note">Cargando…</p>';try{const r=await apiGet({recurso:'lista'});if(!r.ok){cont.innerHTML='<p class="note">Error: '+r.error+'</p>';if(r.error==='clave')reabrirGate();return}casosCache=r.casos||[];cfgBoard=r.config||cfgBoard;if(!casosCache.length){cont.innerHTML='<p class="note">Aún no hay casos guardados. Guarda el primero con el botón Guardar.</p>';return}cont.innerHTML=casosCache.map(c=>`<div class="caso-item" data-id="${c.caso_id}"><div><div class="ci-n">${esc(c.nombre_caso||c.palabra)}<span class="badge">${esc(c.estado||'—')}</span></div><div class="ci-m">palabra: ${esc(c.palabra)} · v${c.version||1} · ${String(c.ts_actualizado||'').slice(0,10)}${c.source==='test'?' · PRUEBA':''}</div></div><div class="ci-kpi">${c.utilidad!==''&&c.utilidad!==undefined?fmtM(Number(c.utilidad)):'—'}<span>utilidad · TIR ${c.tir_dev_pct!==''&&c.tir_dev_pct!==undefined?Number(c.tir_dev_pct).toFixed(1)+'%':'—'}</span></div></div>`).join('');cont.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>abrirPorId(el.dataset.id))}catch(e){cont.innerHTML='<p class="note">Sin conexión. Reintenta.</p>'}}
+  async function cargarLista(){const cont=$('listaCasos');cont.innerHTML='<p class="note">Cargando…</p>';try{const r=await apiGet({recurso:'lista'});if(!r.ok){cont.innerHTML='<p class="note">Error: '+r.error+'</p>';if(r.error==='clave')reabrirGate();return}casosCache=r.casos||[];cfgBoard=r.config||cfgBoard;if(!casosCache.length){cont.innerHTML='<p class="note">Aún no hay casos guardados. Guarda el primero con el botón Guardar.</p>';return}cont.innerHTML=casosCache.map(c=>`<div class="caso-item" data-id="${c.caso_id}"><div><div class="ci-n">${esc(c.nombre_caso||c.palabra)}<span class="badge">${esc(c.estado||'—')}</span></div><div class="ci-m">palabra: ${esc(c.palabra)} · v${c.version||1} · ${fechaCorta(c.ts_actualizado)}${c.source==='test'?' · PRUEBA':''}</div></div><div class="ci-kpi">${c.utilidad!==''&&c.utilidad!==undefined?fmtM(Number(c.utilidad)):'—'}<span>utilidad · TIR ${c.tir_dev_pct!==''&&c.tir_dev_pct!==undefined?Number(c.tir_dev_pct).toFixed(1)+'%':'—'}</span></div></div>`).join('');cont.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>abrirPorId(el.dataset.id))}catch(e){cont.innerHTML='<p class="note">Sin conexión. Reintenta.</p>'}}
   function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function fechaCorta(ts){const d=new Date(ts);return isNaN(d)?'':d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'2-digit'})}
   async function guardarCaso(enviarCorreo){
     if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}
     const nombre=$('gNombre').value.trim(),palabra=$('gPalabra').value.trim(),correo=$('gCorreo').value.trim(),notas=$('gNotas').value;
@@ -602,7 +603,8 @@
         else if(r.error==='clave'){toast('La clave del board cambió');reabrirGate()}
         else toast('No se guardó: '+r.error);
         return}
-      caso.caso_id=r.caso_id;caso.palabra=payload.palabra;caso.correo=correo;caso.nombre_caso=nombre||'Caso sin nombre';caso.notas_caso=notas;caso.version=r.version;
+      if(!r.caso_id){$('gWeb').value='';toast('No se guardó: vuelve a intentar');return}
+      caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.correo=correo;caso.nombre_caso=nombre||'Caso sin nombre';caso.notas_caso=notas;caso.version=r.version;
       pintaCaso();guardarDraft();cerrarOverlays();
       toast(r.emailed?'Caso guardado · correo con la palabra enviado':'Caso guardado · palabra: '+caso.palabra)
     }catch(e){btns.forEach(b=>b.disabled=false);encolar(payload);toast('Sin conexión: se guardará al reconectar')}
@@ -613,13 +615,28 @@
     await postSeguimiento({tipo:'estado',caso_id:caso.caso_id,estado:nuevo,request_id:nuevoRequestId()},'Estado: '+nuevo)
   }
   async function postSeguimiento(payload,okMsg){try{const r=await apiPost(payload);if(r.ok){toast(okMsg)}else if(r.error==='clave'){reabrirGate()}else toast('No se registró: '+r.error)}catch(e){encolar(payload);toast('Sin conexión: se registrará al reconectar')}}
-  function encolar(payload){try{const q=JSON.parse(localStorage.getItem(LS.cola)||'[]');q.push(payload);localStorage.setItem(LS.cola,JSON.stringify(q));const dot=$('syncDot');dot.className='sync-dot err';dot.textContent='· pendiente de sincronizar'}catch(e){}}
-  async function drenarCola(){let q;try{q=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){q=[]}
-    if(!q.length||modoLocal)return;
-    const resto=[];
-    for(const payload of q){try{const r=await apiPost(payload);if(!r.ok&&r.error!=='palabra_ocupada'&&r.error!=='no_existe'){if(r.error==='clave'){resto.push(payload);break}resto.push(payload)}else if(r.ok&&payload.tipo==='guardar'&&!caso.caso_id){caso.caso_id=r.caso_id;caso.version=r.version;pintaCaso()}}catch(e){resto.push(payload)}}
-    localStorage.setItem(LS.cola,JSON.stringify(resto));
-    if(!resto.length&&q.length){toast('Cambios pendientes sincronizados');pintaCaso()}}
+  function encolar(payload){try{let q=JSON.parse(localStorage.getItem(LS.cola)||'[]');
+    // Un solo 'guardar' pendiente por caso/palabra: el último trae los inputs más frescos.
+    if(payload.tipo==='guardar')q=q.filter(x=>!(x.tipo==='guardar'&&((x.caso_id&&x.caso_id===payload.caso_id)||(!x.caso_id&&!payload.caso_id&&x.palabra===payload.palabra))));
+    q.push(payload);localStorage.setItem(LS.cola,JSON.stringify(q));const dot=$('syncDot');dot.className='sync-dot err';dot.textContent='· pendiente de sincronizar'}catch(e){}}
+  let drenando=false;
+  async function drenarCola(){if(drenando||modoLocal)return;let q;try{q=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){q=[]}
+    if(!q.length)return;
+    drenando=true;const resto=[];let claveVieja=false,conflicto=false;
+    try{
+      for(let i=0;i<q.length;i++){const payload=q[i];
+        try{const r=await apiPost(payload);
+          if(r.ok){if(payload.tipo==='guardar'&&!caso.caso_id){caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.version=r.version;pintaCaso()}}
+          else if(r.error==='clave'){resto.push(...q.slice(i));claveVieja=true;break}
+          else if(r.error==='palabra_ocupada'&&payload.tipo==='guardar'){conflicto=true;toast('La palabra "'+payload.palabra+'" quedó ocupada: ese guardado pendiente NO se aplicó. Abre el caso y vuelve a guardar.',6000)}
+          else if(r.error!=='no_existe'&&r.error!=='palabra_ocupada'){resto.push(payload)}
+        }catch(e){resto.push(payload)}}
+      // conservar lo que se encoló mientras drenábamos
+      let actual;try{actual=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){actual=q}
+      localStorage.setItem(LS.cola,JSON.stringify(resto.concat(actual.slice(q.length))));
+      if(claveVieja)reabrirGate();
+      else if(!resto.length&&!conflicto){toast('Cambios pendientes sincronizados');pintaCaso()}
+    }finally{drenando=false}}
   function whatsApp(){
     const r=state||calculate();
     const linea=[`*${caso.nombre_caso||'Potencial vertical'}* · Potenciales YOD`,`Terreno ${fmtN(r.p.terrain)} m² · ${r.units} deptos · ${r.totalFloors} pisos · ${r.spaces} cajones`,`Ventas ${fmtM(r.sales)} · Utilidad ${fmtM(r.profit)} (${pct(r.margin*100,1)})`,`TIR dev ${r.devIrr===null?'—':pct(r.devIrr*100,1)} · Pico deuda ${fmtM(r.peak)}`,caso.caso_id?`Abrir: ${NUBE.SITE}?open=${caso.caso_id}`:''].filter(Boolean).join('\n');
