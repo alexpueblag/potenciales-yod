@@ -38,11 +38,11 @@
   .hud-row:last-child{border:0;margin:0;padding:0}
   .hud-item{display:flex;align-items:center;gap:5px;white-space:nowrap}.hud-val{font-size:14px;font-weight:800;letter-spacing:.3px}
   .c-green{color:var(--green)}.c-pink{color:var(--pink)}.c-blue{color:var(--blue)}.c-orange{color:var(--orange)}.c-red{color:var(--red)}.c-purple{color:var(--purple)}.c-gold{color:var(--goldc)}
-  .urban-hud{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:9px 0 7px;padding:8px 0;border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14}
+  .urban-hud{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:9px 0 7px;padding:8px 0;border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14}
   .urban-item{min-width:0;text-align:center}
   .urban-item span{display:block;color:#8a8780;font-size:9px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .urban-item b{display:block;color:#fff;font-size:13px;margin-top:2px;white-space:nowrap}
-  .urban-item:nth-child(1) b{color:var(--purple)}.urban-item:nth-child(2) b{color:var(--teal)}.urban-item:nth-child(3) b{color:var(--goldc)}.urban-item:nth-child(4) b{color:var(--green)}.urban-item:nth-child(5) b{color:var(--orange)}.urban-item:nth-child(6) b{color:var(--green)}
+  .urban-item:nth-child(1) b{color:var(--purple)}.urban-item:nth-child(2) b{color:var(--teal)}.urban-item:nth-child(3) b{color:var(--goldc)}.urban-item:nth-child(4) b{color:var(--goldc)}.urban-item:nth-child(5) b{color:var(--green)}.urban-item:nth-child(6) b{color:var(--orange)}.urban-item:nth-child(7) b{color:var(--green)}
   .split-bar{height:16px;background:#ffffff14;border-radius:8px;overflow:hidden;display:flex;margin-top:7px;box-shadow:inset 0 2px 4px #0006}
   .split{height:100%;display:flex;justify-content:center;align-items:center;color:#0a0a0c;font-size:9px;font-weight:800;transition:width .25s;overflow:hidden}
   /* ===== Hero del caso ===== */
@@ -58,6 +58,21 @@
   .hcard .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .hcard .big{font-size:clamp(22px,4vw,32px);line-height:1.1;margin:4px 0 2px;color:var(--goldc)}
   .hcard .sub2{font-size:10.5px;color:var(--muted);line-height:1.4}
+  .lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14.5px;line-height:1.55;color:#d8d0bd;margin:12px 2px 2px;max-width:64ch}
+  .lectura b{color:var(--goldc);font-style:normal}
+  .hero-viz{display:grid;grid-template-columns:5fr 6fr;gap:10px;margin-top:12px}
+  .viz-card{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 12px 8px;min-width:0}
+  .viz-card .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .viz-svg{margin-top:6px}.viz-svg svg{display:block;width:100%;height:auto}
+  .viz-svg text{font-family:'Manrope',sans-serif}
+  .mixbar-wrap{margin:4px 0 10px}
+  .mixbar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--lineaf)}
+  .mixbar span{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#0a0a0c;white-space:nowrap;overflow:hidden;min-width:0;transition:width .3s}
+  .mixbar-leyenda{display:flex;gap:12px;flex-wrap:wrap;font-size:9.5px;color:var(--muted);margin-top:5px;font-weight:700}
+  .mixbar-leyenda i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+  .gauge{position:relative;height:14px;border-radius:7px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
+  .gauge-be{position:absolute;left:0;top:0;bottom:0;background:#e0605a55;border-right:2px solid var(--red)}
+  .gauge-col{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,#8fbf8b88,#8FBF8B)}
   /* ===== Lentes de foco ===== */
   .lentes{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
   .lentes::-webkit-scrollbar{display:none}
@@ -208,9 +223,10 @@
     .hud-row{font-size:10px;flex-wrap:wrap;row-gap:3px}.hud-val{font-size:12px}
     .brandrow .kick{overflow:hidden;text-overflow:ellipsis;max-width:52vw;letter-spacing:.12em}
     .sticky-header{padding-left:11px;padding-right:11px}.container{padding-left:11px;padding-right:11px}
-    .urban-hud{grid-template-columns:repeat(3,1fr)}
-    .urban-item:nth-child(4),.urban-item:nth-child(5),.urban-item:nth-child(6){margin-top:5px}
+    .urban-hud{grid-template-columns:repeat(4,1fr)}
+    .urban-item:nth-child(5),.urban-item:nth-child(6),.urban-item:nth-child(7){margin-top:5px}
     .hero-grid{grid-template-columns:1fr}
+    .hero-viz{grid-template-columns:1fr}
     .caso-bar{align-items:flex-start}.caso-actions{justify-content:flex-end}
     .land-modes{grid-template-columns:1fr}.waterfall-steps{grid-template-columns:1fr 1fr}
     .factor-tooltip{position:fixed;left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:55vh;overflow:auto}
@@ -233,7 +249,7 @@
   <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · Vertical usos mixtos</span></div>
   <div class="hud-row"><div class="hud-item">Ventas: <span id="hudIngresos" class="hud-val c-green">$0 M</span></div><div class="hud-item">Costos: <span id="hudCostos" class="hud-val c-red">$0 M</span></div><div class="hud-item">Pico PIK: <span id="hudDeuda" class="hud-val c-purple">$0 M</span></div></div>
   <div class="hud-row"><div class="hud-item">Util. antes impuestos: <span id="hudUtilidad" class="hud-val c-gold" style="font-size:18px">$0 M</span></div><div class="hud-item">Margen: <span id="hudMargen" class="hud-val c-gold">0.0%</span></div><div class="hud-item">TIR Dev: <span id="hudTir" class="hud-val c-blue">—</span></div></div>
-  <div class="urban-hud"><div class="urban-item"><span>Depas / piso</span><b id="hudDepasPiso">0</b></div><div class="urban-item"><span>Locales PB</span><b id="hudLocales">0</b></div><div class="urban-item"><span>Pisos totales</span><b id="hudPisos">0</b></div><div class="urban-item"><span>Habitantes est.</span><b id="hudHabitantes">0</b></div><div class="urban-item"><span>Vehículos / caj.</span><b id="hudVehiculos">0</b></div><div class="urban-item"><span>Área verde</span><b id="hudAreaVerde">0 m²</b></div></div>
+  <div class="urban-hud"><div class="urban-item"><span>Depas / piso</span><b id="hudDepasPiso">0</b></div><div class="urban-item"><span>Locales PB</span><b id="hudLocales">0</b></div><div class="urban-item"><span>Pisos totales</span><b id="hudPisos">0</b></div><div class="urban-item"><span>Altura</span><b id="hudAltura">0 m</b></div><div class="urban-item"><span>Habitantes est.</span><b id="hudHabitantes">0</b></div><div class="urban-item"><span>Vehículos / caj.</span><b id="hudVehiculos">0</b></div><div class="urban-item"><span>Área verde</span><b id="hudAreaVerde">0 m²</b></div></div>
   <div class="split-bar"><div id="barDueno" class="split" style="background:var(--blue);width:50%">Dueño</div><div id="barDes" class="split" style="background:var(--orange);width:50%">Desarrollador</div></div>
   <div class="hud-row" style="margin-top:4px;border:0"><div class="hud-item" style="color:var(--blue);font-size:10px">Dueño total: <span id="lblCajaDueno">$0 M</span></div><div class="hud-item" style="color:var(--orange);font-size:10px">Developer total: <span id="lblCajaDes">$0 M</span></div><div class="hud-item" style="color:var(--goldc);font-size:10px">MOIC Dev: <span id="hudMoic">—</span></div></div>
 </div></div>
@@ -249,6 +265,11 @@
       <div class="hcard"><span class="k">Utilidad antes de impuestos</span><div class="big serif" id="heroUtil">$0 M</div><div class="sub2" id="heroUtilSub">margen —</div></div>
       <div class="hcard"><span class="k">TIR Developer</span><div class="big serif" id="heroTir">—</div><div class="sub2" id="heroTirSub">vs objetivo —</div></div>
       <div class="hcard"><span class="k">Pico de deuda</span><div class="big serif" id="heroDeuda">$0 M</div><div class="sub2" id="heroDeudaSub">límite —</div></div>
+    </div>
+    <p class="lectura" id="heroLectura"></p>
+    <div class="hero-viz">
+      <div class="viz-card"><span class="k">Corte del edificio</span><div id="vizCorte" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">Deuda mes a mes · cobros</span><div id="vizCurva" class="viz-svg"></div></div>
     </div>
   </section>
 
@@ -280,7 +301,7 @@
     <div class="notas-log" id="segLog">Sin notas todavía. Guarda el caso primero para dar seguimiento.</div>
   </section>
 
-  <div class="reference-strip"><b>Caso de referencia preliminar · Hermosillo.</b> Los valores iniciales son orden de magnitud, no avalúo ni presupuesto: producto 55 / 78 / 105 m², lista $55,000/m² como meta premium por validar (un comparable vigente anuncia desde 56 m² y $2.22 M) y obra $22k/$16k por m². Antes de decidir, carga avalúo, tres cotizaciones y term sheet. <a href="https://invien.mx/proyectos/santa-monica/" target="_blank" rel="noopener">Comparable</a> · <a href="https://serviciosacs.com/servicios/construccion/" target="_blank" rel="noopener">Referencia de construcción</a></div>
+  <div class="reference-strip"><b>Caso de referencia preliminar · Hermosillo.</b> Los valores iniciales son orden de magnitud, no avalúo ni presupuesto: producto 60 / 90 / 120 m², lista $58,000/m² como meta premium por validar (un comparable vigente anuncia desde 56 m² y $2.22 M) y obra $24k/$17.5k por m². Antes de decidir, carga avalúo, tres cotizaciones y term sheet. <a href="https://invien.mx/proyectos/santa-monica/" target="_blank" rel="noopener">Comparable</a> · <a href="https://serviciosacs.com/servicios/construccion/" target="_blank" rel="noopener">Referencia de construcción</a></div>
 
   <section class="grid-2">
     <article class="card" data-card="dArq"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">🏢</div><div class="card-title">Arquitectura (COS/CUS)</div></div><div class="edit-pill">AJUSTAR</div></div>
@@ -299,6 +320,7 @@
             <div class="input-group"><div class="input-header"><label>m² 2 recámaras</label><div class="val-display" data-input="inM22Rec">78</div></div><input type="range" id="inM22Rec" min="45" max="160" step="1" value="78" data-color="var(--purple)"></div>
             <div class="input-group"><div class="input-header"><label>3 recámaras (%)</label><div class="val-display" data-input="inMix3Rec">20%</div></div><input type="range" id="inMix3Rec" min="0" max="100" step="1" value="20" data-color="var(--purple)" data-format="pct"></div>
             <div class="input-group"><div class="input-header"><label>m² 3 recámaras</label><div class="val-display" data-input="inM23Rec">105</div></div><input type="range" id="inM23Rec" min="60" max="250" step="1" value="105" data-color="var(--purple)"></div>
+            <div class="mixbar-wrap"><div class="mixbar" id="vizMezcla"></div><div class="mixbar-leyenda" id="vizMezclaLey"></div></div>
             <div class="micro-readout" id="readMix">Calculando mezcla de producto…</div></div></details>
         <details class="advanced"><summary>Volumetría, eficiencia comercial y estacionamiento</summary><div class="advanced-content"><div class="subheading">Producto y niveles</div>
           <div class="input-group"><div class="input-header"><label>Eficiencia comercial (%)</label><div class="val-display" data-input="inEfiCom">85%</div></div><input type="range" id="inEfiCom" min="1" max="100" step="1" value="85" data-color="var(--blue)" data-format="pct"></div>
@@ -310,6 +332,7 @@
           <div class="input-group"><div class="input-header"><label>Altura máxima objetivo / normativa (m)</label><div class="val-display" data-input="inAltMax">60 m</div></div><input type="range" id="inAltMax" min="10" max="150" step="1" value="60" data-color="var(--orange)" data-format="meters"></div>
           <div class="subheading">Sótanos y cajones</div>
           <div class="input-group"><div class="input-header"><label>Cobertura sótano (% terreno)</label><div class="val-display" data-input="inCobSotano">100%</div></div><input type="range" id="inCobSotano" min="20" max="100" step="5" value="100" data-color="var(--blue)" data-format="pct"></div>
+          <div class="input-group"><div class="input-header"><label>Altura por sótano (m)</label><div class="val-display" data-input="inAltSotano">3.2 m</div></div><input type="range" id="inAltSotano" min="2.4" max="6" step=".1" value="3.2" data-color="var(--blue)" data-format="meters"></div>
           <div class="input-group"><div class="input-header"><label>Área verde propuesta (% terreno)</label><div class="val-display" data-input="inAreaVerdePct">20%</div></div><input type="range" id="inAreaVerdePct" min="0" max="100" step="1" value="20" data-color="var(--green)" data-format="pct"></div>
           <div class="input-group"><div class="input-header"><label>m² reales por cajón</label><div class="val-display" data-input="inM2Cajon">34</div></div><input type="range" id="inM2Cajon" min="18" max="50" step=".5" value="34" data-color="var(--blue)" data-format="decimal"></div>
           <div class="input-group"><div class="input-header"><label>Comercial: 1 cajón / m²</label><div class="val-display" data-input="inM2ComCajon">40</div></div><input type="range" id="inM2ComCajon" min="10" max="200" step="5" value="40" data-color="var(--blue)"></div>
@@ -317,7 +340,7 @@
       </div></article>
 
     <article class="card" data-card="dVentas"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">💰</div><div class="card-title">Ventas &amp; Ingresos</div></div><div class="edit-pill">AJUSTAR</div></div>
-      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Ticket Lista (Depto)</span><span class="kpi-val c-green" id="lblTicket">$4.99 M</span></div><div class="kpi-box"><span class="kpi-lbl">Precio Preventa/m²</span><span class="kpi-val" id="lblPrePrev">$49.4k</span></div><div class="kpi-box full"><span class="kpi-lbl">Estructura Enganche (Flujo Libre)</span><span class="kpi-val c-gold" id="lblEnganche">30% / 20% / 50%</span></div><div class="kpi-box full"><span class="kpi-lbl">Ritmo de Preventa</span><span class="kpi-val c-green" id="lblRitmoPreventa">0 depas / mes</span></div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Ticket Lista (Depto)</span><span class="kpi-val c-green" id="lblTicket">$4.99 M</span></div><div class="kpi-box"><span class="kpi-lbl">Precio Preventa/m²</span><span class="kpi-val" id="lblPrePrev">$49.4k</span></div><div class="kpi-box full"><span class="kpi-lbl">Estructura Enganche (Flujo Libre)</span><span class="kpi-val c-gold" id="lblEnganche">30% / 20% / 50%</span></div><div class="kpi-box full"><span class="kpi-lbl">Ritmo de Preventa</span><span class="kpi-val c-green" id="lblRitmoPreventa">0 depas / mes</span></div><div class="kpi-box full"><span class="kpi-lbl">Colchón sobre punto de equilibrio</span><div class="gauge" id="vizColchon"><div class="gauge-be" id="gBE"></div><div class="gauge-col" id="gCol"></div></div><span class="kpi-val" id="lblColchon" style="margin-top:5px">—</span></div></div>
       <div class="drawer" id="dVentas"><div class="subheading">Variables originales</div>
         <div class="input-group"><div class="input-header"><label>Precio Lista Viv ($/m²)</label><div class="val-display" data-input="inPreViv">$55,000</div></div><input type="range" id="inPreViv" min="10000" max="150000" step="500" value="55000" data-color="var(--green)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>Descuento Preventa (%)</label><div class="val-display" data-input="inDescPrev">4.0%</div></div><input type="range" id="inDescPrev" min="0" max="50" step=".5" value="4" data-color="var(--green)" data-format="pct1"></div>
@@ -409,7 +432,10 @@
 
   const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
   const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>'$'+((n||0)/1e6).toFixed(1)+' M'; const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const fmtK=n=>'$'+((n||0)/1000).toFixed(1)+'k'; const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%';
-  const DEFAULTS=Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]));
+  // Prellenado oficial del caso de referencia (JSON torre-ruisenor v3 · 2026-07-09)
+  const PRELLENADO={inTerreno:2500,inCOS:70,inCUS:6,inCom:250,inEfiViv:90,inM2Depto:93,inMixLoft:35,inM2Loft:60,inMix2Rec:20,inM22Rec:90,inMix3Rec:45,inM23Rec:120,inEfiCom:85,inDeptosPiso:12,inLocalesPB:5,inHabDepto:3.5,inAltPB:4.5,inAltViv:3.5,inAltMax:60,inCobSotano:100,inAltSotano:3.2,inAreaVerdePct:20,inM2Cajon:35,inM2ComCajon:40,inPreViv:58000,inDescPrev:4,inPreCom:60000,inEng:30,inObra:40,inPreventa:75,inMesesPreventa:18,inMesesEntrega:18,inPrecioCajon:320000,inCostRas:24000,inCostSot:17500,inInd:7,inImp:5,inCierreTierra:3,inLegal:2,inComision:5,inInicioObra:12,inMesesObra:36,inPIK:12,inTierraUSD:500,inTC:18.5,inVel:80,inAporteTierra:100,inEquity:10000000,inMaxDeuda:305000000,inLTC:60,inMinPreventaObra:15,inFeeDeuda:1.5,inPref:20,inResidualDueno:50,inTirObjetivo:25};
+  const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),PRELLENADO);
+  Object.entries(DEFAULTS).forEach(([id,v])=>{const c=$(id);if(c)c.value=v});
   const REF_USO='https://hmodigital.hermosillo.gob.mx/public/categories/14',REF_CONSTRUCCION='https://pmt.hermosillo.gob.mx/uploads/REGLAMENTO%20CONSTRUCCION.pdf';
   const factorHelp={
     inTerreno:{t:'Terreno',k:'Dato verificable',q:'Superficie legal y física del predio.',m:'Mueve COS, CUS, valor de tierra, sótanos y todo el inventario.',d:'Escritura, catastro y levantamiento topográfico.'},
@@ -432,6 +458,7 @@
     inAltViv:{t:'Altura de vivienda',k:'Diseño / norma',q:'Altura piso a piso típica residencial.',m:'Mueve altura final, costo estructural e instalaciones.',d:'Sistema estructural, instalaciones, acabados y norma aplicable.'},
     inAltMax:{t:'Altura máxima',k:'Norma por validar',q:'Límite de altura capturado para el predio.',m:'Activa alerta si la volumetría lo rebasa.',d:'Licencia de uso de suelo, imagen urbana, protección civil y otras restricciones.',r:['Licencia de Uso de Suelo de Hermosillo',REF_USO]},
     inCobSotano:{t:'Cobertura de sótano',k:'Anteproyecto',q:'Porcentaje del terreno que realmente puede ocupar cada sótano.',m:'Mueve niveles de sótano y costo.',d:'Colindancias, rampas, muros, excavación, servidumbres y estructura.'},
+    inAltSotano:{t:'Altura por sótano',k:'Diseño / norma',q:'Altura libre + estructura de cada nivel de sótano.',m:'Mueve el volumen excavado del modelo y el corte del edificio.',d:'Ventilación, instalaciones colgadas, rampas y protección civil.'},
     inAreaVerdePct:{t:'Área verde propuesta',k:'Diseño / norma por validar',q:'Porcentaje del terreno destinado a vegetación o paisaje.',m:'Mueve el indicador ambiental; se limita al área libre disponible.',d:'Programa de paisaje, permeabilidad, mantenimiento y requisito de uso de suelo; no equivale automáticamente a área libre normativa.'},
     inM2Cajon:{t:'m² por cajón',k:'Eficiencia de estacionamiento',q:'Área real por cajón incluyendo circulaciones, rampas y columnas.',m:'Mueve área y número de sótanos.',d:'Modulación, columnas, radios de giro, ventilación y protección civil; no es una cuota normativa fija.'},
     inM2ComCajon:{t:'Cajones para comercio',k:'Norma por validar',q:'m² comerciales que se cubren con un cajón.',m:'Mueve cajones, sótanos y costo.',d:'Giro específico del local y tabla municipal aplicable.',r:['Reglamento de Construcción de Hermosillo, Tabla VIII; verificar giro y versión',REF_CONSTRUCCION]},
@@ -483,10 +510,10 @@
   function constructionCurve(months){const raw=Array.from({length:Math.max(1,months)},(_,i)=>Math.sin(Math.PI*(i+.5)/Math.max(1,months))),total=raw.reduce((a,b)=>a+b,0);return raw.map(v=>v/total)}
   function calculate(){
     clampRelations();
-    const p={terrain:get('inTerreno'),cos:get('inCOS')/100,cus:get('inCUS'),comReq:get('inCom'),efiViv:get('inEfiViv')/100,m2Depto:get('inM2Depto'),mixLoft:get('inMixLoft')/100,m2Loft:get('inM2Loft'),mix2Rec:get('inMix2Rec')/100,m22Rec:get('inM22Rec'),mix3Rec:get('inMix3Rec')/100,m23Rec:get('inM23Rec'),efiCom:get('inEfiCom')/100,deptosPiso:Math.max(1,Math.round(get('inDeptosPiso'))),localesPB:Math.round(get('inLocalesPB')),habDepto:get('inHabDepto'),altPB:get('inAltPB'),altViv:get('inAltViv'),altMax:get('inAltMax'),cobSotano:get('inCobSotano')/100,areaVerdePct:get('inAreaVerdePct')/100,m2Cajon:get('inM2Cajon'),m2ComCajon:get('inM2ComCajon'),preViv:get('inPreViv'),desc:get('inDescPrev')/100,preCom:get('inPreCom'),eng:get('inEng')/100,obra:get('inObra')/100,velPreventa:get('inVel')/100,conversionPreventa:get('inPreventa')/100,preMonths:Math.round(get('inMesesPreventa')),delivery:Math.round(get('inMesesEntrega')),precioCajon:get('inPrecioCajon'),costRas:get('inCostRas'),costSot:get('inCostSot'),ind:get('inInd')/100,imp:get('inImp')/100,cierre:get('inCierreTierra')/100,legal:get('inLegal')/100,comision:get('inComision')/100,buildStartMonth:Math.max(1,Math.round(get('inInicioObra'))),monthsBuild:Math.round(get('inMesesObra')),pik:get('inPIK')/100,landUsd:get('inTierraUSD'),tc:get('inTC'),equity:get('inEquity'),maxDebt:get('inMaxDeuda'),ltc:get('inLTC')/100,minPreventaObra:get('inMinPreventaObra')/100,feeDebt:get('inFeeDeuda')/100,ownerLand:get('inAporteTierra')/100,pref:get('inPref')/100,residualOwner:get('inResidualDueno')/100,tirTarget:get('inTirObjetivo')/100};
+    const p={terrain:get('inTerreno'),cos:get('inCOS')/100,cus:get('inCUS'),comReq:get('inCom'),efiViv:get('inEfiViv')/100,m2Depto:get('inM2Depto'),mixLoft:get('inMixLoft')/100,m2Loft:get('inM2Loft'),mix2Rec:get('inMix2Rec')/100,m22Rec:get('inM22Rec'),mix3Rec:get('inMix3Rec')/100,m23Rec:get('inM23Rec'),efiCom:get('inEfiCom')/100,deptosPiso:Math.max(1,Math.round(get('inDeptosPiso'))),localesPB:Math.round(get('inLocalesPB')),habDepto:get('inHabDepto'),altPB:get('inAltPB'),altViv:get('inAltViv'),altMax:get('inAltMax'),cobSotano:get('inCobSotano')/100,altSotano:get('inAltSotano'),areaVerdePct:get('inAreaVerdePct')/100,m2Cajon:get('inM2Cajon'),m2ComCajon:get('inM2ComCajon'),preViv:get('inPreViv'),desc:get('inDescPrev')/100,preCom:get('inPreCom'),eng:get('inEng')/100,obra:get('inObra')/100,velPreventa:get('inVel')/100,conversionPreventa:get('inPreventa')/100,preMonths:Math.round(get('inMesesPreventa')),delivery:Math.round(get('inMesesEntrega')),precioCajon:get('inPrecioCajon'),costRas:get('inCostRas'),costSot:get('inCostSot'),ind:get('inInd')/100,imp:get('inImp')/100,cierre:get('inCierreTierra')/100,legal:get('inLegal')/100,comision:get('inComision')/100,buildStartMonth:Math.max(1,Math.round(get('inInicioObra'))),monthsBuild:Math.round(get('inMesesObra')),pik:get('inPIK')/100,landUsd:get('inTierraUSD'),tc:get('inTC'),equity:get('inEquity'),maxDebt:get('inMaxDeuda'),ltc:get('inLTC')/100,minPreventaObra:get('inMinPreventaObra')/100,feeDebt:get('inFeeDeuda')/100,ownerLand:get('inAporteTierra')/100,pref:get('inPref')/100,residualOwner:get('inResidualDueno')/100,tirTarget:get('inTirObjetivo')/100};
     const footprint=p.terrain*p.cos,areaLibre=p.terrain-footprint,greenRequested=p.terrain*p.areaVerdePct,greenArea=Math.min(areaLibre,greenRequested),greenExcess=Math.max(0,greenRequested-areaLibre),com=Math.min(p.comReq,footprint),gross=p.terrain*p.cus,resGross=Math.max(0,gross-com),resSell=resGross*p.efiViv,comSell=com*p.efiCom;
     const mixTotal=p.mixLoft+p.mix2Rec+p.mix3Rec,mixValid=Math.abs(mixTotal-1)<.001,mixLoftShare=mixTotal?p.mixLoft/mixTotal:0,mix2Share=mixTotal?p.mix2Rec/mixTotal:0,mix3Share=mixTotal?p.mix3Rec/mixTotal:0,mixWeightedM2=mixTotal?(p.mixLoft*p.m2Loft+p.mix2Rec*p.m22Rec+p.mix3Rec*p.m23Rec)/mixTotal:0,unitM2Effective=mixValid?mixWeightedM2:p.m2Depto,units=Math.floor(resSell/unitM2Effective),mixLoftUnits=Math.round(units*mixLoftShare),mix2Units=Math.round(units*mix2Share),mix3Units=Math.max(0,units-mixLoftUnits-mix2Units),fullLevels=Math.floor(units/p.deptosPiso),lastFloorUnits=units%p.deptosPiso,levels=units?Math.ceil(units/p.deptosPiso):0,totalFloors=levels+(com>0?1:0),habitantes=Math.round(units*p.habDepto),m2PorLocal=p.localesPB?comSell/p.localesPB:0,height=(com>0?p.altPB:0)+levels*p.altViv,floorPlate=p.efiViv?(p.deptosPiso*unitM2Effective)/p.efiViv:0,lastFloorPlate=p.efiViv?(lastFloorUnits*unitM2Effective)/p.efiViv:0,footprintMargin=footprint-floorPlate,unallocatedResSell=Math.max(0,resSell-units*unitM2Effective);
-    const residentialSpaces=mixValid?mixLoftUnits*parkingPerUnit(p.m2Loft)+mix2Units*parkingPerUnit(p.m22Rec)+mix3Units*parkingPerUnit(p.m23Rec):units*parkingPerUnit(p.m2Depto),spaces=Math.ceil(residentialSpaces+(comSell?comSell/p.m2ComCajon:0)),parkingArea=spaces*p.m2Cajon,basementPlate=Math.max(1,p.terrain*p.cobSotano),basements=spaces?Math.ceil(parkingArea/basementPlate):0,basementArea=basements*basementPlate;
+    const residentialSpaces=mixValid?mixLoftUnits*parkingPerUnit(p.m2Loft)+mix2Units*parkingPerUnit(p.m22Rec)+mix3Units*parkingPerUnit(p.m23Rec):units*parkingPerUnit(p.m2Depto),spaces=Math.ceil(residentialSpaces+(comSell?comSell/p.m2ComCajon:0)),parkingArea=spaces*p.m2Cajon,basementPlate=Math.max(1,p.terrain*p.cobSotano),basements=spaces?Math.ceil(parkingArea/basementPlate):0,basementArea=basements*basementPlate,buildingVolume=com*p.altPB+resGross*p.altViv,parkingVolume=basementArea*p.altSotano,totalVolume=buildingVolume+parkingVolume;
     const preventaEfectiva=p.velPreventa*p.conversionPreventa,presaleSellable=resSell*preventaEfectiva,presaleUnits=units*preventaEfectiva,presaleUnitsPerMonth=p.preMonths?presaleUnits/p.preMonths:0,presaleRev=presaleSellable*p.preViv*(1-p.desc),postRev=(resSell-presaleSellable)*p.preViv,comRev=comSell*p.preCom,parkingRev=spaces*p.precioCajon,sales=presaleRev+postRev+comRev+parkingRev;
     const land=p.terrain*p.landUsd*p.tc,landCash=land*(1-p.ownerLand),closing=land*p.cierre,hard=gross*p.costRas+basementArea*p.costSot,indirect=hard*p.ind,cont=hard*p.imp,legal=hard*p.legal,commission=sales*p.comision,projectCost=land+closing+hard+indirect+cont+legal+commission,cashCost=landCash+closing+hard+indirect+cont+legal+commission,debtCap=Math.min(p.maxDebt,projectCost*p.ltc);
     const buildStart=Math.max(0,p.buildStartMonth-1),buildFinish=buildStart+p.monthsBuild,totalMonths=Math.max(p.preMonths+p.delivery,buildFinish+p.delivery),rev=Array(totalMonths).fill(0),cost=Array(totalMonths).fill(0),curve=constructionCurve(p.monthsBuild),predevMonths=Math.max(1,Math.min(p.buildStartMonth,totalMonths));
@@ -505,11 +532,15 @@
     const revTotal=rev.reduce((a,b)=>a+b,0),costTotal=cost.reduce((a,b)=>a+b,0),cashSourceTotal=revTotal+equityUsed+debtDraws+fundingGap,cashUsesTotal=costTotal+cashInterest+debtRepayments+cash,cashReconciliation=cashSourceTotal-cashUsesTotal,distributable=debt<1&&fundingGap<1?cash:0,ownerSaleProceeds=landCash,ownerCapital=land*p.ownerLand,devCapital=equityUsed,capital=ownerCapital+devCapital,ownerPrefTarget=ownerCapital*p.pref*totalMonths/12,devPrefTarget=flows.reduce((sum,x,i)=>sum+x.equity*p.pref*Math.max(0,totalMonths-i-1)/12,0),prefTarget=ownerPrefTarget+devPrefTarget,effectiveOwnerResidual=ownerCapital>0?p.residualOwner:0;
     let pool=distributable,returnCapital=Math.min(pool,capital);pool-=returnCapital;const prefPaid=Math.min(pool,prefTarget);pool-=prefPaid,ownerCapitalReturn=capital?returnCapital*ownerCapital/capital:0,devCapitalReturn=capital?returnCapital*devCapital/capital:0,ownerPrefPaid=prefTarget?prefPaid*ownerPrefTarget/prefTarget:0,devPrefPaid=prefTarget?prefPaid*devPrefTarget/prefTarget:0,ownerResidual=pool*effectiveOwnerResidual,devResidual=pool-ownerResidual,ownerDist=ownerCapitalReturn+ownerPrefPaid+ownerResidual,devDist=devCapitalReturn+devPrefPaid+devResidual,ownerTotalProceeds=ownerSaleProceeds+ownerDist;
     devFlows[devFlows.length-1]+=devDist;const ownerFlows=Array(totalMonths).fill(0);if(ownerCapital>0){ownerFlows[0]=-ownerCapital;ownerFlows[ownerFlows.length-1]+=ownerDist}const devIrr=irr(devFlows),ownerIrr=ownerCapital?irr(ownerFlows):null,ownerMoic=ownerCapital?ownerDist/ownerCapital:null,profit=sales-projectCost-interest-feeDebt,margin=sales?profit/sales:0,marginBeforeFinance=sales?(sales-projectCost)/sales:0,residentialRevenueFactor=preventaEfectiva*(1-p.desc)+(1-preventaEfectiva),breakevenPreViv=resSell&&residentialRevenueFactor?Math.max(0,(projectCost+interest+feeDebt-comRev-parkingRev)/(resSell*residentialRevenueFactor)):0,preventaAtBuild=preventaEfectiva*Math.min(1,Math.max(0,p.buildStartMonth-1)/p.preMonths),preventaMinMonth=preventaEfectiva?Math.ceil(p.minPreventaObra/preventaEfectiva*p.preMonths):Infinity;
-    state={p,footprint,areaLibre,greenRequested,greenArea,greenExcess,com,gross,resGross,resSell,comSell,units,mixTotal,mixValid,mixWeightedM2,unitM2Effective,mixLoftUnits,mix2Units,mix3Units,levels,fullLevels,lastFloorUnits,totalFloors,habitantes,m2PorLocal,height,floorPlate,lastFloorPlate,footprintMargin,unallocatedResSell,residentialSpaces,spaces,parkingArea,basementPlate,basements,basementArea,preventaEfectiva,preventaAtBuild,preventaMinMonth,preventaCovenantPass:preventaAtBuild>=p.minPreventaObra,presaleSellable,presaleUnits,presaleUnitsPerMonth,presaleRev,postRev,comRev,parkingRev,sales,land,landCash,closing,hard,indirect,cont,legal,commission,projectCost,cashCost,debtCap,peakLtc:projectCost?peak/projectCost:0,debtHeadroom:Math.max(0,debtCap-peak),interest,cashInterest,feeDebt,peak,peakMonth,debt,cash,fundingGap,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,distributable,ownerSaleProceeds,ownerCapital,devCapital,equityUsed,ownerPrefTarget,devPrefTarget,prefTarget,effectiveOwnerResidual,ownerCapitalReturn,devCapitalReturn,ownerPrefPaid,devPrefPaid,ownerResidual,devResidual,ownerDist,ownerTotalProceeds,ownerGain:ownerDist-ownerCapital,ownerIrr,ownerMoic,devDist,devGain:devDist-devCapital,devIrr,devMoic:devCapital?devDist/devCapital:null,profit,margin,marginBeforeFinance,breakevenPreViv,flows,totalMonths,buildStart,buildFinish};render();guardarDraft();return state}
+    state={p,footprint,areaLibre,greenRequested,greenArea,greenExcess,com,gross,resGross,resSell,comSell,units,mixTotal,mixValid,mixWeightedM2,unitM2Effective,mixLoftUnits,mix2Units,mix3Units,levels,fullLevels,lastFloorUnits,totalFloors,habitantes,m2PorLocal,height,floorPlate,lastFloorPlate,footprintMargin,unallocatedResSell,residentialSpaces,spaces,parkingArea,basementPlate,basements,basementArea,buildingVolume,parkingVolume,totalVolume,priceCushion:breakevenPreViv?p.preViv/breakevenPreViv-1:null,preventaEfectiva,preventaAtBuild,preventaMinMonth,preventaCovenantPass:preventaAtBuild>=p.minPreventaObra,presaleSellable,presaleUnits,presaleUnitsPerMonth,presaleRev,postRev,comRev,parkingRev,sales,land,landCash,closing,hard,indirect,cont,legal,commission,projectCost,cashCost,debtCap,peakLtc:projectCost?peak/projectCost:0,debtHeadroom:Math.max(0,debtCap-peak),interest,cashInterest,feeDebt,peak,peakMonth,debt,cash,fundingGap,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,distributable,ownerSaleProceeds,ownerCapital,devCapital,equityUsed,ownerPrefTarget,devPrefTarget,prefTarget,effectiveOwnerResidual,ownerCapitalReturn,devCapitalReturn,ownerPrefPaid,devPrefPaid,ownerResidual,devResidual,ownerDist,ownerTotalProceeds,ownerGain:ownerDist-ownerCapital,ownerIrr,ownerMoic,devDist,devGain:devDist-devCapital,devIrr,devMoic:devCapital?devDist/devCapital:null,profit,margin,marginBeforeFinance,breakevenPreViv,flows,totalMonths,buildStart,buildFinish};render();guardarDraft();return state}
   function render(){
     const r=state;syncPills();
     txt('hudIngresos',fmtM(r.sales));txt('hudCostos',fmtM(r.projectCost+r.interest+r.feeDebt));txt('hudDeuda',fmtM(r.peak));txt('hudUtilidad',fmtM(r.profit));txt('hudMargen',pct(r.margin*100,1));txt('hudTir',r.devIrr===null?'—':pct(r.devIrr*100,1));txt('hudMoic',r.devMoic===null?'—':r.devMoic.toFixed(2)+'x');
     txt('hudDepasPiso',r.p.deptosPiso);txt('hudLocales',r.p.localesPB);txt('hudPisos',r.totalFloors);txt('hudHabitantes',fmtN(r.habitantes));txt('hudVehiculos',fmtN(r.spaces));txt('hudAreaVerde',fmtN(r.greenArea)+' m²');
+    const hAlt=$('hudAltura');hAlt.textContent=r.height.toFixed(1)+' / '+r.p.altMax+' m';hAlt.style.color=r.height>r.p.altMax?'var(--red)':'';
+    const cushion=r.priceCushion;txt('lblColchon',cushion===null?'—':(cushion>=0?'+':'')+pct(cushion*100,1)+' vs equilibrio '+fmtK(r.breakevenPreViv)+'/m²');
+    const beFrac=Math.max(0,Math.min(1.2,r.p.preViv?r.breakevenPreViv/r.p.preViv:0));$('gBE').style.width=Math.min(100,beFrac*100)+'%';const gc=$('gCol');if(cushion!==null&&cushion>0){gc.style.left=Math.min(100,beFrac*100)+'%';gc.style.width=(100-Math.min(100,beFrac*100))+'%';gc.style.display='block'}else gc.style.display='none';
+    dibujaCorte(r);dibujaCurva(r);dibujaMezcla(r);dibujaLectura(r);
     const split=Math.max(0,r.ownerGain)+Math.max(0,r.devGain),own=split?Math.max(0,r.ownerGain)/split*100:50;$('barDueno').style.width=own+'%';$('barDes').style.width=(100-own)+'%';txt('barDueno','Dueño · ganancia');txt('barDes','Developer · ganancia');txt('lblCajaDueno',fmtM(r.ownerTotalProceeds));txt('lblCajaDes',fmtM(r.devDist));
     txt('heroUtil',fmtM(r.profit));txt('heroUtilSub','margen '+pct(r.margin*100,1)+' · ventas '+fmtM(r.sales));
     const tirEl=$('heroTir');tirEl.textContent=r.devIrr===null?'—':pct(r.devIrr*100,1);tirEl.className='big serif '+(r.devIrr===null?'':r.devIrr>=r.p.tirTarget?'status-ok':'status-bad');txt('heroTirSub','vs objetivo '+pct(r.p.tirTarget*100,1)+' · MOIC '+(r.devMoic===null?'—':r.devMoic.toFixed(2)+'x'));
@@ -547,13 +578,93 @@
     ['Utilidad neta','Ventas − costo proyecto − interés − fee',['inTierraUSD','inTC','inCierreTierra','inInd','inImp','inLegal','inComision'],r=>`${fmtM(r.sales)} − ${fmtM(r.projectCost)} − ${fmtM(r.interest)} − ${fmtM(r.feeDebt)} = ${fmtM(r.profit)}`],
     ['Reparto','Pago de tierra + capital devuelto → preferente → residual',['inAporteTierra','inPref','inResidualDueno'],r=>`Dueño: pago tierra ${fmtM(r.ownerSaleProceeds)} + waterfall ${fmtM(r.ownerDist)} = ${fmtM(r.ownerTotalProceeds)} · developer ${fmtM(r.devDist)}`]
   ];
+  /* ================== CAPA INFOGRÁFICA ================== */
+  function dibujaCorte(r){
+    const el=$('vizCorte');if(!el)return;const p=r.p;
+    const W=330,H=236,gy=170,cx=118,tw=Math.round(96*Math.max(.45,Math.min(1,r.floorPlate&&r.footprint?r.floorPlate/r.footprint:1)));
+    const sUp=140/Math.max(r.height,p.altMax,1);
+    const basH=r.basements*p.altSotano,sDn=basH?Math.min(sUp,50/basH):sUp;
+    const pbH=(r.com>0?p.altPB:0)*sUp,resH=r.levels*p.altViv*sUp,topY=gy-pbH-resH;
+    const excede=r.height>p.altMax,colTorre=excede?'#E0605A':'#c9a96e';
+    let s='';
+    // línea de altura máxima
+    const yMax=gy-p.altMax*sUp;
+    s+=`<line x1="16" y1="${yMax}" x2="${W-58}" y2="${yMax}" stroke="${excede?'#E0605A':'#8a8780'}" stroke-width="1" stroke-dasharray="4 3"/><text x="${W-54}" y="${yMax+3}" font-size="8.5" fill="${excede?'#E0605A':'#8a8780'}">máx ${p.altMax} m</text>`;
+    // torre: niveles de vivienda
+    if(r.levels>0){
+      s+=`<rect x="${cx-tw/2}" y="${topY}" width="${tw}" height="${resH}" fill="#c9a96e18" stroke="${colTorre}" stroke-width="1.2"/>`;
+      const hNivel=p.altViv*sUp;
+      if(hNivel>=2.4){for(let i=1;i<r.levels&&i<80;i++){const y=topY+i*hNivel;s+=`<line x1="${cx-tw/2}" y1="${y}" x2="${cx+tw/2}" y2="${y}" stroke="#c9a96e33" stroke-width="1"/>`}}
+      if(r.lastFloorUnits>0&&r.floorPlate>0){const wU=tw*Math.max(.15,Math.min(1,r.lastFloorPlate/r.floorPlate));s+=`<rect x="${cx-tw/2}" y="${topY}" width="${tw}" height="${hNivel}" fill="#0a0a0c"/><rect x="${cx-tw/2}" y="${topY}" width="${wU}" height="${hNivel}" fill="#c9a96e2e" stroke="${colTorre}" stroke-width="1.2"/>`}
+    }
+    // PB comercial
+    if(pbH>0)s+=`<rect x="${cx-tw/2-9}" y="${gy-pbH}" width="${tw+18}" height="${pbH}" fill="#7fd4e822" stroke="#7fd4e8" stroke-width="1.2"/>`;
+    // sótanos
+    for(let i=0;i<r.basements&&i<12;i++){const h=p.altSotano*sDn;s+=`<rect x="${cx-tw/2-16}" y="${gy+i*h}" width="${tw+32}" height="${h}" fill="#8ab8ff14" stroke="#8ab8ff88" stroke-width="1" stroke-dasharray="2 2"/>`}
+    // terreno + área verde
+    const gw=214,gxi=16,verdeW=gw*Math.max(0,Math.min(1,p.terrain?r.greenArea/p.terrain:0));
+    s+=`<line x1="${gxi}" y1="${gy}" x2="${gxi+gw}" y2="${gy}" stroke="#f4f1ea" stroke-width="1.6"/>`;
+    if(verdeW>2){const vx=gxi+gw-verdeW;s+=`<rect x="${vx}" y="${gy-3}" width="${verdeW}" height="3" rx="1.5" fill="#8FBF8B"/><circle cx="${vx+verdeW*.5}" cy="${gy-10}" r="5" fill="#8FBF8B55" stroke="#8FBF8B"/><line x1="${vx+verdeW*.5}" y1="${gy-5}" x2="${vx+verdeW*.5}" y2="${gy}" stroke="#8FBF8B" stroke-width="1.4"/>`}
+    // escala humana (1.7 m)
+    const hp=1.7*sUp,px=cx+tw/2+22;
+    s+=`<circle cx="${px}" cy="${gy-hp}" r="${Math.max(1.4,hp*.16)}" fill="#f4f1ea"/><line x1="${px}" y1="${gy-hp+hp*.22}" x2="${px}" y2="${gy}" stroke="#f4f1ea" stroke-width="1.3"/>`;
+    // cota de altura
+    const cxx=W-40;
+    s+=`<line x1="${cxx}" y1="${topY}" x2="${cxx}" y2="${gy}" stroke="#8a8780" stroke-width="1"/><line x1="${cxx-4}" y1="${topY}" x2="${cxx+4}" y2="${topY}" stroke="#8a8780" stroke-width="1"/><line x1="${cxx-4}" y1="${gy}" x2="${cxx+4}" y2="${gy}" stroke="#8a8780" stroke-width="1"/><text x="${cxx+7}" y="${(topY+gy)/2+3}" font-size="9.5" font-weight="700" fill="${excede?'#E0605A':'#e0c590'}">${r.height.toFixed(1)} m</text>`;
+    // etiquetas
+    s+=`<text x="16" y="14" font-size="9" fill="#b6b3aa" font-weight="700">${r.levels} niveles · ${p.deptosPiso} depas/piso</text>`;
+    if(pbH>0)s+=`<text x="16" y="26" font-size="9" fill="#7fd4e8" font-weight="700">PB comercial · ${p.localesPB} locales</text>`;
+    s+=`<text x="16" y="${gy+basH*sDn+16}" font-size="9" fill="#8ab8ff" font-weight="700">${r.basements} sótano${r.basements===1?'':'s'} · ${fmtN(r.spaces)} cajones · ${fmtN(r.parkingVolume)} m³</text>`;
+    s+=`<text x="16" y="${gy+basH*sDn+28}" font-size="9" fill="#8a8780">volumen edificado ${fmtN(r.buildingVolume)} m³ · total ${fmtN(r.totalVolume)} m³</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Corte esquemático del edificio">${s}</svg>`;
+  }
+  function dibujaCurva(r){
+    const el=$('vizCurva');if(!el)return;
+    const W=330,H=196,mL=8,mR=8,mT=16,mB=26,n=r.flows.length;
+    const capMax=Math.max(r.debtCap,r.peak,1),X=i=>mL+(W-mL-mR)*(n>1?i/(n-1):0),Y=v=>mT+(H-mT-mB)*(1-v/capMax);
+    const maxRev=Math.max(...r.flows.map(f=>f.rev),1);
+    let s='',dl='';
+    // barras de cobros (ritmo de caja)
+    r.flows.forEach((f,i)=>{const h=(f.rev/maxRev)*34;if(h>.5)s+=`<rect x="${X(i)-1.1}" y="${H-mB-h}" width="2.2" height="${h}" fill="#8FBF8B4d"/>`});
+    // límite de crédito
+    const yCap=Y(r.debtCap);
+    s+=`<line x1="${mL}" y1="${yCap}" x2="${W-mR}" y2="${yCap}" stroke="#D9A45B" stroke-width="1" stroke-dasharray="4 3"/><text x="${mL+2}" y="${yCap-4}" font-size="8.5" fill="#D9A45B">límite ${fmtM(r.debtCap)}</text>`;
+    // curva de deuda
+    r.flows.forEach((f,i)=>{dl+=(i?' L':'M')+X(i).toFixed(1)+' '+Y(f.debt).toFixed(1)});
+    s+=`<path d="${dl} L${X(n-1)} ${H-mB} L${X(0)} ${H-mB} Z" fill="#a9a4f51e"/><path d="${dl}" fill="none" stroke="#a9a4f5" stroke-width="1.8"/>`;
+    // pico
+    const xp=X(r.peakMonth-1),yp=Y(r.peak);
+    const anchoDer=xp>W*.55;
+    s+=`<circle cx="${xp}" cy="${yp}" r="3.4" fill="#a9a4f5"/><text x="${anchoDer?xp-6:xp+6}" y="${Math.max(yp-6,12)}" font-size="9" font-weight="800" fill="#cbc7ff" text-anchor="${anchoDer?'end':'start'}">pico ${fmtM(r.peak)} · mes ${r.peakMonth}</text>`;
+    // inicio de obra
+    const xo=X(Math.min(r.buildStart,n-1));
+    s+=`<line x1="${xo}" y1="${mT}" x2="${xo}" y2="${H-mB}" stroke="#E0605A55" stroke-width="1"/><text x="${xo+3}" y="${H-mB-4}" font-size="8" fill="#cf7a74">obra</text>`;
+    // eje
+    s+=`<line x1="${mL}" y1="${H-mB}" x2="${W-mR}" y2="${H-mB}" stroke="#ffffff22" stroke-width="1"/>`;
+    for(let m=6;m<=n;m+=6)s+=`<text x="${X(m-1)}" y="${H-mB+11}" font-size="7.5" fill="#8a8780" text-anchor="middle">${m}</text>`;
+    s+=`<text x="${mL}" y="${H-4}" font-size="8.5" fill="#8a8780">meses · barras verdes = cobros del mes · ${r.debt<1?'deuda liquidada al cierre':'⚠ deuda viva al cierre'}</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva de deuda mensual y cobros">${s}</svg>`;
+  }
+  function dibujaMezcla(r){
+    const bar=$('vizMezcla'),ley=$('vizMezclaLey');if(!bar)return;
+    const defs=[['Loft/1R',r.mixLoftUnits,r.p.m2Loft,'#a9a4f5'],['2 Rec',r.mix2Units,r.p.m22Rec,'#8ab8ff'],['3 Rec',r.mix3Units,r.p.m23Rec,'#e0c590']];
+    const tot=Math.max(1,defs.reduce((a,d)=>a+d[1],0));
+    bar.innerHTML=defs.map(d=>`<span style="width:${d[1]/tot*100}%;background:${d[3]}" title="${d[0]}: ${d[1]} unidades de ${d[2]} m²">${d[1]/tot>.12?d[1]:''}</span>`).join('');
+    ley.innerHTML=defs.map(d=>`<span><i style="background:${d[3]}"></i>${d[0]} · ${d[1]} u × ${d[2]} m²</span>`).join('');
+  }
+  function dibujaLectura(r){
+    const el=$('heroLectura');if(!el)return;
+    const col=r.priceCushion===null?'':(r.priceCushion>=0?'+':'')+pct(r.priceCushion*100,1);
+    const tir=r.devIrr===null?'sin salida':pct(r.devIrr*100,1);
+    el.innerHTML=`El terreno da <b>${r.units} departamentos</b> en ${r.levels} niveles (${r.height.toFixed(1)} m) con ${r.basements} sótano${r.basements===1?'':'s'}. El precio lista trae <b>${col||'—'} de colchón</b> sobre el equilibrio, la deuda pica <b>${fmtM(r.peak)}</b> en el mes ${r.peakMonth} y ${r.debt<1?'se liquida al cierre':'<b style="color:var(--red)">no alcanza a liquidarse</b>'}. TIR del developer <b>${tir}</b> contra ${pct(r.p.tirTarget*100,1)} de meta.`;
+  }
   function labelFor(id){const input=$(id);return input?.closest('.input-group')?.querySelector('label')?.textContent||id}
   function renderFormulas(){$('formulaList').innerHTML=formulaDefs.map((f,i)=>`<div class="formula-row"><b>${f[0]}</b><code>${f[1]}</code><button class="formula-btn" data-formula="${i}">ver</button></div>`).join('');document.querySelectorAll('[data-formula]').forEach(b=>b.onclick=e=>openFormula(Number(e.currentTarget.dataset.formula)))}
   function openFormula(i){const f=formulaDefs[i],r=state;$('formulaDetail').innerHTML=`<b>${f[0]}</b><br><code>${f[1]}</code><p>${f[3](r)}</p>${f[2].map(id=>`<button class="chip" data-jump="${id}">${labelFor(id)}</button>`).join('')}`;document.querySelectorAll('.chip[data-jump]').forEach(b=>b.onclick=()=>{const el=$(b.dataset.jump);el.closest('.card').scrollIntoView({behavior:'smooth',block:'center'});el.focus()})}
   function toggleDrawer(card){const drawer=$(card.dataset.card),was=drawer.classList.contains('active');document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'));document.querySelectorAll('.edit-pill').forEach(e=>e.textContent='AJUSTAR');if(!was){drawer.classList.add('active');card.classList.add('open');card.querySelector('.edit-pill').textContent='CERRAR';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),150)}}
 
   /* ================== JSON del supuesto ================== */
-  function resumenActual(){const r=state||calculate();const num=(v,d=0)=>v===null||v===undefined||!isFinite(v)?'':Number(v.toFixed(d));return{ventas:num(r.sales),costo_proyecto:num(r.projectCost),utilidad:num(r.profit),margen_pct:num(r.margin*100,2),tir_dev_pct:r.devIrr===null?'':num(r.devIrr*100,2),moic_dev:r.devMoic===null?'':num(r.devMoic,2),pico_deuda:num(r.peak),faltante_capital:num(r.fundingGap),precio_equilibrio_m2:num(r.breakevenPreViv),tir_dueno_pct:r.ownerIrr===null?'':num(r.ownerIrr*100,2),moic_dueno:r.ownerMoic===null?'':num(r.ownerMoic,2),resultado_dueno:num(r.ownerTotalProceeds),resultado_dev:num(r.devDist),unidades:r.units,pisos:r.totalFloors,cajones:r.spaces}}
+  function resumenActual(){const r=state||calculate();const num=(v,d=0)=>v===null||v===undefined||!isFinite(v)?'':Number(v.toFixed(d));return{ventas:num(r.sales),costo_proyecto:num(r.projectCost),utilidad:num(r.profit),margen_pct:num(r.margin*100,2),tir_dev_pct:r.devIrr===null?'':num(r.devIrr*100,2),moic_dev:r.devMoic===null?'':num(r.devMoic,2),pico_deuda:num(r.peak),faltante_capital:num(r.fundingGap),precio_equilibrio_m2:num(r.breakevenPreViv),tir_dueno_pct:r.ownerIrr===null?'':num(r.ownerIrr*100,2),moic_dueno:r.ownerMoic===null?'':num(r.ownerMoic,2),resultado_dueno:num(r.ownerTotalProceeds),resultado_dev:num(r.devDist),unidades:r.units,pisos:r.totalFloors,cajones:r.spaces,altura_m:num(r.height,1),volumen_m3:num(r.totalVolume),colchon_precio_pct:r.priceCushion===null?'':num(r.priceCushion*100,2)}}
   function refreshJson(){if(!$('jsonEditor')||!state)return;$('jsonEditor').value=JSON.stringify({schema:'potenciales-yod/vertical/v1',caso:{caso_id:caso.caso_id,nombre_caso:caso.nombre_caso,palabra:caso.palabra},inputs:inputValues(),resumen:resumenActual()},null,2)}
   function applyJson(){try{const data=JSON.parse($('jsonEditor').value);if(data.schema&&data.schema!=='potenciales-yod/vertical/v1'&&data.schema!=='torre-ruisenor/board-integrado/v1')throw Error();const vals=data.inputs||data;let n=0;Object.entries(vals).forEach(([id,v])=>{if($(id)&&Number.isFinite(Number(v))){setControl(id,v);n++}});if(!n)throw Error();calculate();$('checks').innerHTML='<div class="status-ok">JSON aplicado: '+n+' variables editadas.</div>'}catch{$('checks').innerHTML='<div class="status-bad">JSON inválido: se conservaron los valores actuales.</div>'}}
   function exportJson(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('jsonEditor').value],{type:'application/json'}));a.download=(caso.palabra||'potencial')+'-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
