@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Mapa de PPPs · Potenciales · YoDesarrollo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root{--bg:#0a0a0c;--card:#131317;--text:#f4f1ea;--muted:#8a8780;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--gold:#c9a96e;--goldc:#e0c590;--red:#E0605A;
+    --c-macrolotes:#c9a96e;--c-vertical:#8ab8ff;--c-unifamiliar:#8FBF8B;--c-residencial:#7fd4e8;--c-patrimonial:#a9a4f5}
+  *{box-sizing:border-box}
+  body{font-family:'Manrope',-apple-system,sans-serif;color:var(--text);margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+  #gate{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+  #gate.off{display:none}
+  .gate-box{width:min(360px,92vw);text-align:center}
+  .gate-box img{height:34px;filter:brightness(0) invert(.92);margin-bottom:22px}
+  .gate-box h1{font-size:30px;margin:0 0 4px}
+  .gate-box p{color:var(--muted);font-size:12px;margin:0 0 22px}
+  .gate-box input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:12px;padding:13px 14px;color:var(--text);font:inherit;font-size:15px;text-align:center;letter-spacing:.06em}
+  .gate-box button{width:100%;margin-top:10px;background:var(--gold);color:#0a0a0c;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .gate-err{color:var(--red);font-size:12px;min-height:18px;margin-top:10px;font-weight:700}
+  header{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:rgba(10,10,12,.94);border-bottom:1px solid #c9a96e59}
+  header img{height:20px;filter:brightness(0) invert(.92)}
+  header .kick{font-size:9px;font-weight:800;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  header a{color:var(--goldc);font-size:11px;font-weight:700;text-decoration:none}
+  #wrap{position:relative;height:calc(100vh - 46px)}
+  #map{position:absolute;inset:0;background:#0a0a0c}
+  .leaflet-container{font:inherit}
+  .leaflet-popup-content-wrapper{background:#16161b;color:var(--text);border:1px solid var(--lineaf);border-radius:14px;box-shadow:0 12px 32px #000a}
+  .leaflet-popup-tip{background:#16161b}
+  .pp-t{font-family:'Instrument Serif',Georgia,serif;font-size:17px;margin:0 0 2px}
+  .pp-badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:9px;padding:2px 8px;color:#0a0a0c;margin-bottom:6px}
+  .pp-l{font-size:10.5px;color:var(--muted);margin:0 0 7px}
+  .pp-d{font-size:11px;color:var(--suave);line-height:1.5;margin:0 0 3px}
+  .pp-d b{color:var(--goldc)}
+  .pp-a{display:inline-block;margin-top:8px;background:var(--gold);color:#0a0a0c!important;font-size:10px;font-weight:800;border-radius:9px;padding:6px 10px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em}
+  .panel{position:absolute;z-index:1100;top:12px;left:12px;background:rgba(19,19,23,.92);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:16px;padding:12px 14px;max-width:270px}
+  .panel h1{font-size:20px;margin:0}
+  .panel .sub{font-size:10.5px;color:var(--muted);margin:2px 0 10px;line-height:1.4}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 10px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px}
+  .chip i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .chip .n{background:#ffffff14;border-radius:8px;padding:0 6px;font-size:9px;color:var(--goldc)}
+  .chip.off{opacity:.32}
+  .pie{position:absolute;z-index:1100;bottom:10px;left:12px;font-size:9.5px;color:var(--muted);background:rgba(10,10,12,.7);border-radius:8px;padding:4px 8px}
+  .pin-emoji{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50% 50% 50% 4px;transform:rotate(0deg);border:2px solid #0a0a0c;box-shadow:0 4px 12px #000b;font-size:14px}
+  @media(max-width:640px){.panel{max-width:calc(100vw - 24px)}}
+</style>
+</head>
+<body>
+<div id="gate"><div class="gate-box">
+  <img src="img/yod-logo.png" alt="YoDesarrollo">
+  <h1 class="serif">Mapa de PPPs</h1>
+  <p>Todos los planes de potencial en el mapa · acceso del equipo</p>
+  <input type="password" id="gateClave" placeholder="Clave del board" autocomplete="current-password">
+  <button id="gateBtn">Entrar</button>
+  <div class="gate-err" id="gateErr"></div>
+</div></div>
+
+<header>
+  <div style="display:flex;align-items:center;gap:10px"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · Mapa de PPPs</span></div>
+  <a href="./">← Planificador</a>
+</header>
+<div id="wrap">
+  <div id="map"></div>
+  <div class="panel">
+    <h1 class="serif">¿Dónde hemos planeado?</h1>
+    <p class="sub">Cada pin es un PPP. Toca uno para su ficha y abre su board o su Sheet. Los pines viven en la hoja <b>MAPA</b> del Sheet maestro.</p>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="pie">pines editables en el Sheet "YOD - POTENCIALES" · hoja MAPA</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(()=>{
+  const ENDPOINT='https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec';
+  const LSK='pyod_clave_v1';
+  const $=id=>document.getElementById(id);
+  const TIPOS={macrolotes:{n:'Macro Lotes',e:'🏭',c:'var(--c-macrolotes)',hex:'#c9a96e'},vertical:{n:'Mixto / Depas',e:'🏢',c:'var(--c-vertical)',hex:'#8ab8ff'},unifamiliar:{n:'Unifamiliar',e:'🏡',c:'var(--c-unifamiliar)',hex:'#8FBF8B'},residencial:{n:'Lotes Residenciales',e:'🏘️',c:'var(--c-residencial)',hex:'#7fd4e8'},patrimonial:{n:'Patrimonial / Rentas',e:'💼',c:'var(--c-patrimonial)',hex:'#a9a4f5'}};
+  let clave=localStorage.getItem(LSK)||'', map=null, capa=null, pines=[], bounds=null, filtros=new Set(Object.keys(TIPOS));
+  window.addEventListener('resize',()=>{if(map)map.invalidateSize()});
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function initMap(){
+    if(map)return;
+    map=L.map('map',{zoomControl:true,attributionControl:true}).setView([25.5,-104],5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+    capa=L.layerGroup().addTo(map);
+    window._pyodMap=map;
+  }
+  function icono(t){const T=TIPOS[t]||TIPOS.macrolotes;return L.divIcon({className:'',html:`<div class="pin-emoji" style="background:${T.hex}">${T.e}</div>`,iconSize:[30,30],iconAnchor:[15,28],popupAnchor:[0,-24]})}
+  function pinta(){
+    capa.clearLayers();const activos=pines.filter(p=>filtros.has(p.tipo));
+    activos.forEach(p=>{
+      const T=TIPOS[p.tipo]||{n:p.tipo,e:'📍',hex:'#c9a96e'};
+      const html=`<div style="min-width:210px"><span class="pp-badge" style="background:${T.hex}">${T.e} ${esc(T.n)}</span><p class="pp-t">${esc(p.nombre)}</p><p class="pp-l">📍 ${esc(p.lugar)}</p><p class="pp-d">${esc(p.dato1)}</p><p class="pp-d"><b>${esc(p.dato2)}</b></p>${p.link?`<a class="pp-a" href="${esc(p.link)}" target="_blank" rel="noopener">Abrir ${/docs.google/.test(p.link)?'Sheet':'board'} →</a>`:''}</div>`;
+      L.marker([p.lat,p.lng],{icon:icono(p.tipo)}).bindPopup(html).addTo(capa);
+    });
+    if(activos.length)bounds=L.latLngBounds(activos.map(p=>[p.lat,p.lng])).pad(0.25);
+    renderChips();ajusta();
+  }
+  // El contenedor puede medir 0×0 al arrancar (pestaña en background): reintenta hasta tener tamaño real.
+  function ajusta(intentos){intentos=intentos===undefined?25:intentos;if(!map)return;
+    setTimeout(()=>{map.invalidateSize();
+      if(map.getSize().x>0){if(bounds)map.fitBounds(bounds)}
+      else if(intentos>0)ajusta(intentos-1)},300)}
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')ajusta(5)});
+  function renderChips(){
+    const counts={};pines.forEach(p=>counts[p.tipo]=(counts[p.tipo]||0)+1);
+    $('chips').innerHTML=Object.entries(TIPOS).filter(([t])=>counts[t]).map(([t,T])=>`<button class="chip${filtros.has(t)?'':' off'}" data-t="${t}"><i style="background:${T.hex}"></i>${T.e} ${T.n}<span class="n">${counts[t]}</span></button>`).join('');
+    document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const t=b.dataset.t;filtros.has(t)?filtros.delete(t):filtros.add(t);pinta()});
+  }
+  async function cargar(k){
+    const r=await fetch(ENDPOINT+'?recurso=mapa&k='+encodeURIComponent(k)).then(x=>x.json());
+    if(!r.ok)throw r.error||'error';
+    pines=r.pines||[];initMap();pinta();
+  }
+  async function entrar(){
+    const v=$('gateClave').value.trim();if(!v){$('gateErr').textContent='Escribe la clave';return}
+    $('gateBtn').disabled=true;$('gateErr').textContent='';
+    try{await cargar(v);clave=v;localStorage.setItem(LSK,v);$('gate').classList.add('off');ajusta()}
+    catch(e){$('gateErr').textContent=e==='clave'?'Clave incorrecta':'Sin conexión con el Sheet'}
+    $('gateBtn').disabled=false;
+  }
+  $('gateBtn').onclick=entrar;$('gateClave').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});
+  if(clave){cargar(clave).then(()=>{$('gate').classList.add('off');ajusta()}).catch(e=>{if(e==='clave'){localStorage.removeItem(LSK);$('gateErr').textContent='La clave cambió'}else $('gateErr').textContent='Sin conexión con el Sheet'})}
+})();
+</script>
+</body>
+</html>
