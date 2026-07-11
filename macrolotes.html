@@ -262,7 +262,9 @@
   .rango i.rp{background:var(--red)}.rango i.rb{background:var(--goldc)}.rango i.ro{background:var(--green)}
   /* ===== Gráficos ===== */
   .grafs{display:grid;gap:14px;margin-bottom:16px}
-  .graf-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .graf-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start}
+  .graf-row3 .viz-card{height:100%}
+  @media(max-width:860px){.graf-row3{grid-template-columns:1fr}}
   .tag-dummy{display:inline-block;background:#a9a4f526;color:#cbc7ff;border-radius:8px;font-size:8px;font-weight:900;padding:2px 7px;letter-spacing:.1em;margin-left:8px;vertical-align:2px}
   .estrategia-row{display:flex;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:wrap}
   .estrategia-row .et{font-size:10px;font-weight:800;color:var(--suave);text-transform:uppercase;min-width:70px}
@@ -313,14 +315,6 @@
 
 <div class="sticky-header"><div class="header-inner">
   <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · PPP Macro Lotes</span></div>
-  <div class="mkpi-row">
-    <div class="mkpi" data-kpi="vendible"><span class="mk-lbl">Eficiencia de suelo</span><b class="mk-val c-green" id="mkVendible">0%</b><span class="mk-sub" id="mkVendibleSub">— vendible</span></div>
-    <div class="mkpi" data-kpi="ingresoM2"><span class="mk-lbl">Ingreso mezclado</span><b class="mk-val c-gold" id="mkIngreso">$0</b><span class="mk-sub">por m² vendible</span></div>
-    <div class="mkpi" data-kpi="costoM2"><span class="mk-lbl">Costo all-in</span><b class="mk-val c-red" id="mkCosto">$0</b><span class="mk-sub" id="mkCostoSub">urb. $0/m²</span></div>
-    <div class="mkpi" data-kpi="spreadM2"><span class="mk-lbl">Spread del metro</span><b class="mk-val" id="mkSpread">$0</b><span class="mk-sub" id="mkSpreadSub">— del ingreso</span><div class="rango" id="rangoSpread" title="Rango P / Base / O"></div></div>
-    <div class="mkpi" data-kpi="duenoM2"><span class="mk-lbl">Dueño por m²</span><b class="mk-val c-blue" id="mkDueno">$0</b><span class="mk-sub" id="mkDuenoSub">vs mercado</span><div class="rango" id="rangoDueno" title="Rango P / Base / O"></div></div>
-    <div class="mkpi" data-kpi="colaMes"><span class="mk-lbl">Cierre del caso</span><b class="mk-val c-orange" id="mkCola">0 m</b><span class="mk-sub" id="mkColaSub">cola: —</span></div>
-  </div>
   <div class="suelo-bar" id="sueloBar" title="El suelo repartiéndose en vivo"></div>
   <div class="urban-hud" style="margin:4px 0 5px;padding:6px 0"><div class="urban-item"><span>Naves</span><b id="hudNaves" class="c-gold">0</b></div><div class="urban-item"><span>Macro</span><b id="hudMacro" class="c-blue">0</b></div><div class="urban-item"><span>Comercial</span><b id="hudCom" style="color:var(--teal)">0</b></div><div class="urban-item"><span>Viviendas</span><b id="hudVivs" class="c-green">0</b></div><div class="urban-item"><span>Habitantes</span><b id="hudHab">—</b></div><div class="urban-item"><span>Empleos</span><b id="hudEmp" class="c-green">0</b></div><div class="urban-item"><span>Empleo:PEA</span><b id="hudRatio">—</b></div><div class="urban-item"><span>Vehículos</span><b id="hudVeh" class="c-orange">0</b></div><div class="urban-item"><span>OMS verde</span><b id="hudOms" class="c-green">—</b></div><div class="urban-item"><span>Agua/día</span><b id="hudAguaDia" class="c-blue">0 m³</b></div></div>
   <div class="hud-row" style="margin-top:5px;border:0;font-size:10px;color:#8a8780"><div class="hud-item">Ventas <span id="hudIngresos" class="hud-val c-green">$0 M</span></div><div class="hud-item">Utilidad <span id="hudUtilidad" class="hud-val c-gold">$0 M</span> · <span id="hudMargen">0%</span></div><div class="hud-item">TIR Dev <span id="hudTir" class="hud-val c-blue">—</span></div><div class="hud-item">Pico deuda <span id="hudDeuda" class="hud-val c-purple">$0 M</span></div><div class="hud-item">Dueño <span id="lblCajaDueno" class="hud-val c-blue">$0 M</span> / Dev <span id="lblCajaDes" class="hud-val c-orange">$0 M</span></div><div class="hud-item">Agua <span id="hudGate" class="hud-val">—</span></div></div>
@@ -339,10 +333,14 @@
       <div class="hcard"><span class="k">Lo que gana el dueño</span><div class="big serif" id="heroDueno">$0 M</div><div class="sub2" id="heroDuenoSub">$/m² de terreno</div></div>
       <div class="hcard"><span class="k">TIR Developer · pico deuda</span><div class="big serif" id="heroTir">—</div><div class="sub2" id="heroTirSub">con el calendario capturado</div></div>
     </div>
-    <div class="esc-chips"><span style="font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;align-self:center">Escenario:</span><button class="esc-chip p" data-esc="p">Pesimista</button><button class="esc-chip on" data-esc="b">Base</button><button class="esc-chip o" data-esc="o">Optimista</button><span class="sync-dot" id="escNota" style="align-self:center"></span></div>
     <p class="lectura" id="heroLectura"></p>
-    <div class="hero-viz" style="grid-template-columns:1fr">
-      <div class="viz-card"><span class="k">Plano proporcional · cada banda a escala real de sus m²</span><div id="vizPlan" class="viz-svg"></div></div>
+  </section>
+
+  <section class="grafs">
+    <div class="graf-row3">
+      <div class="viz-card"><span class="k">Plano proporcional · a escala real</span><div id="vizPlan" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">El embudo del suelo · de ha a pesos</span><div id="vizEmbudo" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
     </div>
   </section>
 
@@ -357,21 +355,6 @@
     </div>
   </div>
 
-  <section class="camino" id="caminoPanel">
-    <div class="subheading">¿Dónde estamos? · lo que falta para el sí <span style="float:right;color:var(--muted);font-weight:700;text-transform:none;letter-spacing:0" id="caminoRes"></span></div>
-    <div class="camino-steps" id="caminoSteps"></div>
-    <div class="camino-barra"><i id="caminoBarra" style="width:0%"></i></div>
-    <p class="note" style="margin:4px 0 0">Toca un paso para avanzarlo: falta → en curso → resuelto. Se guarda en el Sheet con el caso.</p>
-  </section>
-
-  <section class="grafs">
-    <div class="viz-card"><span class="k">El embudo del suelo · de hectáreas a pesos<span class="tag-dummy">VISTA PREVIA</span></span><div id="vizEmbudo" class="viz-svg"></div></div>
-    <div class="graf-row2">
-      <div class="viz-card"><span class="k">El río del dinero · de ingresos a reparto<span class="tag-dummy">VISTA PREVIA</span></span><div id="vizCascada" class="viz-svg"></div></div>
-      <div class="viz-card"><span class="k">La carrera del tiempo · inventario vs deuda<span class="tag-dummy">VISTA PREVIA</span></span><div id="vizCurva" class="viz-svg"></div></div>
-    </div>
-    <div class="viz-card"><span class="k">Tornado · qué mata el proyecto<span class="tag-dummy">VISTA PREVIA</span></span><div id="vizTornado" class="viz-svg"></div></div>
-  </section>
 
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
@@ -458,7 +441,7 @@
         <div class="micro-readout" id="readUrb">Calculando urbanización…</div></div></article>
 
     <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#c9a96e1f;color:var(--gold)">🏗️</div><div class="card-title">Construcción de Naves + Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
-      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Construcción de Naves</span><span class="kpi-val c-red" id="lblConstNaves">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Blandos e Indirectos</span><span class="kpi-val" id="lblBlandos">$0 M</span></div><div class="kpi-box full"><span class="kpi-lbl">Costo Total del Proyecto</span><span class="kpi-val c-red" id="lblCostoTotal">$0 M · $0/m² vendible</span></div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Construcción de Naves</span><span class="kpi-val c-red" id="lblConstNaves">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Blandos e Indirectos</span><span class="kpi-val" id="lblBlandos">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Costo Total del Proyecto</span><span class="kpi-val c-red" id="lblCostoTotal">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Spread del Metro (utilidad/m²)</span><span class="kpi-val c-gold" id="lblSpreadM2">$0 /m²</span></div></div>
       <div class="drawer" id="dCostos"><div class="subheading">Construcción</div>
         <div class="input-group"><div class="input-header"><label>Costo de construcción de nave ($/m²)</label><div class="val-display" data-input="inCostoNave">$7,800</div></div><input type="range" id="inCostoNave" min="4000" max="16000" step="100" value="7800" data-color="var(--red)" data-format="money"></div>
         <div class="subheading">Blandos sobre costo directo</div>
@@ -474,7 +457,7 @@
         <div class="micro-readout" id="readCostos">Calculando costos…</div></div></article>
 
     <article class="card" data-card="dCapital"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)">🌍</div><div class="card-title">Capital, Calendario &amp; Reparto</div></div><div class="edit-pill">AJUSTAR</div></div>
-      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Tratamiento del terreno</span><span class="kpi-val" id="lblTierraModo">Aporta · 25% utilidad</span></div><div class="kpi-box"><span class="kpi-lbl">Etapas de urbanización</span><span class="kpi-val c-orange" id="lblEtapas">3 × 10 meses</span></div><div class="kpi-box"><span class="kpi-lbl">Absorción</span><span class="kpi-val c-green" id="lblAbsorcion">—</span></div><div class="kpi-box"><span class="kpi-lbl">Meses totales del caso</span><span class="kpi-val" id="lblMesesTotales">0</span></div><div class="kpi-box full"><span class="kpi-lbl">Condición de crédito</span><span class="kpi-val" id="lblCondPIK">—</span></div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Tratamiento del terreno</span><span class="kpi-val" id="lblTierraModo">Aporta · 25% utilidad</span></div><div class="kpi-box"><span class="kpi-lbl">Etapas de urbanización</span><span class="kpi-val c-orange" id="lblEtapas">3 × 10 meses</span></div><div class="kpi-box"><span class="kpi-lbl">Absorción</span><span class="kpi-val c-green" id="lblAbsorcion">—</span></div><div class="kpi-box"><span class="kpi-lbl">Meses totales · cola</span><span class="kpi-val" id="lblMesesTotales">0</span></div><div class="kpi-box"><span class="kpi-lbl">Dueño por m² vs mercado</span><span class="kpi-val c-blue" id="lblDuenoM2">$0</span></div><div class="kpi-box full"><span class="kpi-lbl">Condición de crédito</span><span class="kpi-val" id="lblCondPIK">—</span></div></div>
       <div class="drawer" id="dCapital"><div class="partner-guide"><b>El PPP reparte utilidad, no caja:</b> el dueño aporta el terreno y recibe su % de la utilidad del proyecto <b>antes de costos financieros</b> (el crédito puente y sus intereses corren por cuenta del developer, igual que en el PPP presentado). Si el dueño vende (no aporta), el terreno se paga al cierre y su % baja a 0.</div>
         <div class="subheading">1. Tratamiento del terreno</div>
         <div class="land-modes"><button type="button" class="land-mode" data-land-mode="0"><b>Dueño vende</b><span>El proyecto paga la tierra a valor de mercado; el dueño no participa.</span></button><button type="button" class="land-mode active" data-land-mode="100"><b>Dueño aporta</b><span>La tierra entra al proyecto; el dueño recibe % de la utilidad.</span></button><button type="button" class="land-mode" data-land-mode="50"><b>Acuerdo mixto</b><span>Parte pagada al cierre, parte aportada con % proporcional.</span></button></div>
@@ -504,8 +487,8 @@
         <div class="input-group"><div class="input-header"><label>TIR objetivo developer (%)</label><div class="val-display" data-input="inTirObjetivo">25.0%</div></div><input type="range" id="inTirObjetivo" min="0" max="100" step=".5" value="25" data-color="var(--orange)" data-format="pct1"></div>
         <div class="micro-readout" id="readCapital">Calculando flujo…</div></div></article>
 
-    <article class="card" data-card="dAgua"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)">🚰</div><div class="card-title">Agua, Energía &amp; Escenarios</div></div><div class="edit-pill">AJUSTAR</div></div>
-      <div class="kpi-grid"><div class="kpi-box full" id="boxGate" style="border-color:#e0605a66;background:#e0605a12"><span class="kpi-lbl" style="color:#f4b8b3">Gate del agua — bloqueante</span><span class="kpi-val c-red" id="lblGate">EN VEDA · sin resolver</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda de agua</span><span class="kpi-val c-blue" id="lblAguaDia">0 m³/día</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda eléctrica</span><span class="kpi-val c-orange" id="lblKva">0 kVA</span></div><div class="kpi-box"><span class="kpi-lbl">Empleos estimados</span><span class="kpi-val c-green" id="lblEmpleos">0</span></div><div class="kpi-box"><span class="kpi-lbl">Escenario activo</span><span class="kpi-val c-gold" id="lblEscenario">BASE</span></div></div>
+    <article class="card" data-card="dAgua"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)">🚰</div><div class="card-title">Agua, Energía &amp; Polo</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box full" id="boxGate" style="border-color:#e0605a66;background:#e0605a12"><span class="kpi-lbl" style="color:#f4b8b3">Gate del agua — bloqueante</span><span class="kpi-val c-red" id="lblGate">EN VEDA · sin resolver</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda de agua</span><span class="kpi-val c-blue" id="lblAguaDia">0 m³/día</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda eléctrica</span><span class="kpi-val c-orange" id="lblKva">0 kVA</span></div><div class="kpi-box"><span class="kpi-lbl">Empleos estimados</span><span class="kpi-val c-green" id="lblEmpleos">0</span></div><div class="kpi-box"><span class="kpi-lbl">Eficiencia de suelo</span><span class="kpi-val c-green" id="lblEficSuelo">—</span></div></div>
       <div class="drawer" id="dAgua"><div class="subheading">Gate del agua (veda Costa de Hermosillo)</div>
         <div class="land-modes"><button type="button" class="gate-mode land-mode active" data-gate="0"><b>⚠ En veda · sin resolver</b><span>Pozo nuevo es ilegal. El caso queda en rojo.</span></button><button type="button" class="gate-mode land-mode" data-gate="1"><b>En trámite</b><span>Gestoría CONAGUA / derechos en proceso.</span></button><button type="button" class="gate-mode land-mode" data-gate="2"><b>Derechos asignados</b><span>Fuente de agua resuelta y documentada.</span></button></div>
         <div class="subheading">Dotaciones del polo</div>
@@ -519,9 +502,6 @@
         <div class="input-group"><div class="input-header"><label>m² de lote comercial por empleo</label><div class="val-display" data-input="inM2EmpleoCom">50</div></div><input type="range" id="inM2EmpleoCom" min="20" max="200" step="5" value="50" data-color="var(--teal)"></div>
         <div class="input-group"><div class="input-header"><label>Gasto familiar mensual ($ MXN)</label><div class="val-display" data-input="inGastoFamMes">$8,000</div></div><input type="range" id="inGastoFamMes" min="2000" max="30000" step="500" value="8000" data-color="var(--teal)" data-format="money"></div>
         <div class="micro-readout" id="readPolo">Calculando demografía del polo…</div>
-        <div class="subheading">Escenarios (variación global)</div>
-        <div class="input-group"><div class="input-header"><label>Variación de precios de venta (%)</label><div class="val-display" data-input="inVarPrecios">0%</div></div><input type="range" id="inVarPrecios" min="-25" max="25" step="1" value="0" data-color="var(--gold)" data-format="pct"></div>
-        <div class="input-group"><div class="input-header"><label>Variación de costos de obra (%)</label><div class="val-display" data-input="inVarCostos">0%</div></div><input type="range" id="inVarCostos" min="-20" max="20" step="1" value="0" data-color="var(--red)" data-format="pct"></div>
         <div class="micro-readout" id="readAgua">Calculando dotaciones…</div></div></article>
   </section>
 
@@ -556,15 +536,13 @@
   const LS={clave:'pyod_clave_v1',draft:'pyodm_draft_v1',cola:'pyodm_postq_v1'};
   const ESTADOS=['EXPLORACIÓN','ANÁLISIS','PROPUESTA','NEGOCIACIÓN','CERRADO','DESCARTADO'];
   let clave=localStorage.getItem(LS.clave)||'';
-  const HITOS_DEF='0,0,0,0,0,0';
-  let caso={caso_id:'',palabra:'',correo:'',nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',hitos:HITOS_DEF,version:0};
+  let caso={caso_id:'',palabra:'',correo:'',nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};
   let cfgBoard={}, casosCache=[], modoLocal=!cloudOn;
 
   const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
   const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>'$'+((n||0)/1e6).toFixed(1)+' M'; const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%'; const fmtHa=n=>((n||0)/10000).toFixed(1)+' ha';
   // Prellenado oficial: La Cercada v4 (PPP corregido 30-jun-2026)
   const PRELLENADO={inFrente:500,inFondo:1000,inAnchoVialidad:12,inSepLuminarias:30,inPctVialidades:18,inPctBanquetas:4,inPctVerdes:12,inPctEquipamiento:3,inPctRetencion:3,inPctDDV:2,inMixNaves:50,inMixMacro:30,inMixCom:20,inMixViv:0,inCosNaves:47.5,inEfSubdiv:92,inM2Nave:250,inM2Macro:5000,inM2LoteCom:2000,inM2LoteViv:160,inPreNave:14000,inPreMacro:2200,inPreCom:4500,inPreVivLote:1800,inPuDespalme:20,inPuTerracerias:45,inPuPavimento:450,inPuGuarniciones:350,inPuRedAgua:900,inPuDrenaje:1200,inPuPluvial:800,inPuMT:1100,inPuFibra:300,inPuAlumbrado:18000,inPuJardineria:180,inPuBarda:1500,inPuPtar:3500000,inPuSubestacion:4000000,inPuDerechosAgua:2500000,inPuCisterna:1800000,inPuCaseta:800000,inPuSenaletica:400000,inCostoNave:7800,inEstudios:5,inLicencias:3,inSupervision:4,inLegalPct:2,inAdminPct:3,inComisionPct:4,inMktPct:2,inImprevistos:12,inEtapas:3,inMesesUrbEtapa:10,inInicioVentas:4,inAbsNaves:6,inAbsMacro:0.5,inAbsCom:1,inAbsViv:4,inEngNave:30,inMesesEntregaNave:8,inEngLote:50,inMesesSaldoLote:6,inEquity:80000000,inMaxDeuda:400000000,inLTC:60,inPIK:14,inFeeDeuda:1.5,inTirObjetivo:25,inValorTierraM2:150,inAporteTierra:100,inPctDueno:25,inGateAgua:0,inVarPrecios:0,inVarCostos:0,inM2Empleo:40,inAguaM2Const:1.5,inWm2Const:40,inFactorDemanda:60,inEstrNaves:0,inEstrCom:0,inRentaNave:95,inRentaCom:35,inVacancia:5,inOpex:15,inCapRate:9,inMesesSalida:12,inHabPorViv:3.5,inTrabPorViv:1.2,inM2EmpleoCom:50,inGastoFamMes:8000};
-  const ESCENARIOS={p:{inVarPrecios:-22,inVarCostos:15},b:{inVarPrecios:0,inVarCostos:0},o:{inVarPrecios:20,inVarCostos:-10}};
   const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),PRELLENADO);
   Object.entries(DEFAULTS).forEach(([id,v])=>{const c=$(id);if(c)c.value=v});
   let gateAgua=PRELLENADO.inGateAgua,estrNaves=PRELLENADO.inEstrNaves,estrCom=PRELLENADO.inEstrCom;
@@ -686,7 +664,7 @@
       engNave:get('inEngNave')/100,mesesEntregaNave:Math.max(1,Math.round(get('inMesesEntregaNave'))),engLote:get('inEngLote')/100,mesesSaldoLote:Math.max(1,Math.round(get('inMesesSaldoLote'))),
       equity:get('inEquity'),maxDeuda:get('inMaxDeuda'),ltc:get('inLTC')/100,pik:get('inPIK')/100,feeDeuda:get('inFeeDeuda')/100,tirTarget:get('inTirObjetivo')/100,
       valorTierraM2:get('inValorTierraM2'),aporteTierra:get('inAporteTierra')/100,pctDueno:get('inPctDueno')/100,
-      gateAgua:gateAgua,varPrecios:get('inVarPrecios')/100,varCostos:get('inVarCostos')/100,
+      gateAgua:gateAgua,varPrecios:0,varCostos:0,
       m2Empleo:Math.max(1,get('inM2Empleo')),aguaM2:get('inAguaM2Const'),wm2:get('inWm2Const'),factorDemanda:get('inFactorDemanda')/100,
       estrNaves:estrNaves,estrCom:estrCom,rentaNave:get('inRentaNave'),rentaCom:get('inRentaCom'),vacancia:get('inVacancia')/100,opex:get('inOpex')/100,capRate:get('inCapRate')/100,mesesSalida:Math.max(0,Math.round(get('inMesesSalida'))),
       habViv:get('inHabPorViv'),trabViv:get('inTrabPorViv'),m2EmpleoCom:Math.max(1,get('inM2EmpleoCom')),gastoFam:get('inGastoFamMes')};
@@ -815,18 +793,9 @@
     txt('hudAguaDia',r.aguaDia.toFixed(1)+' m³');
     txt('lblCajaDueno',fmtM(r.ownerTotal));txt('lblCajaDes',fmtM(r.devDist));
     // KPIs del metro
-    const okVend=r.vendiblePct>=.55&&r.vendiblePct<=.65;const mkV=$('mkVendible');mkV.textContent=pct(r.vendiblePct*100,0);mkV.className='mk-val '+(okVend?'c-green':'status-warn');txt('mkVendibleSub',fmtHa(r.vendible)+' vendibles · norma 55–65%');
-    txt('mkIngreso',fmtMoney(r.ingresoM2));txt('mkCosto',fmtMoney(r.costoM2));txt('mkCostoSub','urb. '+fmtMoney(r.urbM2)+'/m² vendible');
-    const mkS=$('mkSpread');mkS.textContent=fmtMoney(r.spreadM2);mkS.className='mk-val '+(r.spreadPct>=.25?'c-gold':r.spreadPct>=.15?'status-warn':'status-bad');txt('mkSpreadSub',pct(r.spreadPct*100,0)+' del ingreso · piso sano 25%');
-    txt('mkDueno',fmtMoney(r.valorTerrenoM2));txt('mkDuenoSub','vs '+fmtMoney(r.p.valorTierraM2)+' de mercado ('+(r.p.valorTierraM2?(r.valorTerrenoM2/r.p.valorTierraM2).toFixed(2):'—')+'×)');
-    txt('mkCola',r.colaMes+' m');txt('mkColaSub','cola: '+r.colaProducto+' · '+fmtN(r.empleos)+' empleos');
-    // rangos P/B/O dentro de los KPIs (analítico: mismas fórmulas económicas, factores de escenario)
-    const ing0=r.ingresos/(1+r.p.varPrecios),dir0=r.directo/(1+r.p.varCostos),A=r.p.estudios+r.p.licencias+r.p.supervision+r.p.imprevistos,B=r.p.legalPct+r.p.adminPct+r.p.comisionPct+r.p.mktPct;
-    const uPre=(vp,vc)=>ing0*(1+vp)*(1-B)-dir0*(1+vc)*(1+A)-r.tierraPago;
-    const escsPBO={p:[-.22,.15],b:[0,0],o:[.20,-.10]};
-    const pintaRango=(id,fn)=>{const el=$(id);if(!el)return;const vals=Object.entries(escsPBO).map(([k,e])=>[k,fn(uPre(e[0],e[1]))]);const nums=vals.map(v=>v[1]),lo=Math.min(...nums),hi=Math.max(...nums),span=hi-lo||1;el.innerHTML=vals.map(([k,v])=>`<i class="r${k}" style="left:${((v-lo)/span*92+4)}%" title="${k.toUpperCase()}: ${fmtMoney(v)}"></i>`).join('')};
-    pintaRango('rangoSpread',u=>r.vendible?u/r.vendible:0);
-    pintaRango('rangoDueno',u=>r.superficie?(r.tierraPago+Math.max(0,u)*r.p.pctDueno)/r.superficie:0);
+    // KPIs del metro reubicados en sus tarjetas
+    const sEl=$('lblSpreadM2');if(sEl){sEl.textContent=fmtMoney(r.spreadM2)+' /m²';sEl.className='kpi-val '+(r.spreadPct>=.25?'c-gold':r.spreadPct>=.15?'status-warn':'status-bad');sEl.title=pct(r.spreadPct*100,0)+' del ingreso · piso sano 25%'}
+    txt('lblDuenoM2',fmtMoney(r.valorTerrenoM2)+' vs '+fmtMoney(r.p.valorTierraM2)+' ('+(r.p.valorTierraM2?(r.valorTerrenoM2/r.p.valorTierraM2).toFixed(2):'—')+'×)');
     txt('heroUtil',fmtM(r.utilidadFinal));txt('heroUtilSub','margen '+pct(r.margenFinal*100,1)+' · antes de financiar '+fmtM(r.utilidadPre)+' ('+pct(r.margenPre*100,1)+')');
     txt('heroDueno',fmtM(r.ownerTotal));txt('heroDuenoSub',fmtMoney(r.valorTerrenoM2)+' por m² de terreno · '+pct(r.p.pctDueno*100,0)+' de la utilidad');
     const tirEl=$('heroTir');tirEl.textContent=(r.devIrr===null?'—':pct(r.devIrr*100,1))+' · '+fmtM(r.peak);tirEl.className='big serif '+(r.devIrr===null?'':r.devIrr>=r.p.tirTarget?'status-ok':'status-bad');txt('heroTirSub','vs objetivo '+pct(r.p.tirTarget*100,1)+' · MOIC '+(r.devMoic===null?'—':r.devMoic.toFixed(2)+'x')+' · '+r.totalMonths+' meses');
@@ -839,15 +808,11 @@
     document.querySelectorAll('.estr-btn').forEach(b=>{const v=b.dataset.estr==='naves'?r.p.estrNaves:r.p.estrCom;b.classList.toggle('on',Number(b.dataset.val)===v)});
     const rp=$('readPolo');if(rp)rp.innerHTML=r.nViv>0?`<b>Demografía del polo:</b> ${fmtN(r.habitantes)} habitantes en ${fmtN(r.nViv)} viviendas · PEA ${fmtN(r.pea)} vs ${fmtN(r.empleos)} empleos (ratio ${r.ratioEmpleoPea===null?'—':r.ratioEmpleoPea.toFixed(2)}: ${r.ratioEmpleoPea>=0.9&&r.ratioEmpleoPea<=1.15?'polo equilibrado — vive y trabaja aquí':'desequilibrado'}) · ${fmtN(r.vehiculos)} vehículos · OMS ${r.omsM2Hab===null?'—':r.omsM2Hab.toFixed(1)+' m² verdes/hab (recomendado 9+)'}. <b>Comercio:</b> gasto interno ${fmtM(r.gastoInternoAnual)}/año → ${r.demandaComM2===null?'—':fmtMoney(r.demandaComM2)+'/m² comercial de demanda'} ${r.demandaComM2===null?'':r.demandaComM2>=20000?'(el retail se sostiene solo con el polo ✓)':r.demandaComM2>=10000?'(justo: necesita algo de carretera)':'(el retail dependerá del tráfico de la carretera)'}`:`<b>Sin vivienda en la mezcla:</b> los ${fmtN(r.empleos)} empleos y ${fmtN(r.vehiculos)} vehículos vienen de naves y comercio; el retail (${fmtN(r.m2ComVend)} m²) depende 100% del tráfico de la Carr. a Kino. Sube el % de vivienda para ver demografía y demanda interna.`;
     txt('lblUrbTotal',fmtM(r.urbanizacion));txt('lblUrbM2',fmtMoney(r.vendible?r.urbanizacion/r.vendible:0));txt('lblLumBarda',fmtN(r.luminarias)+' · '+fmtN(r.perimetro)+' ml');txt('lblObraFija',fmtM(r.obraFija));
-    txt('lblConstNaves',fmtM(r.construccion));txt('lblBlandos',fmtM(r.blandos));txt('lblCostoTotal',fmtM(r.costoProyecto)+' · '+fmtMoney(r.vendible?r.costoProyecto/r.vendible:0)+'/m² vendible');
-    const modoT=r.p.aporteTierra>=.999?'Aporta':r.p.aporteTierra<=.001?'Vende':'Mixto';txt('lblTierraModo',modoT+' · '+pct(r.p.pctDueno*100,0)+' utilidad');txt('lblEtapas',r.p.etapas+' × '+r.p.mesesUrbEtapa+' meses');txt('lblAbsorcion',r.p.absNaves+' naves/mes · '+r.p.absMacro+' macro/mes');txt('lblMesesTotales',r.totalMonths+' meses');
+    txt('lblConstNaves',fmtM(r.construccion));txt('lblBlandos',fmtM(r.blandos));txt('lblCostoTotal',fmtM(r.costoProyecto)+' · '+fmtMoney(r.costoM2)+'/m²');
+    const modoT=r.p.aporteTierra>=.999?'Aporta':r.p.aporteTierra<=.001?'Vende':'Mixto';txt('lblTierraModo',modoT+' · '+pct(r.p.pctDueno*100,0)+' utilidad');txt('lblEtapas',r.p.etapas+' × '+r.p.mesesUrbEtapa+' meses');txt('lblAbsorcion',r.p.absNaves+' naves/mes · '+r.p.absMacro+' macro/mes');txt('lblMesesTotales',r.totalMonths+' m · cola: '+r.colaProducto);
     txt('lblCondPIK',pct(r.p.pik*100,1)+' anual · '+(r.peak>1?'pico '+fmtM(r.peak)+' mes '+r.peakMonth:'sin deuda dispuesta: los enganches fondean la obra')+' · límite '+fmtM(r.debtCap)+(r.fundingGap>1?' · FALTAN '+fmtM(r.fundingGap):''));
     txt('lblGate',['EN VEDA · sin resolver','EN TRÁMITE · gestoría CONAGUA','DERECHOS ASIGNADOS ✓'][r.p.gateAgua]);const bg=$('boxGate');if(bg){const c=[['#e0605a66','#e0605a12'],['#d9a45b66','#d9a45b12'],['#8fbf8b66','#8fbf8b12']][r.p.gateAgua];bg.style.borderColor=c[0];bg.style.background=c[1];const v=bg.querySelector('.kpi-val');v.className='kpi-val '+['c-red','c-orange','c-green'][r.p.gateAgua]}
-    txt('lblAguaDia',r.aguaDia.toFixed(1)+' m³/día');txt('lblKva',fmtN(r.demandaKva)+' kVA');txt('lblEmpleos','~'+fmtN(r.empleos));
-    const escAct=Object.entries(ESCENARIOS).find(([k,v])=>v.inVarPrecios===Math.round(r.p.varPrecios*100)&&v.inVarCostos===Math.round(r.p.varCostos*100));
-    txt('lblEscenario',escAct?{p:'PESIMISTA',b:'BASE',o:'OPTIMISTA'}[escAct[0]]:'PERSONALIZADO ('+(r.p.varPrecios>=0?'+':'')+pct(r.p.varPrecios*100,0)+' precios, '+(r.p.varCostos>=0?'+':'')+pct(r.p.varCostos*100,0)+' costos)');
-    document.querySelectorAll('.esc-chip').forEach(ch=>ch.classList.toggle('on',escAct&&ch.dataset.esc===escAct[0]));
-    txt('escNota',escAct&&escAct[0]==='b'?'':'· los números de TODO el tablero están en este escenario');
+    txt('lblAguaDia',r.aguaDia.toFixed(1)+' m³/día');txt('lblKva',fmtN(r.demandaKva)+' kVA');txt('lblEmpleos','~'+fmtN(r.empleos));txt('lblEficSuelo',pct(r.vendiblePct*100,0)+' vendible · norma 55–65%');
     document.querySelectorAll('.gate-mode').forEach(b=>b.classList.toggle('active',Number(b.dataset.gate)===r.p.gateAgua));
     $('readAreas').innerHTML=`<b>Cuadro de áreas:</b> cesiones ${pct(r.sumaCesiones*100,0)} (vialidades ${fmtN(r.m2Vial)} m² · banquetas ${fmtN(r.m2Banq)} · verdes/donación ${fmtN(r.m2Verdes)} · equipamiento ${fmtN(r.m2Equip)} · retención ${fmtN(r.m2Ret)} · derecho de vía ${fmtN(r.m2DDV)}) → <b>vendible ${fmtN(r.vendible)} m² (${pct(r.vendiblePct*100,1)})</b>. ${fmtN(r.mlVial)} ml de calles → ${fmtN(r.luminarias)} luminarias. La donación real la fija el urbanista.`;
     $('readMezcla').innerHTML=`<b>Mezcla ${r.mixValid?'válida':'⚠ debe sumar 100%'} (${pct(r.mixTotal*100,0)}):</b> naves ${fmtN(r.terrNaves)} m² de terreno × COS ${pct(r.p.cosNaves*100,1)} = ${fmtN(r.m2NavesConst)} m² construidos (${fmtN(r.nNaves)} naves de ${r.p.m2Nave} m²) · macro ${fmtN(r.m2MacroVend)} m² vendibles (${fmtN(r.nMacro)}) · comercial ${fmtN(r.m2ComVend)} m² (${fmtN(r.nCom)}) · vivienda ${fmtN(r.m2VivVend)} m² (${fmtN(r.nViv)}). Ingreso por m² vendible ${fmtMoney(r.vendible?r.ingresos/r.vendible:0)}.`;
@@ -1098,28 +1063,10 @@
     document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>cambiarEstado(b.dataset.estado));
     $('segSiguiente').value=caso.siguiente_paso||'';
     $('segLog').textContent=caso.notas_seguimiento||'Sin notas todavía.'+(caso.caso_id?'':' Guarda el caso primero.');
-    pintaCamino();
-  }
-  const HITOS=['Agua: derechos CONAGUA','Urbanista: donación, uso de suelo, DDV','Presupuesto de constructor (18 PU)','Comparables de mercado (precios y absorción)','Acuerdo con el dueño (% y term sheet)','Decisión de comité'];
-  function hitosVals(){return String(caso.hitos||HITOS_DEF).split(',').map(v=>Math.max(0,Math.min(2,Number(v)||0))).slice(0,HITOS.length)}
-  function pintaCamino(){
-    const cont=$('caminoSteps');if(!cont)return;const vals=hitosVals();while(vals.length<HITOS.length)vals.push(0);
-    const est=['falta','en curso','resuelto'];
-    cont.innerHTML=HITOS.map((h,i)=>`<button class="cstep s${vals[i]}" data-hito="${i}"><span class="cdot"></span><span class="clbl">${h}</span><span class="cest">${est[vals[i]]}</span></button>`).join('');
-    const done=vals.filter(v=>v===2).length,curso=vals.filter(v=>v===1).length;
-    $('caminoBarra').style.width=(done/HITOS.length*100)+'%';
-    txt('caminoRes',`${done} de ${HITOS.length} resueltos${curso?' · '+curso+' en curso':''}`);
-    cont.querySelectorAll('[data-hito]').forEach(b=>b.onclick=()=>{
-      const i=Number(b.dataset.hito),v=hitosVals();while(v.length<HITOS.length)v.push(0);
-      v[i]=(v[i]+1)%3;caso.hitos=v.join(',');
-      if(i===0&&v[0]===2&&gateAgua<2){gateAgua=2;calculate()}   // resolver el hito del agua desbloquea el gate del plano
-      pintaCamino();guardarDraft();
-      if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,hitos:caso.hitos,request_id:nuevoRequestId()},'Camino actualizado: '+HITOS[i].split(':')[0]+' → '+est[v[i]]);
-    });
   }
   function aplicarCasoRemoto(obj){
     Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
-    caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',hitos:String(obj.hitos||HITOS_DEF),version:Number(obj.version||1)};
+    caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',version:Number(obj.version||1)};
     calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado')
   }
   async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
@@ -1132,7 +1079,7 @@
     if(enviarCorreo&&!correo){toast('Pon un correo para enviarte la palabra');return}
     const btns=[$('gGuardarSolo'),$('gGuardarEnviar')];btns.forEach(b=>b.disabled=true);
     const rSt=state||calculate();
-    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,hitos:caso.hitos,inputs:inputValues(),resumen:resumenActual(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.pik+f.fee),Math.round(f.debt),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
+    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.pik+f.fee),Math.round(f.debt),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
     try{
       const r=await apiPost(payload);
       btns.forEach(b=>b.disabled=false);
@@ -1198,40 +1145,15 @@
   /* ================== ARRANQUE ================== */
   document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
   controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();
-  /* Eco del slider: al soltar una perilla, los KPIs del metro contestan con su delta */
-  let kpiSnap=null;
-  const snapKpis=()=>state?{vendible:state.vendiblePct*100,ingresoM2:state.ingresoM2,costoM2:state.costoM2,spreadM2:state.spreadM2,duenoM2:state.valorTerrenoM2,colaMes:state.colaMes}:null;
-  const MEJOR_ARRIBA={vendible:true,ingresoM2:true,costoM2:false,spreadM2:true,duenoM2:true,colaMes:false};
-  const UMBRAL={vendible:.2,ingresoM2:5,costoM2:5,spreadM2:5,duenoM2:2,colaMes:.6};
-  const FMTD={vendible:v=>Math.abs(v).toFixed(1)+' pts',ingresoM2:v=>'$'+fmtN(Math.abs(v))+'/m²',costoM2:v=>'$'+fmtN(Math.abs(v))+'/m²',spreadM2:v=>'$'+fmtN(Math.abs(v))+'/m²',duenoM2:v=>'$'+fmtN(Math.abs(v))+'/m²',colaMes:v=>Math.abs(Math.round(v))+' meses'};
-  function ecoDeltas(){
-    if(!kpiSnap||!state)return;const ahora=snapKpis();
-    Object.entries(ahora).forEach(([k,v])=>{
-      const d=v-kpiSnap[k];if(Math.abs(d)<UMBRAL[k])return;
-      const box=document.querySelector(`.mkpi[data-kpi="${k}"]`);if(!box)return;
-      const sube=d>0,bueno=MEJOR_ARRIBA[k]?sube:!sube;
-      box.querySelectorAll('.mk-delta').forEach(x=>x.remove());
-      const chip=document.createElement('span');chip.className='mk-delta '+(bueno?'up':'down');chip.textContent=(sube?'+':'−')+FMTD[k](d);
-      box.appendChild(chip);box.classList.add('pulse');
-      setTimeout(()=>{chip.remove();box.classList.remove('pulse')},2300);
-    });
-    kpiSnap=null;
-  }
-  controls.forEach(c=>{
-    c.addEventListener('pointerdown',()=>{if(state)kpiSnap=snapKpis()});
-    c.addEventListener('touchstart',()=>{if(state&&!kpiSnap)kpiSnap=snapKpis()},{passive:true});
-    c.addEventListener('change',ecoDeltas);
-  });
   document.querySelectorAll('.gate-mode').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();gateAgua=Number(b.dataset.gate);calculate();pintaCaso()}));
   document.querySelectorAll('.estr-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();if(b.dataset.estr==='naves')estrNaves=Number(b.dataset.val);else estrCom=Number(b.dataset.val);calculate()}));
-  document.querySelectorAll('.esc-chip').forEach(ch=>ch.onclick=()=>{const e=ESCENARIOS[ch.dataset.esc];setControl('inVarPrecios',e.inVarPrecios);setControl('inVarCostos',e.inVarCostos);calculate()});
   $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
   $('gGuardarSolo').onclick=()=>guardarCaso(false);$('gGuardarEnviar').onclick=()=>guardarCaso(true);$('gCancelar').onclick=cerrarOverlays;
   $('btnMisCasos').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave');return}abrirOverlay('ovCasos');cargarLista()};
   $('casosCerrar').onclick=cerrarOverlays;
   $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
   $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
-  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));gateAgua=PRELLENADO.inGateAgua;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',hitos:HITOS_DEF,version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de La Cercada v4')};
+  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));gateAgua=PRELLENADO.inGateAgua;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de La Cercada v4')};
   $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
