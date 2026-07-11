@@ -251,6 +251,35 @@
   .esc-chip.o.on{background:var(--green);border-color:var(--green);color:#0a0a0c}
   .breadcrumb{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:6px}
   .breadcrumb a{color:var(--goldc);text-decoration:none}
+  /* KPIs del metro (HUD) */
+  .mkpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:2px}
+  .mkpi{position:relative;background:rgba(255,255,255,.045);border:1px solid var(--linea);border-radius:12px;padding:8px 10px;min-width:0;transition:outline-color .3s}
+  .mk-lbl{display:block;font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mk-val{display:block;font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(16px,1.9vw,22px);line-height:1.15;margin-top:2px;white-space:nowrap}
+  .mk-sub{display:block;font-size:8.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+  .mkpi.pulse{outline:2px solid var(--gold);outline-offset:1px}
+  .mk-delta{position:absolute;top:-9px;right:6px;font-size:9px;font-weight:800;padding:2px 7px;border-radius:9px;background:#1d1d22;border:1px solid var(--lineaf);animation:mkfade 2.2s forwards;pointer-events:none;white-space:nowrap}
+  .mk-delta.up{color:#8FBF8B;border-color:#8FBF8B66}.mk-delta.down{color:#E0605A;border-color:#E0605A66}
+  @keyframes mkfade{0%{opacity:0;transform:translateY(4px)}12%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
+  /* Plano protagonista */
+  .hero-viz{grid-template-columns:8fr 5fr}
+  @media(max-width:900px){.hero-viz{grid-template-columns:1fr}}
+  /* Camino del caso (¿dónde estamos?) */
+  .camino{background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:13px 14px;margin-bottom:14px}
+  .camino .subheading{margin-top:0}
+  .camino-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .cstep{position:relative;border:0;background:transparent;text-align:left;cursor:pointer;font-family:inherit;padding:6px 4px 4px;border-radius:9px}
+  .cstep:hover{background:rgba(255,255,255,.04)}
+  .cstep .cdot{display:inline-block;width:13px;height:13px;border-radius:50%;border:2px solid var(--red);vertical-align:-2px;margin-right:5px;transition:.2s}
+  .cstep.s1 .cdot{border-color:var(--orange);background:#d9a45b44}
+  .cstep.s2 .cdot{border-color:var(--green);background:var(--green)}
+  .cstep .clbl{font-size:9.5px;font-weight:800;color:var(--suave);line-height:1.25;display:inline}
+  .cstep .cest{display:block;font-size:8.5px;color:var(--muted);margin-top:2px;margin-left:18px}
+  .cstep.s2 .clbl{color:#b5dcb1}
+  .camino-barra{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin:9px 0 3px;overflow:hidden}
+  .camino-barra i{display:block;height:100%;background:linear-gradient(90deg,#8fbf8b88,#8FBF8B);transition:width .3s}
+  .camino-res{font-size:10px;color:var(--muted);font-weight:700}
+  @media(max-width:700px){.mkpi-row{grid-template-columns:repeat(3,1fr)}.camino-steps{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -266,11 +295,15 @@
 
 <div class="sticky-header"><div class="header-inner">
   <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · PPP Macro Lotes</span></div>
-  <div class="hud-row"><div class="hud-item">Ventas: <span id="hudIngresos" class="hud-val c-green">$0 M</span></div><div class="hud-item">Costo total: <span id="hudCostos" class="hud-val c-red">$0 M</span></div><div class="hud-item">Pico deuda: <span id="hudDeuda" class="hud-val c-purple">$0 M</span></div></div>
-  <div class="hud-row"><div class="hud-item">Utilidad neta: <span id="hudUtilidad" class="hud-val c-gold" style="font-size:18px">$0 M</span></div><div class="hud-item">Margen: <span id="hudMargen" class="hud-val c-gold">0.0%</span></div><div class="hud-item">TIR Dev: <span id="hudTir" class="hud-val c-blue">—</span></div></div>
-  <div class="urban-hud"><div class="urban-item"><span>Superficie</span><b id="hudSuperficie">0 ha</b></div><div class="urban-item"><span>Vendible</span><b id="hudVendible">0 ha</b></div><div class="urban-item"><span>Naves PyME</span><b id="hudNaves">0</b></div><div class="urban-item"><span>Macro-lotes</span><b id="hudMacro">0</b></div><div class="urban-item"><span>Lotes com.</span><b id="hudCom">0</b></div><div class="urban-item"><span>Lotes viv.</span><b id="hudViv">0</b></div><div class="urban-item"><span>Vialidades</span><b id="hudVialidades">0 ml</b></div><div class="urban-item"><span>Empleos est.</span><b id="hudEmpleos">0</b></div><div class="urban-item"><span>Agua / día</span><b id="hudAgua">0 m³</b></div><div class="urban-item"><span>Gate agua</span><b id="hudGate">—</b></div></div>
-  <div class="split-bar"><div id="barDueno" class="split" style="background:var(--blue);width:25%">Dueño</div><div id="barDes" class="split" style="background:var(--orange);width:75%">Developer</div></div>
-  <div class="hud-row" style="margin-top:4px;border:0"><div class="hud-item" style="color:var(--blue);font-size:10px">Dueño total: <span id="lblCajaDueno">$0 M</span></div><div class="hud-item" style="color:var(--orange);font-size:10px">Developer total: <span id="lblCajaDes">$0 M</span></div><div class="hud-item" style="color:var(--goldc);font-size:10px">Terreno implícito: <span id="hudValorTierra">—</span></div></div>
+  <div class="mkpi-row">
+    <div class="mkpi" data-kpi="vendible"><span class="mk-lbl">Eficiencia de suelo</span><b class="mk-val c-green" id="mkVendible">0%</b><span class="mk-sub" id="mkVendibleSub">— vendible</span></div>
+    <div class="mkpi" data-kpi="ingresoM2"><span class="mk-lbl">Ingreso mezclado</span><b class="mk-val c-gold" id="mkIngreso">$0</b><span class="mk-sub">por m² vendible</span></div>
+    <div class="mkpi" data-kpi="costoM2"><span class="mk-lbl">Costo all-in</span><b class="mk-val c-red" id="mkCosto">$0</b><span class="mk-sub" id="mkCostoSub">urb. $0/m²</span></div>
+    <div class="mkpi" data-kpi="spreadM2"><span class="mk-lbl">Spread del metro</span><b class="mk-val" id="mkSpread">$0</b><span class="mk-sub" id="mkSpreadSub">— del ingreso</span></div>
+    <div class="mkpi" data-kpi="duenoM2"><span class="mk-lbl">Dueño por m²</span><b class="mk-val c-blue" id="mkDueno">$0</b><span class="mk-sub" id="mkDuenoSub">vs mercado</span></div>
+    <div class="mkpi" data-kpi="colaMes"><span class="mk-lbl">Cierre del caso</span><b class="mk-val c-orange" id="mkCola">0 m</b><span class="mk-sub" id="mkColaSub">cola: —</span></div>
+  </div>
+  <div class="hud-row" style="margin-top:7px;border:0;font-size:10px;color:#8a8780"><div class="hud-item">Ventas <span id="hudIngresos" class="hud-val c-green">$0 M</span></div><div class="hud-item">Utilidad <span id="hudUtilidad" class="hud-val c-gold">$0 M</span> · <span id="hudMargen">0%</span></div><div class="hud-item">TIR Dev <span id="hudTir" class="hud-val c-blue">—</span></div><div class="hud-item">Pico deuda <span id="hudDeuda" class="hud-val c-purple">$0 M</span></div><div class="hud-item">Dueño <span id="lblCajaDueno" class="hud-val c-blue">$0 M</span> / Dev <span id="lblCajaDes" class="hud-val c-orange">$0 M</span></div><div class="hud-item">Agua <span id="hudGate" class="hud-val">—</span></div></div>
 </div></div>
 
 <main class="container">
@@ -289,7 +322,7 @@
     <div class="esc-chips"><span style="font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;align-self:center">Escenario:</span><button class="esc-chip p" data-esc="p">Pesimista</button><button class="esc-chip on" data-esc="b">Base</button><button class="esc-chip o" data-esc="o">Optimista</button><span class="sync-dot" id="escNota" style="align-self:center"></span></div>
     <p class="lectura" id="heroLectura"></p>
     <div class="hero-viz">
-      <div class="viz-card"><span class="k">Master plan esquemático</span><div id="vizPlan" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">Plano proporcional · cada banda a escala real de sus m²</span><div id="vizPlan" class="viz-svg"></div></div>
       <div class="viz-card"><span class="k">Deuda mes a mes · cobros</span><div id="vizCurva" class="viz-svg"></div></div>
     </div>
   </section>
@@ -304,6 +337,13 @@
       <button class="small-btn" id="btnGuardar">Guardar</button>
     </div>
   </div>
+
+  <section class="camino" id="caminoPanel">
+    <div class="subheading">¿Dónde estamos? · lo que falta para el sí <span style="float:right;color:var(--muted);font-weight:700;text-transform:none;letter-spacing:0" id="caminoRes"></span></div>
+    <div class="camino-steps" id="caminoSteps"></div>
+    <div class="camino-barra"><i id="caminoBarra" style="width:0%"></i></div>
+    <p class="note" style="margin:4px 0 0">Toca un paso para avanzarlo: falta → en curso → resuelto. Se guarda en el Sheet con el caso.</p>
+  </section>
 
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
@@ -473,7 +513,8 @@
   const LS={clave:'pyod_clave_v1',draft:'pyodm_draft_v1',cola:'pyodm_postq_v1'};
   const ESTADOS=['EXPLORACIÓN','ANÁLISIS','PROPUESTA','NEGOCIACIÓN','CERRADO','DESCARTADO'];
   let clave=localStorage.getItem(LS.clave)||'';
-  let caso={caso_id:'',palabra:'',correo:'',nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};
+  const HITOS_DEF='0,0,0,0,0,0';
+  let caso={caso_id:'',palabra:'',correo:'',nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',hitos:HITOS_DEF,version:0};
   let cfgBoard={}, casosCache=[], modoLocal=!cloudOn;
 
   const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
@@ -666,21 +707,30 @@
     const valorTerrenoM2=superficie?ownerTotal/superficie:0;
     // indicadores urbanos
     const m2ConstTotal=m2NavesConst,empleos=Math.round(m2ConstTotal/p.m2Empleo),aguaDia=(m2ConstTotal*p.aguaM2+(m2MacroVend+m2ComVend+m2VivVend)*.3)/1000,cargaKw=(m2ConstTotal*p.wm2+(m2MacroVend+m2ComVend)*10)/1000,demandaKva=cargaKw*p.factorDemanda/0.9;
+    // KPIs del metro (la moneda del negocio horizontal)
+    const ingresoM2=vendible?ingresos/vendible:0,costoM2=vendible?costoProyecto/vendible:0,urbM2=vendible?urbanizacion/vendible:0,spreadM2=vendible?utilidadPre/vendible:0,spreadPct=ingresoM2?spreadM2/ingresoM2:0;
+    const colas=[['naves',finNaves,nNaves],['macro-lotes',finMacro,nMacro],['comercial',finCom,nCom],['vivienda',finViv,nViv]].filter(c=>c[2]>0);
+    const cola=colas.length?colas.reduce((a,b)=>b[1]>a[1]?b:a):['—',0,0],colaProducto=cola[0],colaMes=Math.ceil(cola[1]);
     state={p,superficie,perimetro,sumaCesiones,vendiblePct,vendible,m2Vial,m2Banq,m2Verdes,m2Equip,m2Ret,m2DDV,mlVial,luminarias,mixTotal,mixValid,
       terrNaves,nNaves,m2NavesConst,ingNaves,terrMacro,nMacro,m2MacroVend,ingMacro,terrCom,nCom,m2ComVend,ingCom,terrViv,nViv,m2VivVend,ingViv,ingresos,
       obraFija,urbVariable,urbanizacion,construccion,directo,blandosDirecto,blandosIngresos,blandos,tierraPago,costoProyecto,utilidadPre,margenPre,
       mesesUrb,totalMonths,flows,debtCap,peak,peakMonth,fundingGap,interest,cashInterest,feeDebt,debt,cash,equityUsed,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,
       utilidadFinal,margenFinal,duenoUtilidad,ownerTotal,devDist,devIrr,devMoic,valorTerrenoM2,distribuible,
-      empleos,aguaDia,demandaKva,cargaKw,ventasTruncadas,buildStart:0,buildFinish:mesesUrb};
+      empleos,aguaDia,demandaKva,cargaKw,ventasTruncadas,ingresoM2,costoM2,urbM2,spreadM2,spreadPct,colaProducto,colaMes,buildStart:0,buildFinish:mesesUrb};
     render();guardarDraft();return state}
 
   /* ================== RENDER ================== */
   function render(){
     const r=state;syncPills();
-    txt('hudIngresos',fmtM(r.ingresos));txt('hudCostos',fmtM(r.costoProyecto+r.interest+r.feeDebt));txt('hudDeuda',fmtM(r.peak));txt('hudUtilidad',fmtM(r.utilidadFinal));txt('hudMargen',pct(r.margenFinal*100,1));txt('hudTir',r.devIrr===null?'—':pct(r.devIrr*100,1));
-    txt('hudSuperficie',fmtHa(r.superficie));txt('hudVendible',fmtHa(r.vendible)+' · '+pct(r.vendiblePct*100,0));txt('hudNaves',fmtN(r.nNaves));txt('hudMacro',fmtN(r.nMacro));txt('hudCom',fmtN(r.nCom));txt('hudViv',fmtN(r.nViv));txt('hudVialidades',fmtN(r.mlVial)+' ml');txt('hudEmpleos','~'+fmtN(r.empleos));txt('hudAgua',r.aguaDia.toFixed(1)+' m³');
+    txt('hudIngresos',fmtM(r.ingresos));txt('hudDeuda',fmtM(r.peak));txt('hudUtilidad',fmtM(r.utilidadFinal));txt('hudMargen',pct(r.margenFinal*100,1));txt('hudTir',r.devIrr===null?'—':pct(r.devIrr*100,1));
     const gInfo=[['⚠ en veda','var(--red)'],['en trámite','var(--orange)'],['resuelta','var(--green)']][r.p.gateAgua];const hg=$('hudGate');hg.textContent=gInfo[0];hg.style.color=gInfo[1];
-    const own=Math.max(0,Math.min(100,(r.ownerTotal)/Math.max(1,r.ownerTotal+r.devDist)*100));$('barDueno').style.width=own+'%';$('barDes').style.width=(100-own)+'%';txt('barDueno','Dueño '+pct(r.p.pctDueno*100,0));txt('barDes','Developer '+pct((1-r.p.pctDueno)*100,0));txt('lblCajaDueno',fmtM(r.ownerTotal));txt('lblCajaDes',fmtM(r.devDist));txt('hudValorTierra',fmtMoney(r.valorTerrenoM2)+'/m²');
+    txt('lblCajaDueno',fmtM(r.ownerTotal));txt('lblCajaDes',fmtM(r.devDist));
+    // KPIs del metro
+    const okVend=r.vendiblePct>=.55&&r.vendiblePct<=.65;const mkV=$('mkVendible');mkV.textContent=pct(r.vendiblePct*100,0);mkV.className='mk-val '+(okVend?'c-green':'status-warn');txt('mkVendibleSub',fmtHa(r.vendible)+' vendibles · norma 55–65%');
+    txt('mkIngreso',fmtMoney(r.ingresoM2));txt('mkCosto',fmtMoney(r.costoM2));txt('mkCostoSub','urb. '+fmtMoney(r.urbM2)+'/m² vendible');
+    const mkS=$('mkSpread');mkS.textContent=fmtMoney(r.spreadM2);mkS.className='mk-val '+(r.spreadPct>=.25?'c-gold':r.spreadPct>=.15?'status-warn':'status-bad');txt('mkSpreadSub',pct(r.spreadPct*100,0)+' del ingreso · piso sano 25%');
+    txt('mkDueno',fmtMoney(r.valorTerrenoM2));txt('mkDuenoSub','vs '+fmtMoney(r.p.valorTierraM2)+' de mercado ('+(r.p.valorTierraM2?(r.valorTerrenoM2/r.p.valorTierraM2).toFixed(2):'—')+'×)');
+    txt('mkCola',r.colaMes+' m');txt('mkColaSub','cola: '+r.colaProducto+' · '+fmtN(r.empleos)+' empleos');
     txt('heroUtil',fmtM(r.utilidadFinal));txt('heroUtilSub','margen '+pct(r.margenFinal*100,1)+' · antes de financiar '+fmtM(r.utilidadPre)+' ('+pct(r.margenPre*100,1)+')');
     txt('heroDueno',fmtM(r.ownerTotal));txt('heroDuenoSub',fmtMoney(r.valorTerrenoM2)+' por m² de terreno · '+pct(r.p.pctDueno*100,0)+' de la utilidad');
     const tirEl=$('heroTir');tirEl.textContent=(r.devIrr===null?'—':pct(r.devIrr*100,1))+' · '+fmtM(r.peak);tirEl.className='big serif '+(r.devIrr===null?'':r.devIrr>=r.p.tirTarget?'status-ok':'status-bad');txt('heroTirSub','vs objetivo '+pct(r.p.tirTarget*100,1)+' · MOIC '+(r.devMoic===null?'—':r.devMoic.toFixed(2)+'x')+' · '+r.totalMonths+' meses');
@@ -737,36 +787,71 @@
   function dibujaAreas(r){const bar=$('vizAreas'),ley=$('vizAreasLey');if(!bar)return;const defs=[['vialidades',r.p.pctVial,'#D9A45B'],['banquetas',r.p.pctBanq,'#b98d4e'],['verdes/donación',r.p.pctVerdes,'#8FBF8B'],['equipamiento',r.p.pctEquip,'#a9a4f5'],['retención',r.p.pctRet,'#8ab8ff'],['derecho de vía',r.p.pctDDV,'#E0605A'],['VENDIBLE',r.vendiblePct,'#c9a96e']];bar.innerHTML=defs.map(d=>`<span style="width:${Math.max(0,d[1]*100)}%;background:${d[2]}" title="${d[0]}: ${pct(d[1]*100,0)}">${d[1]>.09?pct(d[1]*100,0):''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} ${pct(d[1]*100,0)}</span>`).join('')}
   function dibujaMezcla(r){const bar=$('vizMezcla'),ley=$('vizMezclaLey');if(!bar)return;const defs=[['Naves',r.p.mixNaves,'#c9a96e',`${fmtN(r.nNaves)} naves · ${fmtN(r.m2NavesConst)} m²`],['Macro',r.p.mixMacro,'#8ab8ff',`${fmtN(r.nMacro)} lotes · ${fmtN(r.m2MacroVend)} m²`],['Comercial',r.p.mixCom,'#7fd4e8',`${fmtN(r.nCom)} lotes · ${fmtN(r.m2ComVend)} m²`],['Vivienda',r.p.mixViv,'#8FBF8B',`${fmtN(r.nViv)} lotes · ${fmtN(r.m2VivVend)} m²`]].filter(d=>d[1]>0);const tot=Math.max(.0001,defs.reduce((a,d)=>a+d[1],0));bar.innerHTML=defs.map(d=>`<span style="width:${d[1]/tot*100}%;background:${d[2]}" title="${d[0]}: ${d[3]}">${d[1]/tot>.14?d[0]:''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} · ${d[3]}</span>`).join('')}
   function dibujaPlan(r){
-    const el=$('vizPlan');if(!el)return;const W=330,H=252;
-    const aspect=r.p.fondo/Math.max(1,r.p.frente),lw=Math.min(280,240/Math.max(.4,Math.min(aspect,2.4))),lh=Math.min(190,lw*Math.min(aspect,2.4)*.7+40);
-    const x0=(W-lw)/2,y0=16,yG=y0+lh;
+    const el=$('vizPlan');if(!el)return;const p=r.p;
+    // Plano HONESTO: aspect ratio real y cada banda con su área exacta a escala.
+    const W=460,H=480,mB=34,mT=14;
+    const aspect=p.fondo/Math.max(1,p.frente);
+    let lotH=H-mT-mB,lotW=lotH/aspect;
+    const maxLotW=250;if(lotW>maxLotW){lotW=maxLotW;lotH=lotW*aspect;if(lotH>H-mT-mB){lotH=H-mT-mB;lotW=lotH/aspect}}
+    const x0=30,yG=mT+lotH;// yG = frente (carretera, abajo)
+    const escala=lotH/p.fondo;// px por metro de fondo
     let s='';
-    // franjas superiores: verdes+equip+retención (proporcional al % sobre cesiones no viales)
-    const topPct=r.p.pctVerdes+r.p.pctEquip+r.p.pctRet,topH=Math.min(lh*.24,lh*topPct*1.6)||0;
-    const wV=r.p.pctVerdes/(topPct||1)*lw,wE=r.p.pctEquip/(topPct||1)*lw,wR=r.p.pctRet/(topPct||1)*lw;
-    if(topH>3){s+=`<rect x="${x0}" y="${y0}" width="${wR}" height="${topH}" fill="#8ab8ff14" stroke="#8ab8ff" stroke-dasharray="3 2"/><rect x="${x0+wR}" y="${y0}" width="${wV}" height="${topH}" fill="#8fbf8b1c" stroke="#8FBF8B"/><rect x="${x0+wR+wV}" y="${y0}" width="${wE}" height="${topH}" fill="#a9a4f51c" stroke="#a9a4f5"/>`;
-      if(wR>28)s+=`<text x="${x0+wR/2}" y="${y0+topH/2+3}" font-size="7.5" fill="#8ab8ff" text-anchor="middle">retención</text>`;
-      if(wV>34)s+=`<text x="${x0+wR+wV/2}" y="${y0+topH/2+3}" font-size="7.5" fill="#8FBF8B" text-anchor="middle">verdes+donación</text>`;
-      if(wE>26)s+=`<text x="${x0+wR+wV+wE/2}" y="${y0+topH/2+3}" font-size="7.5" fill="#a9a4f5" text-anchor="middle">equip.</text>`}
-    // vialidad principal
-    const vy=y0+topH+2,vh=Math.max(5,lh*r.p.pctVial*.5);
-    s+=`<rect x="${x0}" y="${vy}" width="${lw}" height="${vh}" fill="#0a0a0c" stroke="#8a8780"/><text x="${x0+lw/2}" y="${vy+vh/2+2.5}" font-size="7" fill="#b6b3aa" text-anchor="middle">vialidad ${r.p.anchoVial} m · redes bajo calle · ${fmtN(r.mlVial)} ml</text>`;
-    // manzanas de producto (área restante proporcional a la mezcla)
-    const py=vy+vh+2,ph=Math.max(24,yG-py-14);
-    const prods=[['naves',r.p.mixNaves,'#c9a96e',`${fmtN(r.nNaves)} naves PyME`],['macro',r.p.mixMacro,'#8ab8ff',`${fmtN(r.nMacro)} macro-lotes`],['com',r.p.mixCom,'#7fd4e8',`${fmtN(r.nCom)} comercial`],['viv',r.p.mixViv,'#8FBF8B',`${fmtN(r.nViv)} viv.`]].filter(d=>d[1]>0.001);
-    const totMix=Math.max(.0001,prods.reduce((a,d)=>a+d[1],0));let px=x0;
-    prods.forEach(d=>{const w=d[1]/totMix*lw;s+=`<rect x="${px}" y="${py}" width="${w}" height="${ph}" fill="${d[2]}14" stroke="${d[2]}" stroke-width="1.2"/>`;
-      const cols=Math.max(1,Math.round(w/26)),rows=Math.max(1,Math.round(ph/22));
-      for(let i=1;i<cols;i++)s+=`<line x1="${px+i*w/cols}" y1="${py}" x2="${px+i*w/cols}" y2="${py+ph}" stroke="${d[2]}30"/>`;
-      for(let j=1;j<rows;j++)s+=`<line x1="${px}" y1="${py+j*ph/rows}" x2="${px+w}" y2="${py+j*ph/rows}" stroke="${d[2]}30"/>`;
-      if(w>46)s+=`<text x="${px+w/2}" y="${py+ph/2+3}" font-size="8" font-weight="800" fill="${d[2]}" text-anchor="middle">${d[3]}</text>`;px+=w});
-    // derecho de vía + carretera (frente)
-    s+=`<rect x="${x0}" y="${yG-10}" width="${lw}" height="10" fill="#e0605a1a" stroke="#E0605A66" stroke-dasharray="3 2"/>`;
-    s+=`<line x1="${x0-8}" y1="${yG+8}" x2="${x0+lw+8}" y2="${yG+8}" stroke="#f4f1ea" stroke-width="1.6"/><text x="${x0+lw/2}" y="${yG+20}" font-size="8" fill="#cf7a74" text-anchor="middle">Carr. Hermosillo–Kino · frente ${fmtN(r.p.frente)} m · derecho de vía ${pct(r.p.pctDDV*100,0)}</text>`;
-    s+=`<rect x="${x0}" y="${y0}" width="${lw}" height="${lh}" fill="none" stroke="#f4f1ea" stroke-width="1.4"/>`;
-    s+=`<text x="${x0-6}" y="${(y0+yG)/2}" font-size="7.5" fill="#8a8780" text-anchor="middle" transform="rotate(-90 ${x0-6} ${(y0+yG)/2})">fondo ${fmtN(r.p.fondo)} m</text>`;
-    s+=`<text x="${x0}" y="${H-6}" font-size="8.5" fill="#8a8780">${fmtHa(r.superficie)} · vendible ${fmtHa(r.vendible)} (${pct(r.vendiblePct*100,0)}) · ${r.p.etapas} etapas</text>`;
-    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Master plan esquemático">${s}</svg>`;
+    // presupuesto de alturas por área exacta (bandas de ancho completo ⇒ % área = % altura)
+    const hOf=frac=>frac*lotH;
+    const callesH=hOf(p.pctVial+p.pctBanq);
+    const nCalles=Math.max(2,Math.min(18,Math.round(r.mlVial/Math.max(1,p.frente))));
+    // segmentos de abajo (carretera) hacia arriba
+    const navesSub=Math.max(1,Math.min(8,nCalles-4));
+    const segs=[];
+    segs.push({t:'ddv',h:hOf(p.pctDDV),c:'#E0605A',f:'#e0605a1a',lbl:'derecho de vía',dash:1});
+    segs.push({t:'calle'});
+    if(p.mixCom>0)segs.push({t:'prod',h:hOf(r.terrCom/r.superficie),c:'#7fd4e8',f:'#7fd4e814',lbl:`${fmtN(r.nCom)} lotes comerciales · frente a carretera`,grid:Math.max(2,Math.round(r.nCom/2))});
+    segs.push({t:'calle'});
+    for(let i=0;i<navesSub;i++){segs.push({t:'prod',h:hOf(r.terrNaves/r.superficie)/navesSub,c:'#c9a96e',f:'#c9a96e14',lbl:i===Math.floor(navesSub/2)?`${fmtN(r.nNaves)} naves PyME (NOWUS)`:'',grid:8});if(i<navesSub-1)segs.push({t:'calle'})}
+    if(p.mixViv>0){segs.push({t:'calle'});segs.push({t:'prod',h:hOf(r.terrViv/r.superficie),c:'#8FBF8B',f:'#8fbf8b14',lbl:`${fmtN(r.nViv)} lotes de vivienda`,grid:10})}
+    segs.push({t:'calle'});
+    if(p.mixMacro>0)segs.push({t:'prod',h:hOf(r.terrMacro/r.superficie),c:'#8ab8ff',f:'#8ab8ff12',lbl:`${fmtN(r.nMacro)} macro-lotes industriales`,grid:Math.max(2,Math.round(r.nMacro/3))});
+    segs.push({t:'ces',h:hOf(p.pctEquip),c:'#a9a4f5',f:'#a9a4f51a',lbl:'equipamiento'});
+    segs.push({t:'ces',h:hOf(p.pctVerdes),c:'#8FBF8B',f:'#8fbf8b1f',lbl:'verdes + donación municipal'});
+    segs.push({t:'ces',h:hOf(p.pctRet),c:'#8ab8ff',f:'#8ab8ff1a',lbl:'retención pluvial',dash:1});
+    const nCalleSegs=segs.filter(x=>x.t==='calle').length,hCalle=nCalleSegs?callesH/nCalleSegs:0;
+    let y=yG;const vendZonas=[];
+    segs.forEach(seg=>{
+      const h=seg.t==='calle'?hCalle:seg.h||0;if(h<=0){return}
+      y-=h;
+      if(seg.t==='calle'){s+=`<rect x="${x0}" y="${y}" width="${lotW}" height="${h}" fill="#000" stroke="#8a8780" stroke-width="${Math.min(1,h*.2)}"/>`;if(h>7)s+=`<line x1="${x0+4}" y1="${y+h/2}" x2="${x0+lotW-4}" y2="${y+h/2}" stroke="#f4f1ea33" stroke-width="1" stroke-dasharray="6 5"/>`}
+      else{s+=`<rect x="${x0}" y="${y}" width="${lotW}" height="${h}" fill="${seg.f}" stroke="${seg.c}" stroke-width="1.1"${seg.dash?' stroke-dasharray="4 3"':''}/>`;
+        if(seg.grid&&h>7){const cols=seg.grid;for(let i=1;i<cols;i++)s+=`<line x1="${x0+i*lotW/cols}" y1="${y}" x2="${x0+i*lotW/cols}" y2="${y+h}" stroke="${seg.c}2e" stroke-width="1"/>`}
+        if(seg.lbl&&h>=12)s+=`<text x="${x0+lotW/2}" y="${y+h/2+3}" font-size="8.5" font-weight="800" fill="${seg.c}" text-anchor="middle">${seg.lbl}</text>`;
+        if(seg.t==='prod')vendZonas.push([y,h]);}
+    });
+    // gate del agua: rayado rojo sobre TODO lo vendible mientras no haya derechos
+    if(p.gateAgua<2){
+      s=`<defs><pattern id="veda" width="9" height="9" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="9" stroke="#E0605A" stroke-width="1.6" opacity=".4"/></pattern></defs>`+s;
+      vendZonas.forEach(([zy,zh])=>{s+=`<rect x="${x0}" y="${zy}" width="${lotW}" height="${zh}" fill="url(#veda)"/>`});
+      s+=`<text x="${x0+lotW/2}" y="${mT-3}" font-size="8.5" font-weight="800" fill="#E0605A" text-anchor="middle">⚠ vendible condicionado al agua (${p.gateAgua===0?'veda sin resolver':'en trámite'})</text>`;
+    }
+    // contorno, carretera y cotas
+    s+=`<rect x="${x0}" y="${mT}" width="${lotW}" height="${lotH}" fill="none" stroke="#f4f1ea" stroke-width="1.5"/>`;
+    s+=`<line x1="${x0-10}" y1="${yG+9}" x2="${x0+lotW+10}" y2="${yG+9}" stroke="#f4f1ea" stroke-width="2"/><text x="${x0+lotW/2}" y="${yG+22}" font-size="8.5" fill="#cf7a74" text-anchor="middle">Carr. Hermosillo–Kino · frente ${fmtN(p.frente)} m</text>`;
+    s+=`<text x="${x0-8}" y="${(mT+yG)/2}" font-size="8" fill="#8a8780" text-anchor="middle" transform="rotate(-90 ${x0-8} ${(mT+yG)/2})">fondo ${fmtN(p.fondo)} m</text>`;
+    const esc100=100*escala;if(esc100>8)s+=`<line x1="${x0+lotW+14}" y1="${yG}" x2="${x0+lotW+14}" y2="${yG-esc100}" stroke="#8a8780" stroke-width="2"/><text x="${x0+lotW+19}" y="${yG-esc100/2+3}" font-size="7.5" fill="#8a8780">100 m</text>`;
+    // leyenda a la derecha: el reparto del suelo en ha
+    const lx=x0+lotW+34;let ly=mT+8;
+    const fila=(c,nom,dato,bold)=>{s+=`<rect x="${lx}" y="${ly-7}" width="9" height="9" rx="2" fill="${c}"/><text x="${lx+14}" y="${ly+1}" font-size="9"${bold?' font-weight="800"':''} fill="${bold?'#f4f1ea':'#b6b3aa'}">${nom}</text><text x="${lx+14}" y="${ly+12}" font-size="8.5" fill="#8a8780">${dato}</text>`;ly+=26};
+    s+=`<text x="${lx}" y="${ly}" font-size="8.5" font-weight="800" fill="#8a8780" letter-spacing="2">EL REPARTO DEL SUELO</text>`;ly+=18;
+    if(p.mixNaves>0)fila('#c9a96e','Naves PyME',`${fmtHa(r.terrNaves)} · ${fmtN(r.nNaves)} naves · ${fmtM(r.ingNaves)}`,1);
+    if(p.mixMacro>0)fila('#8ab8ff','Macro-lotes',`${fmtHa(r.terrMacro)} · ${fmtN(r.nMacro)} lotes · ${fmtM(r.ingMacro)}`,1);
+    if(p.mixCom>0)fila('#7fd4e8','Comercial',`${fmtHa(r.terrCom)} · ${fmtN(r.nCom)} lotes · ${fmtM(r.ingCom)}`,1);
+    if(p.mixViv>0)fila('#8FBF8B','Lotes vivienda',`${fmtHa(r.terrViv)} · ${fmtN(r.nViv)} lotes · ${fmtM(r.ingViv)}`,1);
+    fila('#000000','Calles y banquetas',`${fmtHa(r.m2Vial+r.m2Banq)} · ${fmtN(r.mlVial)} ml · ${fmtN(r.luminarias)} lum.`);
+    fila('#8FBF8B','Verdes + donación',fmtHa(r.m2Verdes));
+    fila('#a9a4f5','Equipamiento',fmtHa(r.m2Equip));
+    fila('#8ab8ff','Retención pluvial',fmtHa(r.m2Ret));
+    fila('#E0605A','Derecho de vía',fmtHa(r.m2DDV));
+    ly+=2;s+=`<line x1="${lx}" y1="${ly-12}" x2="${W-10}" y2="${ly-12}" stroke="#ffffff22"/><text x="${lx}" y="${ly}" font-size="9.5" font-weight="800" fill="#e0c590">${fmtHa(r.superficie)} → ${fmtHa(r.vendible)} vendibles (${pct(r.vendiblePct*100,0)})</text>`;ly+=13;
+    s+=`<text x="${lx}" y="${ly}" font-size="8.5" fill="#8a8780">~${fmtN(r.empleos)} empleos · agua ${r.aguaDia.toFixed(0)} m³/día · ${fmtN(r.demandaKva)} kVA</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plano proporcional del terreno">${s}</svg>`;
   }
   function dibujaCurva(r){
     const el=$('vizCurva');if(!el)return;const W=330,H=196,mL=8,mR=8,mT=16,mB=26,n=r.flows.length;
@@ -832,10 +917,28 @@
     document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>cambiarEstado(b.dataset.estado));
     $('segSiguiente').value=caso.siguiente_paso||'';
     $('segLog').textContent=caso.notas_seguimiento||'Sin notas todavía.'+(caso.caso_id?'':' Guarda el caso primero.');
+    pintaCamino();
+  }
+  const HITOS=['Agua: derechos CONAGUA','Urbanista: donación, uso de suelo, DDV','Presupuesto de constructor (18 PU)','Comparables de mercado (precios y absorción)','Acuerdo con el dueño (% y term sheet)','Decisión de comité'];
+  function hitosVals(){return String(caso.hitos||HITOS_DEF).split(',').map(v=>Math.max(0,Math.min(2,Number(v)||0))).slice(0,HITOS.length)}
+  function pintaCamino(){
+    const cont=$('caminoSteps');if(!cont)return;const vals=hitosVals();while(vals.length<HITOS.length)vals.push(0);
+    const est=['falta','en curso','resuelto'];
+    cont.innerHTML=HITOS.map((h,i)=>`<button class="cstep s${vals[i]}" data-hito="${i}"><span class="cdot"></span><span class="clbl">${h}</span><span class="cest">${est[vals[i]]}</span></button>`).join('');
+    const done=vals.filter(v=>v===2).length,curso=vals.filter(v=>v===1).length;
+    $('caminoBarra').style.width=(done/HITOS.length*100)+'%';
+    txt('caminoRes',`${done} de ${HITOS.length} resueltos${curso?' · '+curso+' en curso':''}`);
+    cont.querySelectorAll('[data-hito]').forEach(b=>b.onclick=()=>{
+      const i=Number(b.dataset.hito),v=hitosVals();while(v.length<HITOS.length)v.push(0);
+      v[i]=(v[i]+1)%3;caso.hitos=v.join(',');
+      if(i===0&&v[0]===2&&gateAgua<2){gateAgua=2;calculate()}   // resolver el hito del agua desbloquea el gate del plano
+      pintaCamino();guardarDraft();
+      if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,hitos:caso.hitos,request_id:nuevoRequestId()},'Camino actualizado: '+HITOS[i].split(':')[0]+' → '+est[v[i]]);
+    });
   }
   function aplicarCasoRemoto(obj){
     Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
-    caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',version:Number(obj.version||1)};
+    caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',hitos:String(obj.hitos||HITOS_DEF),version:Number(obj.version||1)};
     calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado')
   }
   async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
@@ -848,7 +951,7 @@
     if(enviarCorreo&&!correo){toast('Pon un correo para enviarte la palabra');return}
     const btns=[$('gGuardarSolo'),$('gGuardarEnviar')];btns.forEach(b=>b.disabled=true);
     const rSt=state||calculate();
-    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.pik+f.fee),Math.round(f.debt),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
+    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,hitos:caso.hitos,inputs:inputValues(),resumen:resumenActual(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.pik+f.fee),Math.round(f.debt),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
     try{
       const r=await apiPost(payload);
       btns.forEach(b=>b.disabled=false);
@@ -914,6 +1017,30 @@
   /* ================== ARRANQUE ================== */
   document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
   controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();
+  /* Eco del slider: al soltar una perilla, los KPIs del metro contestan con su delta */
+  let kpiSnap=null;
+  const snapKpis=()=>state?{vendible:state.vendiblePct*100,ingresoM2:state.ingresoM2,costoM2:state.costoM2,spreadM2:state.spreadM2,duenoM2:state.valorTerrenoM2,colaMes:state.colaMes}:null;
+  const MEJOR_ARRIBA={vendible:true,ingresoM2:true,costoM2:false,spreadM2:true,duenoM2:true,colaMes:false};
+  const UMBRAL={vendible:.2,ingresoM2:5,costoM2:5,spreadM2:5,duenoM2:2,colaMes:.6};
+  const FMTD={vendible:v=>Math.abs(v).toFixed(1)+' pts',ingresoM2:v=>'$'+fmtN(Math.abs(v))+'/m²',costoM2:v=>'$'+fmtN(Math.abs(v))+'/m²',spreadM2:v=>'$'+fmtN(Math.abs(v))+'/m²',duenoM2:v=>'$'+fmtN(Math.abs(v))+'/m²',colaMes:v=>Math.abs(Math.round(v))+' meses'};
+  function ecoDeltas(){
+    if(!kpiSnap||!state)return;const ahora=snapKpis();
+    Object.entries(ahora).forEach(([k,v])=>{
+      const d=v-kpiSnap[k];if(Math.abs(d)<UMBRAL[k])return;
+      const box=document.querySelector(`.mkpi[data-kpi="${k}"]`);if(!box)return;
+      const sube=d>0,bueno=MEJOR_ARRIBA[k]?sube:!sube;
+      box.querySelectorAll('.mk-delta').forEach(x=>x.remove());
+      const chip=document.createElement('span');chip.className='mk-delta '+(bueno?'up':'down');chip.textContent=(sube?'+':'−')+FMTD[k](d);
+      box.appendChild(chip);box.classList.add('pulse');
+      setTimeout(()=>{chip.remove();box.classList.remove('pulse')},2300);
+    });
+    kpiSnap=null;
+  }
+  controls.forEach(c=>{
+    c.addEventListener('pointerdown',()=>{if(state)kpiSnap=snapKpis()});
+    c.addEventListener('touchstart',()=>{if(state&&!kpiSnap)kpiSnap=snapKpis()},{passive:true});
+    c.addEventListener('change',ecoDeltas);
+  });
   document.querySelectorAll('.gate-mode').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();gateAgua=Number(b.dataset.gate);calculate();pintaCaso()}));
   document.querySelectorAll('.esc-chip').forEach(ch=>ch.onclick=()=>{const e=ESCENARIOS[ch.dataset.esc];setControl('inVarPrecios',e.inVarPrecios);setControl('inVarCostos',e.inVarCostos);calculate()});
   $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
@@ -922,7 +1049,7 @@
   $('casosCerrar').onclick=cerrarOverlays;
   $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
   $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
-  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));gateAgua=PRELLENADO.inGateAgua;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de La Cercada v4')};
+  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));gateAgua=PRELLENADO.inGateAgua;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',hitos:HITOS_DEF,version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de La Cercada v4')};
   $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
