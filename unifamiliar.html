@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PPP Unifamiliar · Potenciales · YoDesarrollo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
+  :root{--bg:#0a0a0c;--card:#131317;--surface:rgba(255,255,255,.045);--text:#f4f1ea;--muted:#8a8780;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
+    --gold:#c9a96e;--goldc:#e0c590;--blue:#8ab8ff;--teal:#7fd4e8;--pink:#ff8aa1;--orange:#D9A45B;--purple:#a9a4f5;--green:#8FBF8B;--red:#E0605A;--dark:#0a0a0c}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Manrope',-apple-system,sans-serif;color:var(--text);margin:0;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,var(--bg)}
+  .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+  a{color:var(--goldc)}
+  /* ===== Gate ===== */
+  #gate{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+  #gate.off{display:none}
+  .gate-box{width:min(360px,92vw);text-align:center}
+  .gate-box img{height:34px;filter:brightness(0) invert(.92);margin-bottom:22px}
+  .gate-box h1{font-size:30px;margin:0 0 4px}
+  .gate-box p{color:var(--muted);font-size:12px;margin:0 0 22px}
+  .gate-box input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:12px;padding:13px 14px;color:var(--text);font:inherit;font-size:15px;text-align:center;letter-spacing:.06em}
+  .gate-box input:focus{outline:2px solid #c9a96e66;border-color:var(--gold)}
+  .gate-box button{width:100%;margin-top:10px;background:var(--gold);color:#0a0a0c;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .gate-err{color:var(--red);font-size:12px;min-height:18px;margin-top:10px;font-weight:700}
+  .gate-local{margin-top:16px;font-size:11px;color:var(--muted);text-decoration:underline;cursor:pointer;background:none;border:0;font-family:inherit}
+  /* ===== Header pegajoso (HUD) ===== */
+  .sticky-header{position:sticky;top:0;z-index:100;background:rgba(10,10,12,.94);backdrop-filter:blur(15px);padding:10px 16px 12px;border-bottom:1px solid #c9a96e59;box-shadow:0 4px 24px #0006}
+  .header-inner,.container{max-width:940px;margin:0 auto}.container{padding:16px 16px 80px}
+  .brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .brandrow img{height:20px;filter:brightness(0) invert(.92)}
+  .brandrow .kick{font-size:9px;font-weight:800;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+  .hud-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #ffffff14;font-size:12px;font-weight:600;color:#d8d4ca}
+  .hud-row:last-child{border:0;margin:0;padding:0}
+  .hud-item{display:flex;align-items:center;gap:5px;white-space:nowrap}.hud-val{font-size:14px;font-weight:800;letter-spacing:.3px}
+  .c-green{color:var(--green)}.c-pink{color:var(--pink)}.c-blue{color:var(--blue)}.c-orange{color:var(--orange)}.c-red{color:var(--red)}.c-purple{color:var(--purple)}.c-gold{color:var(--goldc)}
+  .urban-hud{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;row-gap:9px;margin:9px 0 7px;padding:8px 0;border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14}
+  .urban-item{min-width:0;text-align:center}
+  .urban-item span{display:block;color:#8a8780;font-size:9px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .urban-item b{display:block;color:#fff;font-size:13px;margin-top:2px;white-space:nowrap}
+  .urban-item:nth-child(1) b{color:var(--purple)}.urban-item:nth-child(2) b{color:var(--purple)}.urban-item:nth-child(3) b{color:var(--goldc)}.urban-item:nth-child(4) b{color:var(--green)}.urban-item:nth-child(5) b{color:var(--teal)}.urban-item:nth-child(6) b{color:var(--goldc)}.urban-item:nth-child(7) b{color:var(--green)}.urban-item:nth-child(8) b{color:var(--orange)}.urban-item:nth-child(9) b{color:var(--green)}.urban-item:nth-child(10) b{color:var(--blue)}
+  .split-bar{height:16px;background:#ffffff14;border-radius:8px;overflow:hidden;display:flex;margin-top:7px;box-shadow:inset 0 2px 4px #0006}
+  .split{height:100%;display:flex;justify-content:center;align-items:center;color:#0a0a0c;font-size:9px;font-weight:800;transition:width .25s;overflow:hidden}
+  /* ===== Hero del caso ===== */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#121218,#0c0c0f);border:1px solid var(--linea);border-radius:22px;padding:20px 20px 16px;margin-bottom:14px}
+  .hero::after{content:"";position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,#c9a96e2b,transparent 65%);pointer-events:none}
+  .hero .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  .hero h1{font-size:clamp(26px,5vw,38px);margin:6px 0 2px;line-height:1.05}
+  .hero .hsub{color:var(--muted);font-size:12px;margin:0 0 14px}
+  .hero .hsub b{color:var(--suave)}
+  .estado-pill{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--gold);color:var(--goldc);border-radius:12px;padding:4px 10px;margin-left:8px;vertical-align:middle}
+  .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .hcard{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 14px;min-width:0}
+  .hcard .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .hcard .big{font-size:clamp(22px,4vw,32px);line-height:1.1;margin:4px 0 2px;color:var(--goldc)}
+  .hcard .sub2{font-size:10.5px;color:var(--muted);line-height:1.4}
+  .lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14.5px;line-height:1.55;color:#d8d0bd;margin:12px 2px 2px;max-width:64ch}
+  .lectura b{color:var(--goldc);font-style:normal}
+  .hero-viz{display:grid;grid-template-columns:5fr 6fr;gap:10px;margin-top:12px}
+  .viz-card{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 12px 8px;min-width:0}
+  .viz-card .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .viz-svg{margin-top:6px}.viz-svg svg{display:block;width:100%;height:auto}
+  .viz-svg text{font-family:'Manrope',sans-serif}
+  .mixbar-wrap{margin:4px 0 10px}
+  .mixbar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--lineaf)}
+  .mixbar span{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#0a0a0c;white-space:nowrap;overflow:hidden;min-width:0;transition:width .3s}
+  .mixbar-leyenda{display:flex;gap:12px;flex-wrap:wrap;font-size:9.5px;color:var(--muted);margin-top:5px;font-weight:700}
+  .mixbar-leyenda i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+  .gauge{position:relative;height:14px;border-radius:7px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
+  .gauge-be{position:absolute;left:0;top:0;bottom:0;background:#e0605a55;border-right:2px solid var(--red)}
+  .gauge-col{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,#8fbf8b88,#8FBF8B)}
+  /* ===== Lentes de foco ===== */
+  .lentes{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+  .lentes::-webkit-scrollbar{display:none}
+  .lchip{flex-shrink:0;border:1px solid var(--lineaf);border-radius:20px;padding:8px 14px;font-size:11px;font-weight:800;color:var(--suave);background:transparent;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .lchip.on{background:var(--gold);color:#0a0a0c;border-color:var(--gold)}
+  .lchip .cnt{background:#00000033;border-radius:10px;padding:1px 7px;margin-left:5px;font-size:10px}
+  .lchip:not(.on) .cnt{background:#ffffff14;color:var(--goldc)}
+  .dimmed{opacity:.28;transition:opacity .25s}
+  /* ===== Barra del caso + seguimiento ===== */
+  .caso-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--card);border:1px solid var(--linea);border-radius:14px;flex-wrap:wrap}
+  .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+  .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+  .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
+  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#0a0a0c;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
+  .small-btn.danger{background:#e0605a26;color:var(--red)}
+  .small-btn:disabled{opacity:.4;cursor:default}
+  .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
+  .seguimiento.on{display:block}
+  .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+  .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+  .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
+  .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
+  .sync-dot{font-size:10px;color:var(--muted);font-weight:700}
+  .sync-dot.err{color:var(--orange)}
+  /* ===== Tarjetas del modelo ===== */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+  .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 4px 16px #00000040;border:1px solid var(--linea);transition:.25s;cursor:pointer;overflow:hidden}
+  .card:active{transform:scale(.985)}.card.open{box-shadow:0 12px 32px #00000070;border-color:var(--gold)}
+  .wide{grid-column:1/-1}
+  .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+  .title-wrap{display:flex;gap:10px;align-items:center}
+  .icon-box{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .card-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .edit-pill{background:rgba(255,255,255,.08);color:var(--muted);font-size:10px;font-weight:800;padding:6px 10px;border-radius:12px}
+  .card.open .edit-pill{background:var(--gold);color:#0a0a0c}
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .kpi-grid.tres{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:700px){.kpi-grid.tres{grid-template-columns:1fr 1fr}}
+  .kpi-box{background:var(--box);padding:10px 12px;border-radius:12px;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(255,255,255,.055);min-height:57px}
+  .kpi-box.full{grid-column:span 2}
+  .kpi-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+  .kpi-val{font-size:14px;font-weight:800;letter-spacing:-.3px}
+  .drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease;background:#0e0e12;margin:0 -16px -16px;padding:0 16px}
+  .drawer.active{max-height:3800px;opacity:1;padding:16px;border-top:1px solid var(--linea);margin-top:16px}
+  .input-group{margin-bottom:15px}.input-group:last-child{margin-bottom:4px}
+  .input-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}
+  .input-header label{font-size:11px;font-weight:800;color:var(--suave);text-transform:uppercase}
+  .val-display{font-size:12px;font-weight:800;color:var(--text);background:rgba(255,255,255,.08);padding:4px 8px;border-radius:6px;min-width:70px;text-align:right;cursor:text;border:1px solid transparent}
+  .val-display:hover{border-color:var(--lineaf);background:rgba(255,255,255,.12)}
+  .val-display:focus{outline:2px solid #c9a96e55;background:rgba(255,255,255,.12);border-color:var(--gold)}
+  input[type=range]{appearance:none;-webkit-appearance:none;width:100%;height:24px;background:transparent}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;height:24px;width:24px;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;margin-top:-9px;cursor:grab}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
+  input[type=range]::-moz-range-thumb{height:24px;width:24px;border:0;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;cursor:grab}
+  input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
+  .input-help{font-size:10.5px;line-height:1.4;color:var(--muted);margin-top:6px;padding:8px 10px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.18);border-radius:10px}
+  .subheading{font-size:10px;text-transform:uppercase;font-weight:800;color:var(--goldc);letter-spacing:.7px;margin:16px 0 8px;border-bottom:1px solid var(--linea);padding-bottom:6px}
+  .micro-readout{font-size:11px;line-height:1.45;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 10px;margin:10px 0}
+  .status-ok{color:#8FBF8B!important}.status-warn{color:#D9A45B!important}.status-bad{color:#E0605A!important}
+  details.advanced{background:rgba(255,255,255,.025);border:1px solid var(--linea);border-radius:12px;margin:16px 0 0;padding:0 12px}
+  details.advanced summary{padding:11px 0;cursor:pointer;color:var(--suave);font-size:11px;font-weight:800;text-transform:uppercase}
+  .advanced-content{padding:0 0 12px}
+  .help-legend{font-size:10px;color:var(--muted);margin:0 0 10px}.help-legend b{color:var(--suave)}
+  /* ===== Tratamiento del terreno / waterfall ===== */
+  .partner-guide{background:#c9a96e14;border:1px solid #c9a96e4d;border-radius:10px;padding:9px 10px;font-size:10.5px;line-height:1.45;color:#d9c9a8;margin-bottom:12px}
+  .partner-guide b{color:var(--goldc)}
+  .land-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0 12px}
+  .land-mode{border:1px solid var(--lineaf);border-radius:10px;background:rgba(255,255,255,.03);text-align:left;padding:9px;cursor:pointer;color:var(--suave);font-family:inherit}
+  .land-mode b{display:block;font-size:11px;color:var(--text)}
+  .land-mode span{display:block;margin-top:3px;font-size:9px;line-height:1.3;color:var(--muted)}
+  .land-mode.active{border-color:var(--gold);background:#c9a96e1c;box-shadow:0 0 0 1px #c9a96e55}
+  .land-deal-summary{background:#c9a96e10;border:1px solid #c9a96e40;border-radius:10px;padding:10px;font-size:11px;line-height:1.5;color:#d8d4ca;margin:10px 0}
+  .land-deal-summary b{color:var(--goldc)}
+  .waterfall-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0}
+  .waterfall-step{border-radius:8px;padding:7px 6px;background:rgba(255,255,255,.04);color:var(--muted);font-size:9px;line-height:1.25}
+  .waterfall-step b{display:block;font-size:10px;color:var(--suave);margin-bottom:2px}
+  .waterfall-step:nth-child(1){border-top:3px solid var(--red)}.waterfall-step:nth-child(2){border-top:3px solid var(--blue)}.waterfall-step:nth-child(3){border-top:3px solid var(--gold)}.waterfall-step:nth-child(4){border-top:3px solid var(--orange)}
+  /* ===== Ayudas (tooltips de factores) ===== */
+  .label-help{display:inline-flex;align-items:center;gap:5px;min-width:0}
+  .factor-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;padding:0;border:1px solid #c9a96e66;border-radius:50%;background:transparent;color:var(--goldc);font-size:11px;font-weight:900;cursor:help;font-family:inherit}
+  .factor-tooltip{display:none;position:absolute;z-index:200;left:-5px;top:23px;width:min(310px,70vw);padding:10px;border-radius:10px;background:#1c1c22;border:1px solid var(--lineaf);color:#f2ede2;box-shadow:0 8px 22px #000a;font:10.5px/1.42 'Manrope',sans-serif;text-transform:none;letter-spacing:0;text-align:left}
+  .factor-tooltip b{color:#fff}
+  .factor-tooltip .help-type{display:inline-block;margin:0 0 5px;padding:2px 5px;border-radius:5px;background:#c9a96e26;color:var(--goldc);font-size:9px;font-weight:800;text-transform:uppercase}
+  .factor-tooltip p{margin:4px 0}.factor-tooltip a{color:var(--goldc);text-decoration:underline}
+  .factor-help:hover .factor-tooltip,.factor-help:focus .factor-tooltip,.factor-help.open .factor-tooltip{display:block}
+  .kpi-box[data-kpi-help]{cursor:help}
+  /* ===== Herramientas avanzadas ===== */
+  .advanced-board{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:14px}
+  .advanced-board summary{cursor:pointer;font-weight:800;font-size:12px;color:var(--suave)}
+  .advanced-board[open] summary{margin-bottom:12px}
+  .two-advanced{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .formula-list{font-size:11px}
+  .formula-row{display:grid;grid-template-columns:132px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linea)}
+  .formula-row b{color:var(--text)}
+  .formula-row code{font-size:10px;color:var(--muted);white-space:normal}
+  .formula-btn{border:0;background:#c9a96e22;color:var(--goldc);border-radius:8px;font-size:10px;font-weight:800;padding:5px;cursor:pointer;font-family:inherit}
+  .formula-detail{background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:10px;font-size:11px;line-height:1.45;color:var(--suave);margin-top:9px}
+  .chip{border:0;background:#c9a96e22;color:var(--goldc);border-radius:12px;padding:4px 7px;margin:5px 4px 0 0;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
+  .flow-table{width:100%;border-collapse:collapse;font-size:11px;color:var(--suave)}
+  .flow-table th,.flow-table td{padding:7px 5px;border-bottom:1px solid var(--linea);text-align:right}
+  .flow-table th:first-child,.flow-table td:first-child{text-align:left}
+  .flow-scroll{max-height:420px;overflow:auto;border:1px solid var(--linea);border-radius:10px;padding:0 8px}
+  .year-row td{color:var(--goldc);font-weight:900;text-align:left!important;padding-top:12px;font-size:10px;letter-spacing:.08em}
+  .tot-row td{border-top:1px solid var(--lineaf);font-weight:900;color:var(--text)}
+  .json-editor{width:100%;min-height:190px;border:1px solid var(--lineaf);border-radius:10px;padding:10px;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical;background:#0e0e12;color:#d8d4ca}
+  .note{font-size:10px;line-height:1.45;color:var(--muted);margin:6px 0}
+  .proforma-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 15px}
+  .proforma-card{background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:12px;padding:11px}
+  .proforma-card h3{margin:0 0 7px;font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}
+  .mini-table{width:100%;border-collapse:collapse;font-size:10.5px;color:var(--suave)}
+  .mini-table td{padding:5px 0;border-bottom:1px solid var(--linea)}
+  .mini-table td:last-child{text-align:right;font-weight:800;color:var(--text)}
+  .mini-table .section-row td{padding-top:10px;border-bottom:0;color:var(--goldc);font-size:9px;font-weight:900;letter-spacing:.45px}
+  .mini-table .total-row td{border-top:1px solid var(--lineaf);color:var(--text);font-weight:900}
+  .covenant-line{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--linea);font-size:10.5px;color:var(--suave)}
+  .covenant-line b{white-space:nowrap}
+  .covenant-ok{color:#8FBF8B}.covenant-bad{color:#E0605A}.covenant-warn{color:#D9A45B}
+  .reference-strip{margin:-2px 0 16px;padding:9px 10px;border:1px solid #8fbf8b40;border-radius:11px;background:#8fbf8b0d;color:#b9c4b4;font-size:10.5px;line-height:1.45}
+  .reference-strip b{color:#a9d3a5}.reference-strip a{color:var(--goldc);font-weight:700}
+  /* ===== Modales y toast ===== */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto}
+  .overlay.on{display:flex}
+  .sheet{background:var(--card);border:1px solid var(--lineaf);border-radius:18px;max-width:480px;width:100%;padding:18px;margin:auto 0}
+  .sheet h2{font-size:22px;margin:0 0 2px}
+  .sheet .sh-sub{color:var(--muted);font-size:11.5px;margin:0 0 14px;line-height:1.45}
+  .fld{margin-bottom:11px}
+  .fld label{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}
+  .fld input,.fld textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:10px;padding:11px 12px;color:var(--text);font:inherit;font-size:13px}
+  .fld input:focus,.fld textarea:focus{outline:2px solid #c9a96e55;border-color:var(--gold)}
+  .fld textarea{min-height:56px;resize:vertical;font-size:12px}
+  .fld .hint{font-size:10px;color:var(--muted);margin-top:4px}
+  .sheet-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+  .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+  .caso-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--linea);cursor:pointer}
+  .caso-item:hover{background:rgba(255,255,255,.03)}
+  .caso-item .ci-n{font-size:13px;font-weight:700;color:var(--text)}
+  .caso-item .ci-m{font-size:10px;color:var(--muted);margin-top:2px}
+  .caso-item .ci-kpi{text-align:right;font-size:11px;font-weight:800;color:var(--goldc);white-space:nowrap}
+  .caso-item .ci-kpi span{display:block;font-size:9px;color:var(--muted);font-weight:700}
+  .badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:9px;padding:2px 7px;background:#c9a96e26;color:var(--goldc);margin-left:6px;vertical-align:1px}
+  #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1d1d22;border:1px solid var(--gold);color:var(--text);font-size:12px;font-weight:700;border-radius:12px;padding:11px 18px;z-index:600;transition:transform .3s;max-width:88vw;text-align:center;box-shadow:0 10px 30px #000a}
+  #toast.on{transform:translateX(-50%) translateY(0)}
+  .clave-banner{display:none;background:#d9a45b1a;border:1px solid #d9a45b55;color:#e8c896;border-radius:12px;padding:10px 12px;font-size:11.5px;margin-bottom:12px;line-height:1.5}
+  .clave-banner.on{display:block}
+  /* ===== Móvil ===== */
+  @media(max-width:700px){
+    .grid-2,.two-advanced,.proforma-grid{grid-template-columns:1fr}.wide{grid-column:auto}
+    .formula-row{grid-template-columns:1fr}
+    .hud-row{font-size:10px;flex-wrap:wrap;row-gap:3px}.hud-val{font-size:12px}
+    .brandrow .kick{overflow:hidden;text-overflow:ellipsis;max-width:52vw;letter-spacing:.12em}
+    .sticky-header{padding-left:11px;padding-right:11px}.container{padding-left:11px;padding-right:11px}
+    .urban-hud{grid-template-columns:repeat(3,1fr)}
+    .hero-grid{grid-template-columns:1fr}
+    .hero-viz{grid-template-columns:1fr}
+    .caso-bar{align-items:flex-start}.caso-actions{justify-content:flex-end}
+    .land-modes{grid-template-columns:1fr}.waterfall-steps{grid-template-columns:1fr 1fr}
+    .factor-tooltip{position:fixed;left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:55vh;overflow:auto}
+    .factor-help:hover .factor-tooltip{display:none}.factor-help.open .factor-tooltip{display:block}
+  }
+</style>
+<style>
+  /* ===== Extras del módulo Unifamiliar ===== */
+  .breadcrumb{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:6px}
+  .breadcrumb a{color:var(--goldc);text-decoration:none}
+  /* barra de la casa (la casa repartiéndose en vivo) */
+  .suelo-bar{height:17px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;display:flex;margin:7px 0 2px;box-shadow:inset 0 2px 4px #0006}
+  .suelo-chunk{height:100%;display:flex;align-items:center;justify-content:center;color:#0a0a0c;font-size:8.5px;font-weight:800;white-space:nowrap;overflow:hidden;transition:width .2s ease-out;min-width:0}
+  .suelo-chunk.circ{color:#c9c5ba;background:repeating-linear-gradient(45deg,#3a3a40,#3a3a40 5px,#44444a 5px,#44444a 10px)!important}
+  .grafs{display:grid;gap:14px;margin-bottom:16px}
+  .graf-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start}
+  .graf-row3 .viz-card{height:100%}
+  @media(max-width:860px){.graf-row3{grid-template-columns:1fr}}
+  .estrategia-row{display:flex;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .estrategia-row .et{font-size:10px;font-weight:800;color:var(--suave);text-transform:uppercase;min-width:70px}
+  .estr-btn{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:12px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
+  .estr-btn.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+</style>
+</head>
+<body>
+<div id="gate"><div class="gate-box">
+  <img src="img/yod-logo.png" alt="YoDesarrollo">
+  <h1 class="serif">PPP Unifamiliar</h1>
+  <p>Casa por casa: construir, vender o retener en renta · acceso del equipo</p>
+  <input type="password" id="gateClave" placeholder="Clave del board" autocomplete="current-password">
+  <button id="gateBtn">Entrar</button>
+  <div class="gate-err" id="gateErr"></div>
+  <button class="gate-local" id="gateLocal">Trabajar sin conexión (no guarda en la nube)</button>
+</div></div>
+
+<div class="sticky-header"><div class="header-inner">
+  <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · PPP Unifamiliar</span></div>
+  <div class="suelo-bar" id="casaBar" title="La casa repartiéndose en vivo (m² por espacio)"></div>
+  <div class="urban-hud" style="margin:4px 0 5px;padding:6px 0"><div class="urban-item"><span>Terreno</span><b id="hudTerreno">0 m²</b></div><div class="urban-item"><span>Construcción</span><b id="hudConst" class="c-gold">0 m²</b></div><div class="urban-item"><span>Habitable</span><b id="hudHabit" class="c-green">0 m²</b></div><div class="urban-item"><span>Recámaras</span><b id="hudRec">0</b></div><div class="urban-item"><span>Baños</span><b id="hudBanos">0</b></div><div class="urban-item"><span>Niveles</span><b id="hudNiveles">0</b></div><div class="urban-item"><span>Obra $/m²</span><b id="hudObraM2" class="c-red">$0</b></div><div class="urban-item"><span>Venta $/m²</span><b id="hudVentaM2" class="c-green">$0</b></div><div class="urban-item"><span>Renta/mes</span><b id="hudRenta" class="c-blue">$0</b></div><div class="urban-item"><span>Cap. año 1</span><b id="hudCap" class="c-purple">—</b></div></div>
+  <div class="hud-row" style="margin-top:5px;border:0;font-size:10px;color:#8a8780"><div class="hud-item">Inversión <span id="hudInversion" class="hud-val c-red">$0</span></div><div class="hud-item">Venta <span id="hudVenta" class="hud-val c-green">$0</span></div><div class="hud-item">Utilidad <span id="hudUtilidad" class="hud-val c-gold">$0</span> · <span id="hudRoi">0%</span></div><div class="hud-item">TIR <span id="hudTir" class="hud-val c-blue">—</span></div><div class="hud-item">Retener <span id="hudOptimo" class="hud-val c-purple">—</span></div></div>
+</div></div>
+
+<main class="container">
+  <div class="breadcrumb"><a href="./">← Planificador de Potencial Inmobiliario</a></div>
+  <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
+
+  <section class="hero">
+    <span class="kick">¿Qué da esta casa?</span>
+    <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span></h1>
+    <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
+    <div class="hero-grid">
+      <div class="hcard"><span class="k">Si la vendes al terminar</span><div class="big serif" id="heroUtil">$0</div><div class="sub2" id="heroUtilSub">utilidad · ROI —</div></div>
+      <div class="hcard"><span class="k">Si la retienes en renta</span><div class="big serif" id="heroRenta">$0</div><div class="sub2" id="heroRentaSub">flujo neto año 1 · cap —</div></div>
+      <div class="hcard"><span class="k">El punto dulce del patrimonio</span><div class="big serif" id="heroOptimo">—</div><div class="sub2" id="heroOptimoSub">mientras el patrimonio crezca más que tu alternativa</div></div>
+    </div>
+    <p class="lectura" id="heroLectura"></p>
+  </section>
+
+  <section class="grafs">
+    <div class="graf-row3">
+      <div class="viz-card"><span class="k">La casa en su terreno · a escala</span><div id="vizPlan" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">El río del dinero · de venta a utilidad</span><div id="vizCascada" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">¿Cuándo vender? · la curva patrimonial</span><div id="vizCurvaPat" class="viz-svg"></div></div>
+    </div>
+  </section>
+
+  <div class="caso-bar">
+    <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
+    <div class="caso-actions">
+      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
+      <button class="small-btn" id="btnGuardar">Guardar</button>
+    </div>
+  </div>
+
+  <section class="seguimiento" id="segPanel">
+    <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
+    <div class="estado-chips" id="estadoChips"></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. cotizar obra, avalúo, foto para ficha…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="notas-log" id="segLog">Sin notas todavía.</div>
+  </section>
+
+  <div class="reference-strip"><b>Caso de referencia · Casa Alysa Altozano (real).</b> Prellenado con el libro completo de Alysa: terreno 193.65 m² a $5,800, casa de 232.7 m² (205.3 habitables + cochera), obra cotizada ~$14,950/m², venta a $25,164/m² = $5.86 M, renta esperada $33,468/mes con plusvalía 7% y gastos reales (admón. 7.5% · seguro 0.75% · mantenimiento 5%). La tabla RETENER/VENDER es la misma lógica de su hoja FINANCIERO 2023-2043.</div>
+
+  <section class="grid-2">
+    <article class="card" data-card="dTerreno"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">📐</div><div class="card-title">Terreno</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Superficie</span><span class="kpi-val" id="lblSup">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Costo del terreno</span><span class="kpi-val c-purple" id="lblCostoTerreno">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Huella de la casa (PB)</span><span class="kpi-val c-gold" id="lblHuella">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Jardín / patios</span><span class="kpi-val c-green" id="lblJardin">0 m²</span></div></div>
+      <div class="drawer" id="dTerreno">
+        <div class="input-group"><div class="input-header"><label>Superficie del terreno (m²)</label><div class="val-display" data-input="inSuperficie">193.65</div></div><input type="range" id="inSuperficie" min="90" max="2000" step=".05" value="193.65" data-color="var(--purple)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Frente (m) · para el plano</label><div class="val-display" data-input="inFrente">9</div></div><input type="range" id="inFrente" min="5" max="60" step=".5" value="9" data-color="var(--purple)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Fondo (m) · para el plano</label><div class="val-display" data-input="inFondo">22.5</div></div><input type="range" id="inFondo" min="10" max="80" step=".5" value="22.5" data-color="var(--purple)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Precio del terreno ($/m²)</label><div class="val-display" data-input="inPrecioM2Terreno">$5,800</div></div><input type="range" id="inPrecioM2Terreno" min="500" max="25000" step="10" value="5800" data-color="var(--purple)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Niveles de la casa</label><div class="val-display" data-input="inNiveles">2</div></div><input type="range" id="inNiveles" min="1" max="3" step="1" value="2" data-color="var(--gold)"></div>
+        <div class="micro-readout" id="readTerreno">Calculando terreno…</div></div></article>
+
+    <article class="card" data-card="dPrograma"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#c9a96e1f;color:var(--gold)">🏠</div><div class="card-title">Programa de la Casa</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Construcción total</span><span class="kpi-val c-gold" id="lblConst">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Habitable</span><span class="kpi-val c-green" id="lblHabit">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Programa</span><span class="kpi-val" id="lblPrograma">0 rec · 0 baños</span></div><div class="kpi-box"><span class="kpi-lbl">Cochera</span><span class="kpi-val c-orange" id="lblCochera">0 m²</span></div></div>
+      <div class="drawer" id="dPrograma">
+        <div class="subheading">Tamaño de arranque (los presets del libro de Alysa)</div>
+        <div class="land-modes"><button type="button" class="preset-casa land-mode" data-preset="chica"><b>Casa chica</b><span>~110 m² · 2 rec · 1 nivel</span></button><button type="button" class="preset-casa land-mode" data-preset="mediana"><b>Casa mediana</b><span>~175 m² · 3 rec · 2 niveles</span></button><button type="button" class="preset-casa land-mode" data-preset="grande"><b>Casa grande</b><span>~245 m² · 4 rec · 2 niveles</span></button></div>
+        <div class="subheading">Espacios (m²) · siempre en m²</div>
+        <div class="input-group"><div class="input-header"><label>Área social (sala + comedor + cocina + entrada)</label><div class="val-display" data-input="inM2Social">66.5</div></div><input type="range" id="inM2Social" min="25" max="140" step=".5" value="66.5" data-color="var(--gold)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Recámara principal (con baño y vestidor)</label><div class="val-display" data-input="inM2RecPpal">37</div></div><input type="range" id="inM2RecPpal" min="12" max="70" step=".5" value="37" data-color="var(--green)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Recámaras secundarias (número)</label><div class="val-display" data-input="inNRecSec">2</div></div><input type="range" id="inNRecSec" min="0" max="5" step="1" value="2" data-color="var(--green)"></div>
+        <div class="input-group"><div class="input-header"><label>m² por recámara secundaria</label><div class="val-display" data-input="inM2RecSec">20.1</div></div><input type="range" id="inM2RecSec" min="9" max="35" step=".1" value="20.1" data-color="var(--green)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Baños (completos; 0.5 = medio baño)</label><div class="val-display" data-input="inNBanos">3.5</div></div><input type="range" id="inNBanos" min="1" max="7" step=".5" value="3.5" data-color="var(--blue)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>m² por baño</label><div class="val-display" data-input="inM2Bano">5.6</div></div><input type="range" id="inM2Bano" min="2" max="10" step=".1" value="5.6" data-color="var(--blue)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Servicio (lavandería + cuarto de servicio)</label><div class="val-display" data-input="inM2Servicio">10.3</div></div><input type="range" id="inM2Servicio" min="0" max="40" step=".1" value="10.3" data-color="var(--orange)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Terrazas techadas</label><div class="val-display" data-input="inM2Terraza">20</div></div><input type="range" id="inM2Terraza" min="0" max="60" step=".5" value="20" data-color="var(--teal)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Circulaciones y muros (% sobre espacios)</label><div class="val-display" data-input="inPctCirc">6%</div></div><input type="range" id="inPctCirc" min="0" max="18" step=".5" value="6" data-color="var(--muted)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Cochera (m²) · no habitable</label><div class="val-display" data-input="inM2Cochera">27.5</div></div><input type="range" id="inM2Cochera" min="0" max="90" step=".5" value="27.5" data-color="var(--orange)" data-format="decimal"></div>
+        <div class="micro-readout" id="readPrograma">Calculando programa…</div></div></article>
+
+    <article class="card" data-card="dObra"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)">🧱</div><div class="card-title">Obra, Proyecto &amp; Trámites</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Costo de obra</span><span class="kpi-val c-red" id="lblObra">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Proyecto + trámites</span><span class="kpi-val" id="lblProyecto">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Inversión total</span><span class="kpi-val c-red" id="lblInversion">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Spread del m² (venta − costo)</span><span class="kpi-val c-gold" id="lblSpread">$0 /m²</span></div></div>
+      <div class="drawer" id="dObra">
+        <div class="input-group"><div class="input-header"><label>Costo de obra ($/m² construido, todo incluido)</label><div class="val-display" data-input="inCostoM2Obra">$14,950</div></div><input type="range" id="inCostoM2Obra" min="7000" max="32000" step="1" value="14950" data-color="var(--red)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Proyecto arquitectónico + ejecutivo ($/m²)</label><div class="val-display" data-input="inProyectoM2">$887</div></div><input type="range" id="inProyectoM2" min="0" max="3000" step="1" value="887" data-color="var(--gold)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Trámites, permisos y licencias ($)</label><div class="val-display" data-input="inTramitesFijo">$78,000</div></div><input type="range" id="inTramitesFijo" min="0" max="400000" step="1000" value="78000" data-color="var(--gold)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Imprevistos sobre obra (%)</label><div class="val-display" data-input="inImprevistosPct">0.0%</div></div><input type="range" id="inImprevistosPct" min="0" max="20" step=".5" value="0" data-color="var(--red)" data-format="pct1"></div>
+        <div class="micro-readout" id="readObra">Calculando obra…</div></div></article>
+
+    <article class="card" data-card="dVenta"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">💰</div><div class="card-title">Venta, Comisiones &amp; Estrategia</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Venta esperada</span><span class="kpi-val c-green" id="lblVenta">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Comisiones + operación</span><span class="kpi-val" id="lblComisiones">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Utilidad al vender</span><span class="kpi-val c-gold" id="lblUtilidad">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Plazo total</span><span class="kpi-val" id="lblPlazo">0 meses</span></div></div>
+      <div class="drawer" id="dVenta">
+        <div class="estrategia-row"><span class="et">Estrategia</span><button type="button" class="estr-btn on" data-estr="0">Vender al terminar</button><button type="button" class="estr-btn" data-estr="1">Retener en renta</button></div>
+        <div class="input-group"><div class="input-header"><label>Precio de venta en la zona ($/m² construido)</label><div class="val-display" data-input="inPrecioM2Zona">$25,164</div></div><input type="range" id="inPrecioM2Zona" min="10000" max="60000" step="1" value="25164" data-color="var(--green)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Comisión por lead (%)</label><div class="val-display" data-input="inComLeadsPct">1.5%</div></div><input type="range" id="inComLeadsPct" min="0" max="5" step=".25" value="1.5" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Comisión de cierre / broker (%)</label><div class="val-display" data-input="inComCierrePct">5.0%</div></div><input type="range" id="inComCierrePct" min="0" max="10" step=".25" value="5" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Operación y marketing (%)</label><div class="val-display" data-input="inOperacionPct">2.0%</div></div><input type="range" id="inOperacionPct" min="0" max="8" step=".25" value="2" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Meses de obra</label><div class="val-display" data-input="inMesesObra">18</div></div><input type="range" id="inMesesObra" min="4" max="40" step="1" value="18" data-color="var(--red)"></div>
+        <div class="input-group"><div class="input-header"><label>Meses para vender (después de terminar)</label><div class="val-display" data-input="inMesesVenta">3</div></div><input type="range" id="inMesesVenta" min="0" max="24" step="1" value="3" data-color="var(--green)"></div>
+        <div class="micro-readout" id="readVenta">Calculando venta…</div></div></article>
+
+    <article class="card" data-card="dRenta"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8ab8ff1f;color:var(--blue)">🔑</div><div class="card-title">Renta Patrimonial (si retienes)</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Flujo neto año 1</span><span class="kpi-val c-blue" id="lblFlujo1">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Cap. rate año 1</span><span class="kpi-val c-purple" id="lblCap1">—</span></div><div class="kpi-box"><span class="kpi-lbl">Punto dulce (retener)</span><span class="kpi-val c-gold" id="lblOptimo">—</span></div><div class="kpi-box"><span class="kpi-lbl">Patrimonio al horizonte</span><span class="kpi-val c-green" id="lblPatrimonio">$0</span></div></div>
+      <div class="drawer" id="dRenta">
+        <div class="input-group"><div class="input-header"><label>Renta mensual esperada ($)</label><div class="val-display" data-input="inRentaMes">$33,468</div></div><input type="range" id="inRentaMes" min="5000" max="120000" step="1" value="33468" data-color="var(--blue)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Plusvalía anual de la zona (%)</label><div class="val-display" data-input="inPlusvaliaPct">7.0%</div></div><input type="range" id="inPlusvaliaPct" min="0" max="15" step=".25" value="7" data-color="var(--green)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Administración de la renta (% de renta)</label><div class="val-display" data-input="inAdminRentaPct">7.5%</div></div><input type="range" id="inAdminRentaPct" min="0" max="15" step=".25" value="7.5" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Seguro (% del valor de la casa)</label><div class="val-display" data-input="inSeguroPct">0.75%</div></div><input type="range" id="inSeguroPct" min="0" max="3" step=".05" value="0.75" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Mantenimiento (% de renta)</label><div class="val-display" data-input="inMantPct">5.0%</div></div><input type="range" id="inMantPct" min="0" max="20" step=".5" value="5" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Meses vacíos al año</label><div class="val-display" data-input="inMesesVacios">0</div></div><input type="range" id="inMesesVacios" min="0" max="4" step=".5" value="0" data-color="var(--red)" data-format="decimal"></div>
+        <div class="input-group"><div class="input-header"><label>Horizonte (años)</label><div class="val-display" data-input="inHorizonte">10</div></div><input type="range" id="inHorizonte" min="3" max="20" step="1" value="10" data-color="var(--blue)"></div>
+        <div class="input-group"><div class="input-header"><label>Tu alternativa de inversión (% anual)</label><div class="val-display" data-input="inTasaAlternativa">10.0%</div></div><input type="range" id="inTasaAlternativa" min="4" max="25" step=".5" value="10" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="subheading">La tabla del libro de Alysa · año por año</div>
+        <div class="flow-scroll" style="max-height:280px"><table class="flow-table"><thead><tr><th>Año</th><th>Valor casa</th><th>Renta/mes</th><th>Flujo neto</th><th>Flujo acum.</th><th>Patrimonio</th><th>Crece</th><th>Señal</th></tr></thead><tbody id="rentaRows"></tbody></table></div>
+        <div class="micro-readout" id="readRenta">Calculando renta…</div></div></article>
+
+    <article class="card" data-card="dCapital"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)">🤝</div><div class="card-title">Inversionistas &amp; Reparto</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Inversión abierta</span><span class="kpi-val c-orange" id="lblInvAbierta">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Costo financiero (retorno inv.)</span><span class="kpi-val c-red" id="lblCostoFin">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Equity YOD requerido</span><span class="kpi-val" id="lblEquityYod">$0</span></div><div class="kpi-box"><span class="kpi-lbl">TIR anual del proyecto</span><span class="kpi-val c-blue" id="lblTir">—</span></div></div>
+      <div class="drawer" id="dCapital"><div class="partner-guide"><b>El esquema de Alysa:</b> inversionistas aportan capital con retorno fijo anual (el "costo financiero" del proyecto) y se les liquida al vender. Lo que queda después de pagarles es el remanente YOD. Si retienes la casa, el retorno corre hasta que salgas o refinancies.</div>
+        <div class="input-group"><div class="input-header"><label>Inversión abierta de terceros ($)</label><div class="val-display" data-input="inInversionAbierta">$975,000</div></div><input type="range" id="inInversionAbierta" min="0" max="8000000" step="25000" value="975000" data-color="var(--orange)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>Retorno anual al inversionista (%)</label><div class="val-display" data-input="inRetornoInvPct">20.0%</div></div><input type="range" id="inRetornoInvPct" min="0" max="35" step=".5" value="20" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="micro-readout" id="readCapital">Calculando reparto…</div></div></article>
+  </section>
+
+  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, corrida y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity YOD</th><th>Retorno inv.</th><th>Saldo inv.</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson">Actualizar JSON</button><button class="small-btn" id="applyJson">Aplicar JSON</button><button class="small-btn secondary" id="exportJson">Descargar JSON</button></div><p class="note">Cada renglón de la hoja UNIFAMILIAR del Sheet es un caso; la corrida completa vive en la hoja FLUJO.</p></details>
+</main>
+
+<div class="overlay" id="ovGuardar"><div class="sheet">
+  <h2 class="serif">Guardar caso</h2>
+  <p class="sh-sub">El caso se guarda como un renglón en la hoja UNIFAMILIAR del Sheet. Elige una <b>palabra</b> para volver a él; si pones correo, te mandamos la palabra con el enlace directo.</p>
+  <div class="fld"><label>Nombre del caso</label><input id="gNombre" placeholder="ej. Casa Alysa · Altozano"></div>
+  <div class="fld"><label>Palabra para volver</label><input id="gPalabra" placeholder="ej. casa-alysa" autocapitalize="none"><div class="hint">Una palabra por caso.</div></div>
+  <div class="fld"><label>Correo (opcional)</label><input id="gCorreo" type="email" placeholder="tucorreo@…"></div>
+  <div class="fld"><label>Notas del caso</label><textarea id="gNotas" placeholder="Fuente, cliente, condición por verificar…"></textarea></div>
+  <input class="hp" id="gWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar">Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar">Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo">Guardar</button></div>
+</div></div>
+
+<div class="overlay" id="ovCasos"><div class="sheet">
+  <h2 class="serif">Mis casos</h2>
+  <p class="sh-sub">Casos de Unifamiliar. Toca uno para cargarlo, o ábrelo con su palabra.</p>
+  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra">Abrir</button></div>
+  <div id="listaCasos" style="margin-top:6px"><p class="note">Cargando…</p></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar">Cerrar</button></div>
+</div></div>
+
+<div id="toast"></div>
+<script>
+(() => {
+  /* ================== CONFIG DE NUBE ================== */
+  const NUBE={ENDPOINT:'https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec',TIPO:'unifamiliar',SITE:'https://alexpueblag.github.io/potenciales-yod/',PAGE:'unifamiliar.html'};
+  const cloudOn=/^https:\/\//.test(NUBE.ENDPOINT);
+  const LS={clave:'pyod_clave_v1',draft:'pyodu_draft_v1',cola:'pyodu_postq_v1'};
+  const ESTADOS=['EXPLORACIÓN','ANÁLISIS','PROPUESTA','NEGOCIACIÓN','CERRADO','DESCARTADO'];
+  let clave=localStorage.getItem(LS.clave)||'';
+  let caso={caso_id:'',palabra:'',correo:'',nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};
+  let cfgBoard={}, casosCache=[], modoLocal=!cloudOn;
+
+  const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
+  const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>Math.abs(n||0)>=1e6?'$'+((n||0)/1e6).toFixed(2)+' M':'$'+Math.round(n||0).toLocaleString('en-US'); const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%'; const fmtM2=n=>(Math.round((n||0)*10)/10).toLocaleString('en-US')+' m²';
+  // Prellenado oficial: Casa Alysa Altozano (libro real, jul-2026)
+  const PRELLENADO={inSuperficie:193.65,inFrente:9,inFondo:22.5,inPrecioM2Terreno:5800,inNiveles:2,
+    inM2Social:66.5,inM2RecPpal:37,inNRecSec:2,inM2RecSec:20.1,inNBanos:3.5,inM2Bano:5.6,inM2Servicio:10.3,inM2Terraza:20,inPctCirc:6,inM2Cochera:27.5,
+    inCostoM2Obra:14950,inProyectoM2:887,inTramitesFijo:78000,inImprevistosPct:0,
+    inPrecioM2Zona:25164,inComLeadsPct:1.5,inComCierrePct:5,inOperacionPct:2,inMesesObra:18,inMesesVenta:3,
+    inRentaMes:33468,inPlusvaliaPct:7,inAdminRentaPct:7.5,inSeguroPct:0.75,inMantPct:5,inMesesVacios:0,inHorizonte:10,inTasaAlternativa:10,
+    inInversionAbierta:975000,inRetornoInvPct:20,inEstrategia:0};
+  const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),PRELLENADO);
+  Object.entries(DEFAULTS).forEach(([id,v])=>{const c=$(id);if(c)c.value=v});
+  let estrategia=PRELLENADO.inEstrategia;
+  const PRESETS={
+    chica:{inM2Social:45,inM2RecPpal:16,inNRecSec:1,inM2RecSec:12,inNBanos:2,inM2Bano:4.5,inM2Servicio:8,inM2Terraza:6,inPctCirc:5,inM2Cochera:36,inNiveles:1},
+    mediana:{inM2Social:60,inM2RecPpal:24,inNRecSec:2,inM2RecSec:16,inNBanos:2.5,inM2Bano:5,inM2Servicio:12,inM2Terraza:12,inPctCirc:6,inM2Cochera:48,inNiveles:2},
+    grande:{inM2Social:73,inM2RecPpal:30,inNRecSec:3,inM2RecSec:20,inNBanos:3.5,inM2Bano:6,inM2Servicio:16,inM2Terraza:20,inPctCirc:7,inM2Cochera:60,inNiveles:2}};
+
+  const factorHelp={
+    inSuperficie:{t:'Superficie',k:'Dato verificable',q:'m² reales del terreno (manda sobre frente × fondo si el lote es irregular).',m:'Mueve el costo del terreno y el jardín.',d:'Escritura / levantamiento.'},
+    inFrente:{t:'Frente',k:'Dato verificable',q:'Metros de frente del lote (solo dibuja el plano).',m:'Da la proporción del plano.',d:'Escritura.'},
+    inFondo:{t:'Fondo',k:'Dato verificable',q:'Metros de fondo del lote (solo dibuja el plano).',m:'Da la proporción del plano.',d:'Escritura.'},
+    inPrecioM2Terreno:{t:'Precio del terreno',k:'Comparable por validar',q:'$/m² del lote en la zona.',m:'Primera piedra de la inversión.',d:'Comparables del fraccionamiento (Alysa: $5,800 Altozano).'},
+    inNiveles:{t:'Niveles',k:'Diseño',q:'Plantas de la casa.',m:'Define la huella en el terreno (PB) y el jardín restante.',d:'Reglamento del fraccionamiento y programa.'},
+    inM2Social:{t:'Área social',k:'Programa',q:'Sala + comedor + cocina + entrada + medio baño de visitas.',m:'El corazón del m² habitable.',d:'Tabla chico/mediano/grande del libro de Alysa.'},
+    inM2RecPpal:{t:'Recámara principal',k:'Programa',q:'Con baño, vestidor y su patio si aplica.',m:'m² habitable.',d:'Alysa: 37 m² con recámara en PB (empty nester).'},
+    inNRecSec:{t:'Recámaras secundarias',k:'Programa',q:'Número de recámaras adicionales.',m:'m² y el ticket del mercado meta.',d:'Cliente meta (familia vs pareja).'},
+    inM2RecSec:{t:'m² por recámara',k:'Programa',q:'Tamaño promedio de cada recámara secundaria.',m:'m² habitable.',d:'Tabla C/M/G: 12/16/20+ m².'},
+    inNBanos:{t:'Baños',k:'Programa',q:'Completos; 0.5 es medio baño.',m:'m² e instalaciones.',d:'Programa (Alysa: 3.5).'},
+    inM2Bano:{t:'m² por baño',k:'Programa',q:'Promedio por baño completo.',m:'m² habitable.',d:'Tabla C/M/G: 2/4/6 m².'},
+    inM2Servicio:{t:'Servicio',k:'Programa',q:'Lavandería y cuarto/bodega de servicio.',m:'m² construido.',d:'Programa.'},
+    inM2Terraza:{t:'Terrazas',k:'Programa',q:'Terrazas techadas que sí se construyen.',m:'m² construido (venden mucho en Hermosillo).',d:'Alysa: terraza al lago 24.3 m².'},
+    inPctCirc:{t:'Circulaciones',k:'Criterio de diseño',q:'% que agregan escaleras, pasillos y muros sobre los espacios.',m:'Infla el m² construido real.',d:'2 niveles gastan más en escalera.'},
+    inM2Cochera:{t:'Cochera',k:'Programa',q:'m² de cochera (no habitable, sí se construye y sí se vende).',m:'m² construido total.',d:'2 autos ≈ 36-48 m² techados.'},
+    inCostoM2Obra:{t:'Costo de obra',k:'Comparable verificado',q:'$/m² construido TODO incluido (admón. de obra 18% adentro).',m:'El costo más grande del caso.',d:'Alysa real: cotización $3.48 M / 232.7 m² = $14,943.'},
+    inProyectoM2:{t:'Proyecto',k:'Tarifa Aurum',q:'$/m² de proyecto arquitectónico + ejecutivo + interiores.',m:'Suma a la inversión (y es ingreso de Aurum).',d:'Alysa: $850-890/m² según etapas contratadas.'},
+    inTramitesFijo:{t:'Trámites',k:'Por validar',q:'Licencia de construcción, permisos y derechos.',m:'Suma a la inversión.',d:'Alysa: $78,000 (2% de la bolsa).'},
+    inImprevistosPct:{t:'Imprevistos',k:'Riesgo',q:'Colchón sobre la obra.',m:'Protege el margen si la obra no está cotizada.',d:'0% con presupuesto firmado; 5-10% en exploración.'},
+    inPrecioM2Zona:{t:'Precio de venta',k:'Comparable por validar',q:'$/m² construido al que vende la zona.',m:'Manda sobre TODO el ingreso.',d:'Alysa: $25,164/m² (precio hoy $5.86 M).'},
+    inComLeadsPct:{t:'Comisión lead',k:'Política comercial',q:'% para quien trae al cliente.',m:'Sale de la venta.',d:'Esquema master broker de Alysa (1.5%).'},
+    inComCierrePct:{t:'Comisión cierre',k:'Política comercial',q:'% para quien cierra la venta.',m:'Sale de la venta.',d:'Alysa: 5%.'},
+    inOperacionPct:{t:'Operación',k:'Política',q:'% de operación, página, redes y administración.',m:'Sale de la venta.',d:'Alysa: ~2%.'},
+    inMesesObra:{t:'Meses de obra',k:'Calendario',q:'Duración de la construcción.',m:'Corre el costo financiero de los inversionistas.',d:'Programado Alysa 10.7; real fue mucho más — sé honesto.'},
+    inMesesVenta:{t:'Meses para vender',k:'Mercado',q:'De terminar la casa a escriturar.',m:'Alarga el costo financiero.',d:'Absorción de la zona.'},
+    inRentaMes:{t:'Renta mensual',k:'Comparable por validar',q:'Renta esperada de la casa terminada.',m:'Todo el caso patrimonial.',d:'Alysa: $33,468 (renta mínima especulada).'},
+    inPlusvaliaPct:{t:'Plusvalía',k:'Mercado',q:'% anual de apreciación de la zona.',m:'Mueve valor futuro, renta futura y el punto dulce.',d:'Alysa: 7% (sector poniente, frente al lago).'},
+    inAdminRentaPct:{t:'Administración',k:'Operación',q:'% de la renta para administrar el arrendamiento.',m:'Baja el flujo neto.',d:'Alysa: 7.5%.'},
+    inSeguroPct:{t:'Seguro',k:'Operación',q:'% del VALOR de la casa al año en seguro.',m:'Baja el flujo neto.',d:'Alysa: 0.75%.'},
+    inMantPct:{t:'Mantenimiento',k:'Operación',q:'% de la renta para mantener la casa.',m:'Baja el flujo neto.',d:'Alysa: 5%.'},
+    inMesesVacios:{t:'Meses vacíos',k:'Riesgo',q:'Meses sin inquilino al año.',m:'Baja la renta anual.',d:'Rotación típica de casas: 0-1 mes/año.'},
+    inHorizonte:{t:'Horizonte',k:'Estrategia',q:'Años que proyecta la tabla patrimonial.',m:'Largo de la curva.',d:'Alysa proyecta 2023-2043.'},
+    inTasaAlternativa:{t:'Tu alternativa',k:'Costo de oportunidad',q:'Lo que ganaría tu dinero en otro lado (otro proyecto, cetes+).',m:'Define el punto dulce: retén mientras el patrimonio crezca MÁS que esto.',d:'Meta YOD ~10%+.'},
+    inInversionAbierta:{t:'Inversión abierta',k:'Estructura de capital',q:'Capital de terceros dentro del proyecto.',m:'Genera el costo financiero.',d:'Alysa: $975,000 abiertos.'},
+    inRetornoInvPct:{t:'Retorno al inversionista',k:'Acuerdo',q:'% anual fijo que se paga al capital invitado.',m:'Costo financiero del proyecto.',d:'Esquema Alysa/SFJ: 20% anual.'},
+    inEstrategia:{t:'Estrategia',k:'Decisión',q:'Vender al terminar o retener en renta.',m:'Cambia el énfasis del board (ambas se calculan siempre).',d:'La curva patrimonial te dice cuándo conviene cada una.'}};
+  function get(id){return Number($(id).value)||0} function txt(id,value){const e=$(id);if(e)e.textContent=value}
+  function inputValues(){const o=Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]));o.inEstrategia=estrategia;return o}
+  function updateColor(c){const min=Number(c.min),max=Number(c.max),v=Number(c.value),x=Math.max(0,Math.min(100,(v-min)/(max-min)*100));c.style.background=`linear-gradient(to right, ${c.dataset.color||'var(--gold)'} ${x}%, rgba(255,255,255,.14) ${x}%)`}
+  function displayValue(c){const v=Number(c.value),f=c.dataset.format||'';if(f==='pct')return pct(v,0);if(f==='pct1')return pct(v,1);if(f==='money')return fmtMoney(v);if(f==='decimal')return (Math.round(v*100)/100).toLocaleString('en-US');return fmtN(v)}
+  function setControl(id,value){if(id==='inEstrategia'){estrategia=Number(value)?1:0;return}const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
+  function readPills(){document.querySelectorAll('.val-display[data-input]').forEach(p=>{p.contentEditable='true';p.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();p.blur()}});p.addEventListener('blur',()=>{const raw=p.textContent.replace(/[^0-9.\-]/g,''),n=Number(raw);if(Number.isFinite(n))setControl(p.dataset.input,n);calculate()})})}
+  function syncPills(){controls.forEach(c=>{const p=document.querySelector(`.val-display[data-input="${c.id}"]`);if(p&&document.activeElement!==p)p.textContent=displayValue(c);updateColor(c)})}
+  function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open')})})}
+  function irr(flows){if(!flows.some(x=>x<0)||!flows.some(x=>x>0))return null;let lo=-.999,hi=4;const npv=r=>flows.reduce((s,x,i)=>s+x/Math.pow(1+r,i),0);while(npv(hi)>0&&hi<500)hi*=2;for(let i=0;i<100;i++){const mid=(lo+hi)/2;if(npv(mid)>0)lo=mid;else hi=mid}return Math.pow(1+(lo+hi)/2,12)-1}
+
+  /* ================== MOTOR UNIFAMILIAR (libro de Alysa) ================== */
+  function calculate(){
+    const p={sup:Math.max(1,get('inSuperficie')),frente:Math.max(1,get('inFrente')),fondo:Math.max(1,get('inFondo')),precioTerreno:get('inPrecioM2Terreno'),niveles:Math.max(1,Math.round(get('inNiveles'))),
+      social:get('inM2Social'),recPpal:get('inM2RecPpal'),nRec:Math.round(get('inNRecSec')),m2Rec:get('inM2RecSec'),nBanos:get('inNBanos'),m2Bano:get('inM2Bano'),servicio:get('inM2Servicio'),terraza:get('inM2Terraza'),circ:get('inPctCirc')/100,cochera:get('inM2Cochera'),
+      costoObra:get('inCostoM2Obra'),proyectoM2:get('inProyectoM2'),tramites:get('inTramitesFijo'),imprevistos:get('inImprevistosPct')/100,
+      precioZona:get('inPrecioM2Zona'),leads:get('inComLeadsPct')/100,cierre:get('inComCierrePct')/100,operacion:get('inOperacionPct')/100,mesesObra:Math.max(1,Math.round(get('inMesesObra'))),mesesVenta:Math.max(0,Math.round(get('inMesesVenta'))),
+      rentaMes:get('inRentaMes'),plus:get('inPlusvaliaPct')/100,adminR:get('inAdminRentaPct')/100,seguro:get('inSeguroPct')/100,mant:get('inMantPct')/100,mesesVacios:get('inMesesVacios'),horizonte:Math.max(1,Math.round(get('inHorizonte'))),tasaAlt:get('inTasaAlternativa')/100,
+      invAbierta:get('inInversionAbierta'),retInv:get('inRetornoInvPct')/100,estrategia:estrategia};
+    // 1) programa → m²
+    const espacios=[['Social',p.social,'#c9a96e'],['Rec. principal',p.recPpal,'#8FBF8B'],['Recámaras ×'+p.nRec,p.nRec*p.m2Rec,'#a4cfa0'],['Baños',p.nBanos*p.m2Bano,'#8ab8ff'],['Servicio',p.servicio,'#D9A45B'],['Terraza',p.terraza,'#7fd4e8']];
+    const interior=espacios.reduce((a,e)=>a+e[1],0);
+    const m2Habitable=interior*(1+p.circ),m2Circ=interior*p.circ,m2Const=m2Habitable+p.cochera;
+    const huella=m2Const/p.niveles,jardin=Math.max(0,p.sup-huella);
+    const recamaras=1+p.nRec;
+    // 2) inversión
+    const costoTerreno=p.sup*p.precioTerreno;
+    const obra=m2Const*p.costoObra,obraAdmin=obra*.18,obraMO=(obra-obraAdmin)*.41,obraMat=(obra-obraAdmin)*.59;
+    const proyecto=m2Const*p.proyectoM2,imprev=obra*p.imprevistos;
+    const inversion=costoTerreno+obra+proyecto+p.tramites+imprev;
+    // 3) venta
+    const venta=m2Const*p.precioZona;
+    const comisiones=venta*(p.leads+p.cierre),operCost=venta*p.operacion;
+    const mesesTot=p.mesesObra+p.mesesVenta;
+    const costoFin=Math.min(p.invAbierta,inversion)*p.retInv*(mesesTot/12);
+    const invUsada=Math.min(p.invAbierta,inversion);
+    const costoTotal=inversion+comisiones+operCost+costoFin;
+    const utilidad=venta-costoTotal,roi=inversion?utilidad/inversion:0,margen=venta?utilidad/venta:0,utilM2=m2Const?utilidad/m2Const:0,multiplicador=costoTotal?venta/costoTotal:0;
+    const spreadM2=p.precioZona-(m2Const?costoTotal/m2Const:0);
+    // 4) flujo mensual (venta)
+    const totalMonths=mesesTot+1,rev=Array(totalMonths).fill(0),cost=Array(totalMonths).fill(0);
+    cost[0]+=costoTerreno+p.tramites;
+    const mesesProy=Math.min(3,totalMonths);for(let m=0;m<mesesProy;m++)cost[m]+=proyecto/mesesProy;
+    for(let m=1;m<=p.mesesObra;m++)cost[Math.min(m,totalMonths-1)]+=(obra+imprev)/p.mesesObra;
+    const mSale=totalMonths-1;rev[mSale]+=venta;cost[mSale]+=comisiones+operCost;
+    let cash=0,saldoInv=0,retAcum=0,equityUsed=0;const flows=[],devFlows=[];
+    for(let i=0;i<totalMonths;i++){
+      if(i===0&&invUsada>0)saldoInv=invUsada,cash+=invUsada;
+      const retMes=saldoInv>0?invUsada*p.retInv/12:0;retAcum+=retMes;
+      cash+=rev[i]-cost[i];
+      let equity=0;
+      if(i===mSale&&saldoInv>0){cash-=saldoInv+retAcum;saldoInv=0}
+      if(cash<0){equity=-cash;equityUsed+=equity;cash=0}
+      flows.push({m:i+1,rev:rev[i],cost:cost[i],equity,ret:retMes,saldo:saldoInv>0?saldoInv+retAcum:0,caja:cash});
+      devFlows.push(-equity);
+    }
+    devFlows[devFlows.length-1]+=cash;
+    const tir=irr(devFlows);
+    const revTotal=rev.reduce((a,b)=>a+b,0),costTotal=cost.reduce((a,b)=>a+b,0);
+    // 5) renta patrimonial (tabla EN CASO DE RENTA del libro)
+    const valor0=venta,rentaRows=[];let acum=0,prevPatrim=valor0,anioCorte=null;
+    for(let a=1;a<=p.horizonte;a++){
+      const valor=valor0*Math.pow(1+p.plus,a),renta=p.rentaMes*Math.pow(1+p.plus,a-1),rentaAnual=renta*(12-p.mesesVacios);
+      const gastos=rentaAnual*p.adminR+valor*p.seguro+rentaAnual*p.mant,flujo=rentaAnual-gastos;
+      acum+=flujo;const patrim=valor+acum,crec=prevPatrim?(patrim-prevPatrim)/prevPatrim:0;
+      if(anioCorte===null&&crec<p.tasaAlt)anioCorte=a;
+      rentaRows.push({a,valor,renta,rentaAnual,flujo,acum,patrim,crec});prevPatrim=patrim}
+    const flujo1=rentaRows[0]?rentaRows[0].flujo:0,cap1=valor0?flujo1/valor0:0;
+    const aniosRetener=anioCorte===null?p.horizonte:anioCorte-1;
+    const rowH=rentaRows[rentaRows.length-1]||{valor:valor0,acum:0,patrim:valor0};
+    const roiPatrimonial=valor0?(rowH.patrim-valor0)/valor0:0;
+    state={p,espacios,interior,m2Habitable,m2Circ,m2Const,huella,jardin,recamaras,
+      costoTerreno,obra,obraAdmin,obraMO,obraMat,proyecto,imprev,inversion,
+      venta,comisiones,operCost,mesesTot,costoFin,invUsada,costoTotal,utilidad,roi,margen,utilM2,multiplicador,spreadM2,
+      totalMonths,flows,equityUsed,tir,revTotal,costTotalCaja:costTotal,cash,retAcum,
+      valor0,rentaRows,flujo1,cap1,anioCorte,aniosRetener,valorH:rowH.valor,acumH:rowH.acum,patrimH:rowH.patrim,roiPatrimonial};
+    render();guardarDraft();return state}
+
+  /* ================== RENDER ================== */
+  function render(){
+    const r=state;syncPills();
+    // barra de la casa
+    const sb=$('casaBar');if(sb){const tot=Math.max(1,r.m2Const);const chunks=r.espacios.map(e=>[e[0],e[1]/tot,e[2],'']).concat([['circulación',r.m2Circ/tot,'#3a3a40','circ'],['cochera',r.p.cochera/tot,'#D9A45B','']]).filter(c=>c[1]>0.004);
+      sb.innerHTML=chunks.map(c=>`<span class="suelo-chunk ${c[3]}" style="width:${c[1]*100}%;background:${c[2]}" title="${c[0]}: ${fmtM2(c[1]*tot)} (${pct(c[1]*100,0)})">${c[1]>.09?c[0]:''}</span>`).join('')}
+    txt('hudTerreno',fmtM2(r.p.sup));txt('hudConst',fmtM2(r.m2Const));txt('hudHabit',fmtM2(r.m2Habitable));txt('hudRec',r.recamaras);txt('hudBanos',r.p.nBanos);txt('hudNiveles',r.p.niveles);
+    txt('hudObraM2',fmtMoney(r.p.costoObra));txt('hudVentaM2',fmtMoney(r.p.precioZona));txt('hudRenta',fmtMoney(r.p.rentaMes));txt('hudCap',pct(r.cap1*100,1));
+    txt('hudInversion',fmtM(r.inversion));txt('hudVenta',fmtM(r.venta));txt('hudUtilidad',fmtM(r.utilidad));txt('hudRoi',pct(r.roi*100,1)+' ROI');txt('hudTir',r.tir===null?'—':pct(r.tir*100,1));
+    txt('hudOptimo',r.aniosRetener>=r.p.horizonte?r.p.horizonte+'+ años':r.aniosRetener+' años');
+    // hero
+    txt('heroUtil',fmtM(r.utilidad));txt('heroUtilSub','ROI '+pct(r.roi*100,1)+' · margen '+pct(r.margen*100,1)+' · '+fmtMoney(r.utilM2)+'/m² · '+r.mesesTot+' meses');
+    txt('heroRenta',fmtM(r.flujo1)+'/año');txt('heroRentaSub','renta '+fmtMoney(r.p.rentaMes)+'/mes · cap. rate '+pct(r.cap1*100,2)+' · plusvalía '+pct(r.p.plus*100,1));
+    txt('heroOptimo',r.aniosRetener>=r.p.horizonte?'retener '+r.p.horizonte+'+ años':r.aniosRetener===0?'vender ya':'retener ~'+r.aniosRetener+' años');
+    txt('heroOptimoSub',r.anioCorte===null?'el patrimonio crece más que tu '+pct(r.p.tasaAlt*100,0)+' todo el horizonte':'en el año '+r.anioCorte+' el crecimiento cae debajo de tu '+pct(r.p.tasaAlt*100,0)+' alternativo');
+    const lect=$('heroLectura');if(lect)lect.innerHTML=`Un terreno de <b>${fmtM2(r.p.sup)}</b> (${fmtM(r.costoTerreno)}) recibe una casa de <b>${fmtM2(r.m2Const)}</b> (${r.recamaras} recámaras, ${r.p.nBanos} baños) que cuesta <b>${fmtM(r.costoTotal)}</b> todo incluido y vende en <b>${fmtM(r.venta)}</b>. Vender deja <b>${fmtM(r.utilidad)}</b> (${pct(r.roi*100,1)} ROI); retener renta <b>${fmtMoney(r.p.rentaMes)}/mes</b> y el punto dulce del patrimonio es <b>${r.aniosRetener>=r.p.horizonte?'retener todo el horizonte':r.aniosRetener===0?'vender ya':'~'+r.aniosRetener+' años'}</b>.`;
+    // tarjetas
+    txt('lblSup',fmtM2(r.p.sup)+' · '+r.p.frente+' × '+r.p.fondo+' m');txt('lblCostoTerreno',fmtM(r.costoTerreno)+' · '+fmtMoney(r.p.precioTerreno)+'/m²');txt('lblHuella',fmtM2(r.huella)+' ('+pct(r.huella/r.p.sup*100,0)+')');txt('lblJardin',fmtM2(r.jardin));
+    $('readTerreno').innerHTML=`<b>Terreno:</b> ${fmtM2(r.p.sup)} a ${fmtMoney(r.p.precioTerreno)}/m² = <b>${fmtM(r.costoTerreno)}</b>. La casa de ${r.p.niveles} nivel(es) pisa ${fmtM2(r.huella)} (${pct(r.huella/r.p.sup*100,0)} del lote) y deja ${fmtM2(r.jardin)} de jardín/patios.${r.huella>r.p.sup?' <b class="status-bad">⚠ La huella no cabe en el terreno: sube niveles o recorta programa.</b>':''}`;
+    txt('lblConst',fmtM2(r.m2Const));txt('lblHabit',fmtM2(r.m2Habitable));txt('lblPrograma',r.recamaras+' rec · '+r.p.nBanos+' baños');txt('lblCochera',fmtM2(r.p.cochera));
+    $('readPrograma').innerHTML=`<b>Programa:</b> ${r.espacios.map(e=>`${e[0]} ${fmtM2(e[1])}`).join(' · ')} = ${fmtM2(r.interior)} + circulaciones ${pct(r.p.circ*100,1)} (${fmtM2(r.m2Circ)}) = <b>${fmtM2(r.m2Habitable)} habitables</b> + cochera ${fmtM2(r.p.cochera)} = <b>${fmtM2(r.m2Const)} construidos</b>.`;
+    txt('lblObra',fmtM(r.obra)+' · '+fmtMoney(r.p.costoObra)+'/m²');txt('lblProyecto',fmtM(r.proyecto+r.p.tramites));txt('lblInversion',fmtM(r.inversion));
+    const sEl=$('lblSpread');if(sEl){sEl.textContent=fmtMoney(r.spreadM2)+' /m²';sEl.className='kpi-val '+(r.spreadM2/r.p.precioZona>=.15?'c-gold':r.spreadM2>0?'status-warn':'status-bad')}
+    $('readObra').innerHTML=`<b>Obra ${fmtM(r.obra)}</b> (${fmtMoney(r.p.costoObra)}/m² × ${fmtM2(r.m2Const)}): admón. 18% ${fmtM(r.obraAdmin)} · mano de obra ${fmtM(r.obraMO)} · materiales ${fmtM(r.obraMat)} (proporciones reales del libro de Alysa). + Proyecto ${fmtM(r.proyecto)} + trámites ${fmtMoney(r.p.tramites)}${r.imprev>0?' + imprevistos '+fmtM(r.imprev):''} + terreno ${fmtM(r.costoTerreno)} = <b>inversión ${fmtM(r.inversion)}</b>.`;
+    txt('lblVenta',fmtM(r.venta)+' · '+fmtMoney(r.p.precioZona)+'/m²');txt('lblComisiones',fmtM(r.comisiones+r.operCost));txt('lblUtilidad',fmtM(r.utilidad)+' ('+pct(r.roi*100,1)+')');txt('lblPlazo',r.mesesTot+' meses');
+    $('readVenta').innerHTML=`<b>Venta ${fmtM(r.venta)}</b> = ${fmtM2(r.m2Const)} × ${fmtMoney(r.p.precioZona)}. Se van ${fmtM(r.comisiones)} de comisiones (${pct((r.p.leads+r.p.cierre)*100,1)}) + ${fmtM(r.operCost)} de operación + ${fmtM(r.costoFin)} de costo financiero. <b>Utilidad ${fmtM(r.utilidad)}</b> (${pct(r.margen*100,1)} de margen, ${r.multiplicador.toFixed(2)}× el costo) en ${r.mesesTot} meses.`;
+    document.querySelectorAll('.estr-btn').forEach(b=>b.classList.toggle('on',Number(b.dataset.estr)===r.p.estrategia));
+    // renta
+    txt('lblFlujo1',fmtM(r.flujo1)+'/año');txt('lblCap1',pct(r.cap1*100,2));
+    txt('lblOptimo',r.aniosRetener>=r.p.horizonte?r.p.horizonte+'+ años':r.aniosRetener+' años');
+    txt('lblPatrimonio',fmtM(r.patrimH)+' ('+r.p.horizonte+'a)');
+    const rr=$('rentaRows');if(rr){rr.innerHTML=r.rentaRows.map(x=>`<tr${x.a===r.anioCorte?' style="background:#c9a96e14"':''}><td>${x.a}</td><td>${fmtM(x.valor)}</td><td>${fmtMoney(x.renta)}</td><td>${fmtM(x.flujo)}</td><td>${fmtM(x.acum)}</td><td>${fmtM(x.patrim)}</td><td>${pct(x.crec*100,1)}</td><td>${x.crec>=r.p.tasaAlt?'<span class="status-ok">RETENER</span>':'<span class="status-warn">VENDER</span>'}</td></tr>`).join('')}
+    $('readRenta').innerHTML=`<b>Si retienes:</b> flujo neto año 1 ${fmtM(r.flujo1)} (cap. ${pct(r.cap1*100,2)} sobre ${fmtM(r.valor0)}). Con plusvalía ${pct(r.p.plus*100,1)}, al año ${r.p.horizonte} la casa vale ${fmtM(r.valorH)} y llevas ${fmtM(r.acumH)} de rentas: patrimonio <b>${fmtM(r.patrimH)}</b> (${pct(r.roiPatrimonial*100,0)} sobre el valor de hoy). La señal VENDER aparece cuando el patrimonio crece menos que tu ${pct(r.p.tasaAlt*100,0)} alternativo${r.anioCorte===null?' — en este horizonte nunca aparece.':' (año '+r.anioCorte+').'}`;
+    // capital
+    txt('lblInvAbierta',fmtM(r.invUsada));txt('lblCostoFin',fmtM(r.costoFin));txt('lblEquityYod',fmtM(r.equityUsed));txt('lblTir',r.tir===null?'—':pct(r.tir*100,1));
+    $('readCapital').innerHTML=`<b>Capital:</b> inversionistas ponen ${fmtM(r.invUsada)} al ${pct(r.p.retInv*100,1)} anual → retorno ${fmtM(r.costoFin)} en ${r.mesesTot} meses (se les liquida ${fmtM(r.invUsada+r.costoFin)} al vender). YOD pone ${fmtM(r.equityUsed)} de equity y se queda con <b>${fmtM(r.cash)}</b> al cierre · TIR ${r.tir===null?'—':pct(r.tir*100,1)}.`;
+    // semáforo
+    const warnings=[];
+    if(r.huella>r.p.sup)warnings.push('La huella de la casa ('+fmtM2(r.huella)+') NO cabe en el terreno: sube niveles o recorta programa');
+    if(r.utilidad<0)warnings.push('El caso da PÉRDIDA al vender: '+fmtM(r.utilidad));
+    else if(r.roi<.15)warnings.push('ROI al vender debajo de 15%: '+pct(r.roi*100,1)+' — valida obra y precio de zona');
+    if(r.spreadM2<=0)warnings.push('El m² cuesta más de lo que vende (spread '+fmtMoney(r.spreadM2)+'/m²)');
+    if(r.cap1<.045&&r.p.rentaMes>0)warnings.push('Cap. rate año 1 muy bajo ('+pct(r.cap1*100,2)+'): la renta no justifica retener salvo por plusvalía');
+    if(r.invUsada>0&&r.costoFin>Math.max(0,r.utilidad))warnings.push('El retorno a inversionistas ('+fmtM(r.costoFin)+') se come toda la utilidad');
+    if(Math.abs(r.revTotal-r.venta)>1)warnings.push('Cobros no concilian con la venta');
+    if(!warnings.length)warnings.push('Programa, costos, venta y reparto pasan con los supuestos capturados.');
+    $('checks').innerHTML=warnings.map(w=>`<div class="${w.includes('pasan')?'status-ok':(w.includes('PÉRDIDA')||w.includes('NO cabe'))?'status-bad':'status-warn'}">${w}</div>`).join('');
+    const fc=$('flujoCaption');if(fc)fc.textContent=`Corrida completa: ${r.totalMonths} meses · obra 1–${r.p.mesesObra} · venta en el mes ${r.totalMonths}`;
+    const filasF=[];r.flows.forEach((x,i)=>{if(i%12===0)filasF.push(`<tr class="year-row"><td colspan="7">AÑO ${Math.floor(i/12)+1}</td></tr>`);filasF.push(`<tr><td>${x.m}</td><td>${fmtM(x.rev)}</td><td>${fmtM(x.cost)}</td><td>${fmtM(x.equity)}</td><td>${fmtM(x.ret)}</td><td>${fmtM(x.saldo)}</td><td>${fmtM(x.caja)}</td></tr>`)});
+    filasF.push(`<tr class="tot-row"><td>Σ ${r.totalMonths} m</td><td>${fmtM(r.revTotal)}</td><td>${fmtM(r.costTotalCaja)}</td><td>${fmtM(r.equityUsed)}</td><td>${fmtM(r.retAcum)}</td><td>—</td><td>${fmtM(r.cash)}</td></tr>`);
+    $('flowRows').innerHTML=filasF.join('');
+    renderProforma(r);dibujaPlan(r);dibujaCascada(r);dibujaCurvaPat(r);renderFormulas();refreshJson();
+  }
+  function renderProforma(r){
+    const row=(l,v,k='')=>`<tr class="${k}"><td>${l}</td><td>${v}</td></tr>`,section=l=>`<tr class="section-row"><td colspan="2">${l}</td></tr>`;
+    $('sourcesUses').innerHTML=[section('USOS'),row('Terreno',fmtM(r.costoTerreno)),row('Obra',fmtM(r.obra)),row('Proyecto',fmtM(r.proyecto)),row('Trámites',fmtMoney(r.p.tramites)),row('Imprevistos',fmtM(r.imprev)),row('Comisiones + operación',fmtM(r.comisiones+r.operCost)),row('Retorno a inversionistas',fmtM(r.costoFin)),row('Costo total',fmtM(r.costoTotal),'total-row'),section('FUENTES'),row('Venta de la casa',fmtM(r.venta)),row('Inversión abierta (se regresa)',fmtM(r.invUsada)),row('Equity YOD usado',fmtM(r.equityUsed)),section('RESULTADO'),row('Utilidad al vender',fmtM(r.utilidad),'total-row'),row('Caja final YOD',fmtM(r.cash),'total-row'),section('SI RETIENES'),row('Flujo neto año 1',fmtM(r.flujo1)),row('Patrimonio al año '+r.p.horizonte,fmtM(r.patrimH))].join('');
+    const line=(l,v,k)=>`<div class="covenant-line"><span>${l}</span><b class="${k}">${v}</b></div>`;
+    $('covenantPanel').innerHTML=[line('Utilidad al vender',fmtM(r.utilidad),r.utilidad>0?'covenant-ok':'covenant-bad'),line('ROI vs 15% piso',pct(r.roi*100,1),r.roi>=.15?'covenant-ok':r.roi>0?'covenant-warn':'covenant-bad'),line('TIR vs tu alternativa',`${r.tir===null?'—':pct(r.tir*100,1)} / ${pct(r.p.tasaAlt*100,0)}`,r.tir!==null&&r.tir>=r.p.tasaAlt?'covenant-ok':'covenant-warn'),line('Cap. rate año 1',pct(r.cap1*100,2),r.cap1>=.06?'covenant-ok':r.cap1>=.045?'covenant-warn':'covenant-bad'),line('Huella vs terreno',`${fmtM2(r.huella)} / ${fmtM2(r.p.sup)}`,r.huella<=r.p.sup?'covenant-ok':'covenant-bad'),line('Plazo',r.mesesTot+' meses','covenant-warn')].join('')+'<p class="note">Cotización de obra firmada, avalúo, comparables de renta y reglamento del fraccionamiento siguen pendientes de validación por caso.</p>';
+  }
+  /* ================== INFOGRAFÍA ================== */
+  function dibujaPlan(r){
+    const el=$('vizPlan');if(!el)return;const p=r.p;
+    const W=340,H=330,mT=16,mB=40;
+    const aspect=p.fondo/Math.max(1,p.frente);
+    let lotH=H-mT-mB,lotW=lotH/aspect;const maxW=185;
+    if(lotW>maxW){lotW=maxW;lotH=lotW*aspect;if(lotH>H-mT-mB){lotH=H-mT-mB;lotW=lotH/aspect}}
+    const x0=18,yG=mT+lotH;let s='';
+    // proporción huella vs lote por ÁREA real
+    const fH=Math.min(1,r.huella/p.sup),fCoch=Math.min(fH,(p.cochera/Math.max(1,p.niveles))/p.sup);
+    const hHuella=lotH*fH,hCoch=lotH*fCoch;
+    // jardín (fondo), casa (frente), cochera al frente
+    s+=`<rect x="${x0}" y="${mT}" width="${lotW}" height="${lotH-hHuella}" fill="#8fbf8b14" stroke="#8FBF8B" stroke-width="1" stroke-dasharray="4 3"/>`;
+    if(lotH-hHuella>14)s+=`<text x="${x0+lotW/2}" y="${mT+(lotH-hHuella)/2+3}" font-size="8.5" font-weight="800" fill="#8FBF8B" text-anchor="middle">jardín ${fmtM2(r.jardin)}</text>`;
+    s+=`<rect x="${x0}" y="${yG-hHuella}" width="${lotW}" height="${hHuella-hCoch}" fill="#c9a96e1f" stroke="#c9a96e" stroke-width="1.4"/>`;
+    s+=`<text x="${x0+lotW/2}" y="${yG-hHuella+(hHuella-hCoch)/2-2}" font-size="9" font-weight="800" fill="#e0c590" text-anchor="middle">casa · huella ${fmtM2(r.huella)}</text>`;
+    s+=`<text x="${x0+lotW/2}" y="${yG-hHuella+(hHuella-hCoch)/2+10}" font-size="7.5" fill="#c9a96e" text-anchor="middle">${p.niveles} nivel(es) · ${fmtM2(r.m2Const)} construidos</text>`;
+    if(hCoch>6){s+=`<rect x="${x0}" y="${yG-hCoch}" width="${lotW}" height="${hCoch}" fill="#d9a45b26" stroke="#D9A45B" stroke-width="1"/>`;if(hCoch>11)s+=`<text x="${x0+lotW/2}" y="${yG-hCoch/2+3}" font-size="7.5" font-weight="800" fill="#D9A45B" text-anchor="middle">cochera</text>`}
+    s+=`<rect x="${x0}" y="${mT}" width="${lotW}" height="${lotH}" fill="none" stroke="#f4f1ea" stroke-width="1.5"/>`;
+    s+=`<line x1="${x0-8}" y1="${yG+8}" x2="${x0+lotW+8}" y2="${yG+8}" stroke="#f4f1ea" stroke-width="2"/><text x="${x0+lotW/2}" y="${yG+20}" font-size="8" fill="#8a8780" text-anchor="middle">calle · frente ${p.frente} m</text>`;
+    s+=`<text x="${x0-7}" y="${(mT+yG)/2}" font-size="7.5" fill="#8a8780" text-anchor="middle" transform="rotate(-90 ${x0-7} ${(mT+yG)/2})">fondo ${p.fondo} m</text>`;
+    // leyenda derecha: espacios
+    const lx=x0+lotW+16;let ly=mT+6;
+    s+=`<text x="${lx}" y="${ly}" font-size="8" font-weight="800" fill="#8a8780" letter-spacing="1.5">LA CASA POR DENTRO</text>`;ly+=14;
+    r.espacios.concat([['Circulación',r.m2Circ,'#5a5a60'],['Cochera',p.cochera,'#D9A45B']]).forEach(e=>{if(e[1]<=0)return;
+      s+=`<rect x="${lx}" y="${ly-6.5}" width="8" height="8" rx="2" fill="${e[2]}"/><text x="${lx+13}" y="${ly+1}" font-size="8.5" fill="#b6b3aa">${e[0]}</text><text x="${W-8}" y="${ly+1}" font-size="8.5" font-weight="800" fill="#f4f1ea" text-anchor="end">${fmtM2(e[1])}</text>`;ly+=15});
+    ly+=4;s+=`<line x1="${lx}" y1="${ly-10}" x2="${W-8}" y2="${ly-10}" stroke="#ffffff22"/><text x="${lx}" y="${ly+1}" font-size="9" font-weight="800" fill="#e0c590">${fmtM2(r.m2Const)} totales</text>`;ly+=13;
+    s+=`<text x="${lx}" y="${ly}" font-size="8" fill="#8a8780">${r.recamaras} rec · ${p.nBanos} baños · ${fmtM2(r.m2Habitable)} hab.</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="La casa en su terreno a escala">${s}</svg>`;
+  }
+  function dibujaCascada(r){
+    const el=$('vizCascada');if(!el)return;const W=340,H=330,mB=36,mT=18;
+    const pasos=[['Venta',r.venta,'#8FBF8B'],['Terreno',-r.costoTerreno,'#a9a4f5'],['Obra',-(r.obra+r.imprev),'#E0605A'],['Proy+Trám',-(r.proyecto+r.p.tramites),'#D9A45B'],['Comis+Op',-(r.comisiones+r.operCost),'#cf7a74'],['Financ.',-r.costoFin,'#cf7a74'],['UTILIDAD',null,'#c9a96e']];
+    const maxV=Math.max(r.venta,1),esc=(H-mT-mB)/maxV,xw=(W-16)/pasos.length,y00=H-mB;
+    let run=0,s='',xx=8;
+    pasos.forEach((pa,i)=>{
+      if(pa[1]===null){const v=r.utilidad,hh=Math.max(2,Math.abs(v)*esc),yb=v>=0?y00-v*esc:y00;
+        s+=`<rect x="${xx}" y="${v>=0?yb:y00}" width="${xw-8}" height="${hh}" fill="${v>=0?'#c9a96e':'#E0605A'}"/>`;
+        s+=`<text x="${xx+(xw-8)/2}" y="${(v>=0?yb:y00+hh)+(v>=0?-5:11)}" font-size="8.5" font-weight="800" fill="${v>=0?'#e0c590':'#E0605A'}" text-anchor="middle">${fmtM(v)}</text>`;
+      }else{
+        const v=pa[1],h=Math.max(1.5,Math.abs(v)*esc),yTopPrev=y00-run*esc;run+=v;const yTopNew=y00-run*esc;
+        const yy=v>=0?yTopNew:yTopPrev;
+        s+=`<rect x="${xx}" y="${yy}" width="${xw-8}" height="${h}" fill="${pa[2]}" opacity="${v>=0?1:.82}"/>`;
+        if(i<pasos.length-1)s+=`<line x1="${xx+xw-8}" y1="${yTopNew}" x2="${xx+xw}" y2="${yTopNew}" stroke="#ffffff30" stroke-width="1"/>`;
+        s+=`<text x="${xx+(xw-8)/2}" y="${yy-4}" font-size="7.2" font-weight="700" fill="${pa[2]}" text-anchor="middle">${v<0?'−':''}${fmtM(Math.abs(v))}</text>`;
+      }
+      s+=`<text x="${xx+(xw-8)/2}" y="${H-mB+11}" font-size="7" fill="#8a8780" text-anchor="middle">${pa[0]}</text>`;xx+=xw});
+    s+=`<line x1="6" y1="${y00}" x2="${W-6}" y2="${y00}" stroke="#ffffff26" stroke-width="1"/>`;
+    s+=`<text x="8" y="${H-8}" font-size="8" fill="#8a8780">cada peso de la venta y la mordida que se lo come</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Río del dinero: de venta a utilidad">${s}</svg>`;
+  }
+  function dibujaCurvaPat(r){
+    const el=$('vizCurvaPat');if(!el)return;const W=340,H=330,mL=14,mR=14,mT=22,mB=40;
+    const rows=r.rentaRows,n=rows.length;if(!n){el.innerHTML='';return}
+    const maxY=Math.max(rows[n-1].patrim,r.valor0)*1.04,X=a=>mL+(W-mL-mR)*(a/n),Y=v=>mT+(H-mT-mB)*(1-v/maxY);
+    let s='';
+    // zonas RETENER / VENDER
+    if(r.anioCorte!==null){const xc=X(r.anioCorte-0.5);
+      s+=`<rect x="${mL}" y="${mT}" width="${xc-mL}" height="${H-mT-mB}" fill="#8fbf8b0d"/><rect x="${xc}" y="${mT}" width="${W-mR-xc}" height="${H-mT-mB}" fill="#d9a45b12"/>`;
+      s+=`<line x1="${xc}" y1="${mT}" x2="${xc}" y2="${H-mB}" stroke="#c9a96e" stroke-width="1.4" stroke-dasharray="5 4"/>`;
+      s+=`<text x="${xc-4}" y="${mT+10}" font-size="8.5" font-weight="800" fill="#8FBF8B" text-anchor="end">RETENER</text><text x="${xc+4}" y="${mT+10}" font-size="8.5" font-weight="800" fill="#D9A45B">VENDER</text>`;}
+    else s+=`<text x="${W-mR}" y="${mT+10}" font-size="8.5" font-weight="800" fill="#8FBF8B" text-anchor="end">RETENER todo el horizonte</text>`;
+    // barras de flujo acumulado
+    rows.forEach(x=>{const h=(x.acum/maxY)*(H-mT-mB);if(h>.5)s+=`<rect x="${X(x.a)-5}" y="${H-mB-h}" width="10" height="${h}" fill="#8ab8ff4d"/>`});
+    // línea de valor (solo plusvalía)
+    let dv=`M${X(0)} ${Y(r.valor0)}`;rows.forEach(x=>{dv+=` L${X(x.a)} ${Y(x.valor)}`});
+    s+=`<path d="${dv}" fill="none" stroke="#8a8780" stroke-width="1.2" stroke-dasharray="3 3"/>`;
+    // línea de patrimonio (valor + rentas)
+    let dp=`M${X(0)} ${Y(r.valor0)}`;rows.forEach(x=>{dp+=` L${X(x.a)} ${Y(x.patrim)}`});
+    s+=`<path d="${dp} L${X(n)} ${H-mB} L${X(0)} ${H-mB} Z" fill="#c9a96e14"/><path d="${dp}" fill="none" stroke="#c9a96e" stroke-width="2"/>`;
+    rows.forEach(x=>{s+=`<circle cx="${X(x.a)}" cy="${Y(x.patrim)}" r="2.2" fill="#e0c590"/>`});
+    // hoy
+    s+=`<circle cx="${X(0)}" cy="${Y(r.valor0)}" r="3" fill="#f4f1ea"/><text x="${X(0)+5}" y="${Y(r.valor0)-6}" font-size="8" fill="#b6b3aa">hoy ${fmtM(r.valor0)}</text>`;
+    s+=`<text x="${X(n)}" y="${Y(rows[n-1].patrim)-8}" font-size="8.5" font-weight="800" fill="#e0c590" text-anchor="end">${fmtM(rows[n-1].patrim)}</text>`;
+    s+=`<line x1="${mL}" y1="${H-mB}" x2="${W-mR}" y2="${H-mB}" stroke="#ffffff22"/>`;
+    rows.forEach(x=>{if(x.a%2===0||n<=8)s+=`<text x="${X(x.a)}" y="${H-mB+11}" font-size="7.5" fill="#8a8780" text-anchor="middle">a${x.a}</text>`});
+    s+=`<text x="${mL}" y="${H-16}" font-size="8" fill="#8a8780">línea oro = casa + rentas acumuladas · punteada = solo plusvalía</text>`;
+    s+=`<text x="${mL}" y="${H-6}" font-size="8" fill="#8a8780">barras azules = rentas acumuladas · corte cuando crece &lt; ${pct(r.p.tasaAlt*100,0)}</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva patrimonial: cuándo vender">${s}</svg>`;
+  }
+  const formulaDefs=[
+    ['m² construidos','Espacios × (1 + circulaciones) + cochera',['inM2Social','inM2RecPpal','inNRecSec','inPctCirc','inM2Cochera'],r=>`${fmtM2(r.interior)} × ${(1+r.p.circ).toFixed(2)} + ${fmtM2(r.p.cochera)} = ${fmtM2(r.m2Const)}`],
+    ['Inversión','Terreno + obra + proyecto + trámites + imprevistos',['inPrecioM2Terreno','inCostoM2Obra','inProyectoM2','inTramitesFijo'],r=>`${fmtM(r.costoTerreno)} + ${fmtM(r.obra)} + ${fmtM(r.proyecto)} + ${fmtMoney(r.p.tramites)} + ${fmtM(r.imprev)} = ${fmtM(r.inversion)}`],
+    ['Venta','m² construidos × precio de zona',['inPrecioM2Zona'],r=>`${fmtM2(r.m2Const)} × ${fmtMoney(r.p.precioZona)} = ${fmtM(r.venta)}`],
+    ['Costo financiero','Inversión abierta × retorno anual × meses/12',['inInversionAbierta','inRetornoInvPct','inMesesObra','inMesesVenta'],r=>`${fmtM(r.invUsada)} × ${pct(r.p.retInv*100,1)} × ${r.mesesTot}/12 = ${fmtM(r.costoFin)}`],
+    ['Utilidad al vender','Venta − inversión − comisiones − operación − financiero',['inComLeadsPct','inComCierrePct','inOperacionPct'],r=>`${fmtM(r.venta)} − ${fmtM(r.inversion)} − ${fmtM(r.comisiones+r.operCost)} − ${fmtM(r.costoFin)} = ${fmtM(r.utilidad)} (ROI ${pct(r.roi*100,1)})`],
+    ['Flujo de renta','Renta anual − admón. − seguro − mantenimiento',['inRentaMes','inAdminRentaPct','inSeguroPct','inMantPct'],r=>`año 1: ${fmtM(r.rentaRows[0]?.rentaAnual||0)} − gastos = ${fmtM(r.flujo1)} (cap. ${pct(r.cap1*100,2)})`],
+    ['Patrimonio','Valor con plusvalía + rentas acumuladas',['inPlusvaliaPct','inHorizonte'],r=>`año ${r.p.horizonte}: ${fmtM(r.valorH)} + ${fmtM(r.acumH)} = ${fmtM(r.patrimH)}`],
+    ['Punto dulce','Retener mientras el patrimonio crezca > tu alternativa',['inTasaAlternativa'],r=>r.anioCorte===null?`el crecimiento nunca baja de ${pct(r.p.tasaAlt*100,0)} en ${r.p.horizonte} años`:`en el año ${r.anioCorte} crece ${pct((r.rentaRows[r.anioCorte-1]?.crec||0)*100,1)} < ${pct(r.p.tasaAlt*100,0)} → retener ~${r.aniosRetener} años`]
+  ];
+  function labelFor(id){const input=$(id);return input?.closest('.input-group')?.querySelector('label')?.textContent||id}
+  function renderFormulas(){$('formulaList').innerHTML=formulaDefs.map((f,i)=>`<div class="formula-row"><b>${f[0]}</b><code>${f[1]}</code><button class="formula-btn" data-formula="${i}">ver</button></div>`).join('');document.querySelectorAll('[data-formula]').forEach(b=>b.onclick=e=>openFormula(Number(e.currentTarget.dataset.formula)))}
+  function openFormula(i){const f=formulaDefs[i],r=state;$('formulaDetail').innerHTML=`<b>${f[0]}</b><br><code>${f[1]}</code><p>${f[3](r)}</p>${f[2].map(id=>`<button class="chip" data-jump="${id}">${labelFor(id)}</button>`).join('')}`;document.querySelectorAll('.chip[data-jump]').forEach(b=>b.onclick=()=>{const el=$(b.dataset.jump);const card=el?.closest('.card');if(card){card.scrollIntoView({behavior:'smooth',block:'center'});el.focus()}})}
+  function toggleDrawer(card){const drawer=$(card.dataset.card),was=drawer.classList.contains('active');document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'));document.querySelectorAll('.edit-pill').forEach(e=>e.textContent='AJUSTAR');if(!was){drawer.classList.add('active');card.classList.add('open');card.querySelector('.edit-pill').textContent='CERRAR';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),150)}}
+  /* ================== JSON / RESUMEN ================== */
+  function resumenActual(){const r=state||calculate();const num=(v,d=0)=>v===null||v===undefined||!isFinite(v)?'':Number(v.toFixed(d));return{
+    ventas:num(r.venta),costo_proyecto:num(r.costoTotal),utilidad:num(r.utilidad),margen_pct:num(r.margen*100,2),tir_dev_pct:r.tir===null?'':num(r.tir*100,2),meses_totales:r.mesesTot,
+    terreno_m2:num(r.p.sup,2),m2_construccion:num(r.m2Const,1),m2_habitable:num(r.m2Habitable,1),m2_cochera:num(r.p.cochera,1),recamaras:r.recamaras,banos:num(r.p.nBanos,1),niveles:r.p.niveles,
+    costo_terreno:num(r.costoTerreno),costo_obra:num(r.obra),obra_m2:num(r.p.costoObra),proyecto_total:num(r.proyecto),tramites_total:num(r.p.tramites),imprevistos_total:num(r.imprev),inversion_total:num(r.inversion),
+    venta_esperada:num(r.venta),precio_m2_venta:num(r.p.precioZona),comisiones_total:num(r.comisiones+r.operCost),costo_financiero:num(r.costoFin),utilidad_venta:num(r.utilidad),roi_venta_pct:num(r.roi*100,2),utilidad_m2:num(r.utilM2),multiplicador:num(r.multiplicador,2),
+    renta_mensual:num(r.p.rentaMes),flujo_anual1:num(r.flujo1),cap_rate_pct:num(r.cap1*100,2),anios_retener:r.aniosRetener,valor_horizonte:num(r.valorH),flujo_acum_horizonte:num(r.acumH),patrimonio_horizonte:num(r.patrimH),roi_patrimonial_pct:num(r.roiPatrimonial*100,1),plusvalia_pct:num(r.p.plus*100,2),
+    inversion_abierta:num(r.invUsada),equity_yod:num(r.equityUsed),estrategia:r.p.estrategia}}
+  function refreshJson(){if(!$('jsonEditor')||!state)return;$('jsonEditor').value=JSON.stringify({schema:'potenciales-yod/unifamiliar/v1',caso:{caso_id:caso.caso_id,nombre_caso:caso.nombre_caso,palabra:caso.palabra},inputs:inputValues(),resumen:resumenActual()},null,2)}
+  function applyJson(){try{const data=JSON.parse($('jsonEditor').value);if(data.schema&&data.schema!=='potenciales-yod/unifamiliar/v1')throw Error();const vals=data.inputs||data;let n=0;Object.entries(vals).forEach(([id,v])=>{if((id==='inEstrategia'||$(id))&&Number.isFinite(Number(v))){setControl(id,v);n++}});if(!n)throw Error();calculate();$('checks').innerHTML='<div class="status-ok">JSON aplicado: '+n+' variables.</div>'}catch{$('checks').innerHTML='<div class="status-bad">JSON inválido.</div>'}}
+  function exportJson(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('jsonEditor').value],{type:'application/json'}));a.download=(caso.palabra||'unifamiliar')+'-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+  /* ================== CAPA DE NUBE (idéntica al mixto) ================== */
+  let toastTimer=null;
+  function toast(msg,ms=3200){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('on'),ms)}
+  function apiGet(params){const q=new URLSearchParams(Object.assign({k:clave,tipo:NUBE.TIPO},params));return fetch(NUBE.ENDPOINT+'?'+q.toString()).then(r=>r.json())}
+  function apiPost(body){body=Object.assign({k:clave,tipo_desarrollo:NUBE.TIPO},body);return fetch(NUBE.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(r=>r.json())}
+  function nuevoRequestId(){return (crypto.randomUUID?.()||Date.now()+'-'+Math.random())}
+  function guardarDraft(){try{localStorage.setItem(LS.draft,JSON.stringify({inputs:inputValues(),caso}))}catch(e){}}
+  function cargarDraft(){try{const d=JSON.parse(localStorage.getItem(LS.draft)||'null');if(!d)return;if(d.inputs)Object.entries(d.inputs).forEach(([id,v])=>setControl(id,v));if(d.caso)caso=Object.assign(caso,d.caso)}catch(e){}}
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function fechaCorta(ts){const d=new Date(ts);return isNaN(d)?'':d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'2-digit'})}
+  function pintaCaso(){
+    const nombre=caso.nombre_caso||'Caso nuevo';
+    const h=$('heroNombre');h.innerHTML='';h.append(document.createTextNode(nombre));
+    const pill=document.createElement('span');pill.className='estado-pill';pill.id='heroEstado';pill.textContent=caso.estado||'EXPLORACIÓN';h.append(pill);
+    txt('heroSub',caso.caso_id?`palabra: ${caso.palabra} · v${caso.version||1}${caso.siguiente_paso?' · siguiente: '+caso.siguiente_paso:''}`:'Mueve los supuestos y guarda el caso con una palabra para volver.');
+    txt('casoNombreBar',caso.caso_id?`${nombre} · ${caso.palabra}`:'Caso nuevo (sin guardar)');
+    const dot=$('syncDot');dot.className='sync-dot';dot.textContent=modoLocal?'· sin nube':caso.caso_id?'· guardado en Sheet v'+(caso.version||1):'· sin guardar';
+    $('estadoChips').innerHTML=ESTADOS.map(e=>`<button class="echip${(caso.estado||'EXPLORACIÓN')===e?' on':''}" data-estado="${e}">${e}</button>`).join('');
+    document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>cambiarEstado(b.dataset.estado));
+    $('segSiguiente').value=caso.siguiente_paso||'';
+    $('segLog').textContent=caso.notas_seguimiento||'Sin notas todavía.'+(caso.caso_id?'':' Guarda el caso primero.');
+  }
+  function aplicarCasoRemoto(obj){
+    Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
+    caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',version:Number(obj.version||1)};
+    calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado')
+  }
+  async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
+  async function abrirPorPalabra(palabra){if(!palabra.trim())return;try{const r=await apiGet({recurso:'caso',palabra:palabra.trim()});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'No hay caso con esa palabra':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir')}}
+  async function cargarLista(){const cont=$('listaCasos');cont.innerHTML='<p class="note">Cargando…</p>';try{const r=await apiGet({recurso:'lista'});if(!r.ok){cont.innerHTML='<p class="note">Error: '+r.error+'</p>';if(r.error==='clave')reabrirGate();return}casosCache=r.casos||[];cfgBoard=r.config||cfgBoard;if(!casosCache.length){cont.innerHTML='<p class="note">Aún no hay casos de Unifamiliar. Guarda el primero.</p>';return}cont.innerHTML=casosCache.map(c=>`<div class="caso-item" data-id="${c.caso_id}"><div><div class="ci-n">${esc(c.nombre_caso||c.palabra)}<span class="badge">${esc(c.estado||'—')}</span></div><div class="ci-m">palabra: ${esc(c.palabra)} · v${c.version||1} · ${fechaCorta(c.ts_actualizado)}${c.source==='test'?' · PRUEBA':''}</div></div><div class="ci-kpi">${c.utilidad!==''&&c.utilidad!==undefined?fmtM(Number(c.utilidad)):'—'}<span>utilidad · ROI ${c.roi_venta_pct!==''&&c.roi_venta_pct!==undefined?Number(c.roi_venta_pct).toFixed(1)+'%':'—'}</span></div></div>`).join('');cont.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>abrirPorId(el.dataset.id))}catch(e){cont.innerHTML='<p class="note">Sin conexión. Reintenta.</p>'}}
+  async function guardarCaso(enviarCorreo){
+    if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}
+    const nombre=$('gNombre').value.trim(),palabra=$('gPalabra').value.trim(),correo=$('gCorreo').value.trim(),notas=$('gNotas').value;
+    if(!palabra){toast('Elige una palabra para volver a tu caso');return}
+    if(enviarCorreo&&!correo){toast('Pon un correo para enviarte la palabra');return}
+    const btns=[$('gGuardarSolo'),$('gGuardarEnviar')];btns.forEach(b=>b.disabled=true);
+    const rSt=state||calculate();
+    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.ret),Math.round(f.saldo),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
+    try{
+      const r=await apiPost(payload);
+      btns.forEach(b=>b.disabled=false);
+      if(!r.ok){
+        if(r.error==='palabra_ocupada')toast('Esa palabra ya es de otro caso: elige otra');
+        else if(r.error==='clave'){toast('La clave del board cambió');reabrirGate()}
+        else toast('No se guardó: '+r.error);
+        return}
+      if(!r.caso_id){$('gWeb').value='';toast('No se guardó: vuelve a intentar');return}
+      caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.correo=correo;caso.nombre_caso=nombre||'Caso sin nombre';caso.notas_caso=notas;caso.version=r.version;
+      pintaCaso();guardarDraft();cerrarOverlays();
+      toast(r.emailed?'Caso guardado · correo con la palabra enviado':'Caso guardado · palabra: '+caso.palabra)
+    }catch(e){btns.forEach(b=>b.disabled=false);encolar(payload);toast('Sin conexión: se guardará al reconectar')}
+  }
+  async function cambiarEstado(nuevo){
+    caso.estado=nuevo;pintaCaso();guardarDraft();
+    if(!caso.caso_id||modoLocal){toast(modoLocal?'Estado local (sin nube)':'Guarda el caso para que el estado viva en el Sheet');return}
+    await postSeguimiento({tipo:'estado',caso_id:caso.caso_id,estado:nuevo,request_id:nuevoRequestId()},'Estado: '+nuevo)
+  }
+  async function postSeguimiento(payload,okMsg){try{const r=await apiPost(payload);if(r.ok){toast(okMsg)}else if(r.error==='clave'){reabrirGate()}else toast('No se registró: '+r.error)}catch(e){encolar(payload);toast('Sin conexión: se registrará al reconectar')}}
+  function encolar(payload){try{let q=JSON.parse(localStorage.getItem(LS.cola)||'[]');
+    if(payload.tipo==='guardar')q=q.filter(x=>!(x.tipo==='guardar'&&((x.caso_id&&x.caso_id===payload.caso_id)||(!x.caso_id&&!payload.caso_id&&x.palabra===payload.palabra))));
+    q.push(payload);localStorage.setItem(LS.cola,JSON.stringify(q));const dot=$('syncDot');dot.className='sync-dot err';dot.textContent='· pendiente de sincronizar'}catch(e){}}
+  let drenando=false;
+  async function drenarCola(){if(drenando||modoLocal)return;let q;try{q=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){q=[]}
+    if(!q.length)return;
+    drenando=true;const resto=[];let claveVieja=false,conflicto=false;
+    try{
+      for(let i=0;i<q.length;i++){const payload=q[i];
+        try{const r=await apiPost(payload);
+          if(r.ok){if(payload.tipo==='guardar'&&!caso.caso_id){caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.version=r.version;pintaCaso()}}
+          else if(r.error==='clave'){resto.push(...q.slice(i));claveVieja=true;break}
+          else if(r.error==='palabra_ocupada'&&payload.tipo==='guardar'){conflicto=true;toast('La palabra "'+payload.palabra+'" quedó ocupada: ese guardado pendiente NO se aplicó.',6000)}
+          else if(r.error!=='no_existe'&&r.error!=='palabra_ocupada'){resto.push(payload)}
+        }catch(e){resto.push(payload)}}
+      let actual;try{actual=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){actual=q}
+      localStorage.setItem(LS.cola,JSON.stringify(resto.concat(actual.slice(q.length))));
+      if(claveVieja)reabrirGate();
+      else if(!resto.length&&!conflicto){toast('Cambios pendientes sincronizados');pintaCaso()}
+    }finally{drenando=false}}
+  function whatsApp(){
+    const r=state||calculate();
+    const linea=[`*${caso.nombre_caso||'PPP Unifamiliar'}* · Potenciales YOD`,`Terreno ${fmtM2(r.p.sup)} · casa ${fmtM2(r.m2Const)} (${r.recamaras} rec, ${r.p.nBanos} baños)`,`Inversión ${fmtM(r.inversion)} · Venta ${fmtM(r.venta)} (${fmtMoney(r.p.precioZona)}/m²)`,`Vender: utilidad ${fmtM(r.utilidad)} (ROI ${pct(r.roi*100,1)}) en ${r.mesesTot} meses`,`Retener: renta ${fmtMoney(r.p.rentaMes)}/mes (cap. ${pct(r.cap1*100,2)}) · punto dulce ~${r.aniosRetener} años`,caso.caso_id?`Abrir: ${NUBE.SITE}${NUBE.PAGE}?open=${caso.caso_id}`:''].filter(Boolean).join('\n');
+    const num=String(cfgBoard.whatsapp_num||'').replace(/\D/g,'');
+    window.open('https://wa.me/'+(num?num:'')+'?text='+encodeURIComponent(linea),'_blank')
+  }
+  /* ================== GATE / MODALES ================== */
+  function reabrirGate(){localStorage.removeItem(LS.clave);clave='';$('gate').classList.remove('off');$('gateErr').textContent='La clave cambió o es incorrecta'}
+  async function intentarEntrar(){
+    const v=$('gateClave').value.trim();if(!v){$('gateErr').textContent='Escribe la clave';return}
+    $('gateBtn').disabled=true;$('gateErr').textContent='';
+    const previa=clave;clave=v;
+    try{const r=await apiGet({recurso:'lista'});
+      if(r.ok){localStorage.setItem(LS.clave,clave);modoLocal=false;casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');$('modoLocalBanner').classList.remove('on');pintaCaso();drenarCola();procesarOpen();toast('Bienvenido · PPP Unifamiliar')}
+      else{clave=previa;$('gateErr').textContent=r.error==='clave'?'Clave incorrecta':'Error: '+r.error}
+    }catch(e){clave=previa;$('gateErr').textContent='Sin conexión con el Sheet.'}
+    $('gateBtn').disabled=false
+  }
+  function modoSinConexion(){modoLocal=true;$('gate').classList.add('off');$('modoLocalBanner').classList.add('on');pintaCaso()}
+  function procesarOpen(){const id=new URLSearchParams(location.search).get('open');if(id&&!modoLocal)abrirPorId(id)}
+  function abrirOverlay(id){$(id).classList.add('on')}
+  function cerrarOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on'))}
+  /* ================== ARRANQUE ================== */
+  document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
+  controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();
+  document.querySelectorAll('.preset-casa').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const pr=PRESETS[b.dataset.preset];if(!pr)return;Object.entries(pr).forEach(([id,v])=>setControl(id,v));calculate();toast('Preset aplicado: casa '+b.dataset.preset)}));
+  document.querySelectorAll('.estr-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();estrategia=Number(b.dataset.estr);calculate()}));
+  $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
+  $('gGuardarSolo').onclick=()=>guardarCaso(false);$('gGuardarEnviar').onclick=()=>guardarCaso(true);$('gCancelar').onclick=cerrarOverlays;
+  $('btnMisCasos').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave');return}abrirOverlay('ovCasos');cargarLista()};
+  $('casosCerrar').onclick=cerrarOverlays;
+  $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
+  $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
+  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));estrategia=PRELLENADO.inEstrategia;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de Casa Alysa (real)')};
+  $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
+  $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
+  $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
+  $('btnWhats').onclick=whatsApp;
+  $('refreshJson').onclick=refreshJson;$('applyJson').onclick=applyJson;$('exportJson').onclick=exportJson;
+  $('gateBtn').onclick=intentarEntrar;$('gateClave').addEventListener('keydown',e=>{if(e.key==='Enter')intentarEntrar()});
+  $('gateLocal').onclick=modoSinConexion;
+  document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)cerrarOverlays()}));
+  window.addEventListener('online',drenarCola);setInterval(drenarCola,25000);
+  cargarDraft();calculate();pintaCaso();
+  if(modoLocal){$('gate').classList.add('off');$('modoLocalBanner').classList.add('on')}
+  else if(clave){apiGet({recurso:'lista'}).then(r=>{if(r.ok){casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');drenarCola();procesarOpen()}else{reabrirGate()}}).catch(()=>{modoSinConexion();toast('Sin conexión: trabajando en modo local')})}
+})();
+</script>
+</body>
+</html>
