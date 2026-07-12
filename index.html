@@ -6,6 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css">
 <script>
   // Compatibilidad: los enlaces viejos ?open=ID (correos ya enviados) eran del board mixto.
   (function(){var q=new URLSearchParams(location.search);var id=q.get('open');if(id){var t=q.get('t')||'mixto';var pag={mixto:'mixto.html',vertical:'mixto.html',macrolotes:'macrolotes.html'}[t]||'mixto.html';location.replace(pag+'?open='+encodeURIComponent(id))}})();
@@ -87,7 +88,20 @@
   .ppp.on:hover .flecha{opacity:1}
   .pie{text-align:center;font-size:10.5px;color:var(--muted);padding:18px;line-height:1.6}
   .pie b{color:var(--suave)}
-  @media(max-width:640px){.grid{grid-template-columns:1fr}#mapWrap{height:52vh}.panel{max-width:calc(100vw - 20px)}}
+  @media(max-width:640px){
+    .grid{grid-template-columns:1fr}
+    #mapWrap{height:56vh}
+    header .full{font-size:10px}
+    .panel{left:8px;right:8px;max-width:none;padding:8px 10px}
+    .panel h1{font-size:15px}
+    .panel .sub2{display:none}
+    .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex-shrink:0;padding:7px 10px}
+    #btnTodos{padding:10px 12px}
+    .lt-item{padding:11px 10px}
+    #listaTodos{max-height:38vh}
+  }
 </style>
 </head>
 <body>
@@ -157,6 +171,7 @@
 <div class="pie"><b>YoDesarrollo · Aurum Arquitectos</b> · cada planificador pide su clave · los casos y los pines se administran desde el Sheet "YOD - POTENCIALES"</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.js"></script>
 <script>
 (()=>{
   const ENDPOINT='https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec';
@@ -168,7 +183,7 @@
 
   function initMap(){
     if(map)return;
-    map=L.map('map',{zoomControl:true,attributionControl:true}).setView([25.5,-104],5);
+    map=L.map('map',{zoomControl:true,attributionControl:true,gestureHandling:true,gestureHandlingOptions:{duration:1200,text:{touch:'Usa dos dedos para mover el mapa',scroll:'Usa ctrl + scroll para hacer zoom',scrollMac:'Usa \u2318 + scroll para hacer zoom'}}}).setView([25.5,-104],5);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
     capa=L.layerGroup().addTo(map);
     window._pyodMap=map;
