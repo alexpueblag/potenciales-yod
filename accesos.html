@@ -22,7 +22,7 @@
   .hero p{color:var(--muted);font-size:12px;margin:0;line-height:1.5}
   .card{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:14px 16px;margin-bottom:14px}
   .card h2{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--goldc);margin:0 0 10px}
-  .fila-alta{display:grid;grid-template-columns:2fr 1.5fr 1fr auto;gap:8px}
+  .fila-alta{display:grid;grid-template-columns:2fr 1.3fr 1.1fr .9fr auto;gap:8px}
   .fila-alta input,.fila-alta select{background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:10px;padding:10px 11px;color:var(--text);font:inherit;font-size:12.5px;min-width:0}
   .btn{background:var(--gold);color:#0a0a0c;border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;white-space:nowrap}
   .btn.rojo{background:#e0605a26;color:var(--red)}
@@ -63,6 +63,7 @@
     <div class="fila-alta">
       <input id="aCorreo" type="email" placeholder="correo@…">
       <input id="aNombre" placeholder="Nombre">
+      <input id="aBoards" placeholder="boards: * o RM,TA,TM…" value="*">
       <select id="aRol"><option value="vista">vista</option><option value="admin">admin</option></select>
       <button class="btn" id="aBtn">Dar acceso</button>
     </div>
@@ -79,7 +80,7 @@
     <div class="leyenda">
       <b>12jul·09:14·MA●</b> — día · hora · board · entrada &nbsp;|&nbsp; Boards: <b>PT</b> portal · <b>MP</b> mapa · <b>MA</b> macrolotes · <b>MX</b> mixto · <b>UN</b> unifamiliar · <b>RE</b> residencial · <b>PA</b> patrimonial · <b>TA</b>/<b>TM</b>/<b>TC</b> tracks · <b>AC</b> accesos<br>
       <b>◉</b> abrió un caso · <b>✎</b> guardó · <b>⚑</b> cambió estado · <b>☎</b> WhatsApp · <b>⤓</b> exportó · <b>∅</b> caso nuevo · <b>↦</b> la visita continúa en la celda siguiente<br>
-      <b>(28m ×7)</b> — al cerrar: minutos de la visita × eventos totales &nbsp;|&nbsp; renglón lleno (60 visitas) → renglón nuevo "correo <b>·cont2</b>"
+      <b>(28m ×7)</b> — al cerrar: minutos de la visita × eventos totales &nbsp;|&nbsp; renglón lleno (60 visitas) → renglón nuevo "correo <b>·cont2</b>"<br><b>Permisos</b>: el campo <b>boards</b> de cada usuario acepta <b>*</b> (todo) o códigos separados por coma — <b>AL</b> Alquimia · <b>RM</b> Miramar · más los de arriba. Ej.: un inversionista de Alysa = "TA".
     </div>
   </section>
 </main>
@@ -120,7 +121,7 @@
     const correo=$('aCorreo').value.trim(),nombre=$('aNombre').value.trim();
     if(!correo||correo.indexOf('@')<1){$('aMsg').textContent='Correo inválido';return}
     $('aBtn').disabled=true;$('aMsg').textContent='Guardando…';
-    const r=await post({tipo:'acceso-alta',correo,nombre,rol:$('aRol').value,boards:'*'});
+    const r=await post({tipo:'acceso-alta',correo,nombre,rol:$('aRol').value,boards:($('aBoards').value.trim()||'*')});
     $('aMsg').textContent=r.ok?'✓ '+correo+' ya puede pedir su liga mágica en cualquier board':'No se pudo: '+(r.error||'');
     $('aBtn').disabled=false;if(r.ok){$('aCorreo').value='';$('aNombre').value='';cargar()}
   };
