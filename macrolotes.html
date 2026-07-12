@@ -340,10 +340,8 @@
 
   <section class="grafs">
     <div class="viz-card"><span class="k">Plano proporcional · a escala real (la carretera a la izquierda)</span><div id="vizPlan" class="viz-svg"></div></div>
-    <div class="graf-row2">
-      <div class="viz-card"><span class="k">El embudo del suelo · de ha a pesos</span><div id="vizEmbudo" class="viz-svg"></div></div>
-      <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
-    </div>
+    <div class="viz-card"><span class="k">El embudo del suelo · de ha a pesos</span><div id="vizEmbudo" class="viz-svg"></div></div>
+    <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
   </section>
 
   <div class="caso-bar">
@@ -973,7 +971,7 @@
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Embudo del suelo">${s}</svg>`;
   }
   function dibujaCascada(r){
-    const el=$('vizCascada');if(!el)return;const W=340,H=196,mB=34,mT=16;
+    const el=$('vizCascada');if(!el)return;const W=700,H=230,mB=38,mT=20;
     const pasos=[['Ingresos',r.ingresos,'#8FBF8B'],['Urbaniz.',-r.urbanizacion,'#E0605A'],['Naves',-r.construccion,'#E0605A'],['Blandos',-r.blandos,'#E0605A']];
     if(r.tierraPago>0)pasos.push(['Tierra',-r.tierraPago,'#E0605A']);
     pasos.push(['Financ.',-(r.interest+r.feeDebt),'#cf7a74']);
@@ -985,19 +983,19 @@
         const yTop=v>=0?y00-run*esc:y00-(run)*esc;   // run ya es utilidad
         const hh=Math.max(2,Math.abs(v)*esc),yb=v>=0?y00-v*esc:y00;
         s+=`<rect x="${xx}" y="${v>=0?yb:y00}" width="${xw-8}" height="${hh}" fill="${v>=0?'#c9a96e':'#E0605A'}"/>`;
-        s+=`<text x="${xx+(xw-8)/2}" y="${(v>=0?yb:y00+hh)+(v>=0?-5:11)}" font-size="8.5" font-weight="800" fill="${v>=0?'#e0c590':'#E0605A'}" text-anchor="middle">${fmtM(v)}</text>`;
+        s+=`<text x="${xx+(xw-8)/2}" y="${(v>=0?yb:y00+hh)+(v>=0?-5:11)}" font-size="11" font-weight="800" fill="${v>=0?'#e0c590':'#E0605A'}" text-anchor="middle">${fmtM(v)}</text>`;
         // partición dueño / dev sobre la utilidad
-        if(v>0){const hD=r.duenoUtilidad*esc;s+=`<rect x="${xx}" y="${yb}" width="${xw-8}" height="${Math.min(hD,hh)}" fill="#8ab8ff" opacity=".85"/><text x="${xx+(xw-8)/2}" y="${yb+Math.min(hD,hh)/2+3}" font-size="7" font-weight="800" fill="#0a0a0c" text-anchor="middle">dueño</text>`}
+        if(v>0){const hD=r.duenoUtilidad*esc;s+=`<rect x="${xx}" y="${yb}" width="${xw-8}" height="${Math.min(hD,hh)}" fill="#8ab8ff" opacity=".85"/><text x="${xx+(xw-8)/2}" y="${yb+Math.min(hD,hh)/2+3}" font-size="9" font-weight="800" fill="#0a0a0c" text-anchor="middle">dueño</text>`}
       }else{
         const v=pa[1],h=Math.max(1.5,Math.abs(v)*esc),yTopPrev=y00-run*esc;run+=v;const yTopNew=y00-run*esc;
         const yy=v>=0?yTopNew:yTopPrev;
         s+=`<rect x="${xx}" y="${yy}" width="${xw-8}" height="${h}" fill="${pa[2]}" opacity="${v>=0?1:.8}"/>`;
         if(i<pasos.length-1)s+=`<line x1="${xx+xw-8}" y1="${yTopNew}" x2="${xx+xw}" y2="${yTopNew}" stroke="#ffffff30" stroke-width="1"/>`;
-        s+=`<text x="${xx+(xw-8)/2}" y="${yy-4}" font-size="7.5" font-weight="700" fill="${pa[2]}" text-anchor="middle">${v<0?'−':''}${fmtM(Math.abs(v))}</text>`;
+        s+=`<text x="${xx+(xw-8)/2}" y="${yy-4}" font-size="9.5" font-weight="700" fill="${pa[2]}" text-anchor="middle">${v<0?'−':''}${fmtM(Math.abs(v))}</text>`;
       }
-      s+=`<text x="${xx+(xw-8)/2}" y="${H-mB+11}" font-size="7.5" fill="#8a8780" text-anchor="middle">${pa[0]}</text>`;xx+=xw});
+      s+=`<text x="${xx+(xw-8)/2}" y="${H-mB+11}" font-size="9.5" fill="#8a8780" text-anchor="middle">${pa[0]}</text>`;xx+=xw});
     s+=`<line x1="6" y1="${y00}" x2="${W-6}" y2="${y00}" stroke="#ffffff26" stroke-width="1"/>`;
-    s+=`<text x="8" y="${H-6}" font-size="8" fill="#8a8780">cada peso de ingreso y la mordida que se lo come · azul = la parte del dueño (${pct(r.p.pctDueno*100,0)})</text>`;
+    s+=`<text x="8" y="${H-6}" font-size="9.5" fill="#8a8780">cada peso de ingreso y la mordida que se lo come · azul = la parte del dueño (${pct(r.p.pctDueno*100,0)})</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cascada de ingresos a reparto">${s}</svg>`;
   }
   function dibujaTornado(r){
