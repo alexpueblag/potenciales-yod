@@ -142,6 +142,35 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', engancharGates);
   else engancharGates();
+
+  /* 4) engrane de admin: valida la credencial una vez por pestaña; si el rol es admin
+   *    muestra ⚙️ (accesos); si el token ya murió, limpia y vuelve a pedir el gate. */
+  async function engraneAdmin() {
+    const k = localStorage.getItem(LSC); if (!k || pagina === 'accesos') return;
+    let rol = '';
+    try {
+      const cache = JSON.parse(sessionStorage.getItem('pyod_rol') || 'null');
+      if (cache && cache.f === k.slice(0, 14)) rol = cache.rol;
+      else {
+        const r = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(k)).then(x => x.json());
+        if (r && r.ok) { rol = r.rol || 'vista'; sessionStorage.setItem('pyod_rol', JSON.stringify({ f: k.slice(0, 14), rol })); }
+        else if (r && r.ok === false && r.error === 'liga') {
+          localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol');
+          if (!SIN_GATE && !MODO_SUAVE) overlayCorreo();
+          return;
+        }
+      }
+    } catch (e) { return; }
+    if (rol !== 'admin' || document.getElementById('engraneBtn')) return;
+    const b = document.createElement('button');
+    b.id = 'engraneBtn'; b.type = 'button'; b.textContent = '⚙️';
+    b.title = 'Accesos · quién entra a qué (solo tú lo ves)';
+    b.style.cssText = 'position:fixed;right:14px;bottom:64px;z-index:1300;width:42px;height:42px;border-radius:50%;border:1px solid var(--lineaf,rgba(255,255,255,.16));background:var(--card,#131317);color:var(--text,#f4f1ea);font-size:17px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center';
+    b.onclick = () => { location.href = 'https://alexpueblag.github.io/potenciales-yod/accesos.html'; };
+    document.body.appendChild(b);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', engraneAdmin);
+  else engraneAdmin();
 })();
 
 /* ================== TEMA CLARO / OSCURO ==================

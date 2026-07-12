@@ -42,6 +42,17 @@
   .leyenda{font-size:11px;color:var(--suave);line-height:1.9}
   .leyenda b{color:var(--goldc);font-size:13px}
   .msg{font-size:11.5px;font-weight:700;color:var(--goldc);min-height:16px;margin-top:8px}
+  .mwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.matriz{border-collapse:collapse;width:100%;min-width:640px}
+  .matriz th{font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:6px 4px;border-bottom:1px solid var(--lineaf);text-align:center;white-space:nowrap}
+  .matriz th:first-child,.matriz td:first-child{text-align:left;position:sticky;left:0;background:var(--card)}
+  .matriz td{padding:7px 4px;border-bottom:1px solid var(--linea);text-align:center}
+  .matriz td.u{font-size:11.5px;font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .matriz td.u small{display:block;font-weight:400;color:var(--muted);font-size:9.5px}
+  .matriz input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer}
+  .matriz tr.rev td{opacity:.38}
+  .matriz td.todo{border-right:1px solid var(--lineaf)}
+  .matriz th.todo{border-right:1px solid var(--lineaf)}
   @media(max-width:640px){.fila-alta{grid-template-columns:1fr 1fr}.container{padding:12px 11px 60px}}
 </style>
 </head>
@@ -71,6 +82,12 @@
   </section>
 
   <section class="card">
+    <h2>🎛️ Quién entra a qué — palomea por board</h2>
+    <div class="mwrap"><table class="matriz" id="matriz"><tbody><tr><td class="u">Cargando…</td></tr></tbody></table></div>
+    <div class="msg" id="mMsg"></div>
+  </section>
+
+  <section class="card">
     <h2>👥 Usuarios <span id="uCnt" style="color:var(--muted)"></span></h2>
     <div id="lista"><p class="u-meta">Cargando…</p></div>
   </section>
@@ -94,12 +111,35 @@
   const k=()=>localStorage.getItem(LSC)||'';
   const post=b=>fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({k:k(),request_id:(crypto.randomUUID?.()||Date.now()+'')},b))}).then(r=>r.json());
 
+  const CODES=[['*','Todo'],['MA','Macro'],['MX','Mixto'],['UN','Unifam'],['RE','Resid'],['PA','Patrim'],['MP','Mapa'],['TA','T·Alysa'],['TM','T·María'],['AL','Alquimia'],['RM','Miramar']];
+  function boardsDe(u){const b=String(u.boards||'*').trim();return b===''?'*':b}
+  function tieneCode(b,c){if(b==='*')return true;return b.toUpperCase().split(/[,|; ]+/).indexOf(c)>-1}
+  function renderMatriz(usuarios){
+    const tb=$('matriz');
+    tb.innerHTML='<thead><tr><th>Usuario</th>'+CODES.map(c=>'<th class="'+(c[0]==='*'?'todo':'')+'" title="'+esc(c[1])+'">'+esc(c[1])+'</th>').join('')+'</tr></thead><tbody>'+
+      usuarios.map(u=>{
+        const b=boardsDe(u),todo=b==='*',rev=u.estado!=='activo';
+        return '<tr class="'+(rev?'rev':'')+'" data-correo="'+esc(u.correo)+'"><td class="u">'+esc(u.nombre||u.correo)+'<small>'+esc(u.correo)+(rev?' · revocado':'')+'</small></td>'+
+          CODES.map(c=>{const es=c[0]==='*'?todo:tieneCode(b,c[0]);
+            return '<td class="'+(c[0]==='*'?'todo':'')+'"><input type="checkbox" data-code="'+c[0]+'" '+(es?'checked':'')+(rev||(todo&&c[0]!=='*')?' disabled':'')+'></td>'}).join('')+'</tr>'}).join('')+'</tbody>';
+    tb.querySelectorAll('input[type=checkbox]').forEach(ch=>ch.onchange=async()=>{
+      const tr=ch.closest('tr'),correo=tr.dataset.correo;
+      let boards;
+      if(ch.dataset.code==='*'){boards=ch.checked?'*':CODES.slice(1).map(c=>c[0]).join(',')}
+      else{const activos=[...tr.querySelectorAll('input[type=checkbox]')].filter(x=>x.dataset.code!=='*'&&x.checked).map(x=>x.dataset.code);boards=activos.length?activos.join(','):'MP'}
+      $('mMsg').textContent='Guardando '+correo+'…';
+      const r=await post({tipo:'acceso-alta',correo,boards});
+      if(r.ok){$('mMsg').textContent='✓ '+correo+' → '+r.boards;cargar()}
+      else{$('mMsg').textContent='No se pudo: '+(r.error||'');cargar()}
+    });
+  }
   async function cargar(){
     const cont=$('lista');
     try{
       const r=await fetch(ENDPOINT+'?recurso=accesos-lista&k='+encodeURIComponent(k())).then(x=>x.json());
-      if(!r.ok){cont.innerHTML='<p class="u-meta">'+(r.error==='admin'?'Necesitas sesión de administrador (o la clave maestra) para ver esto.':'Error: '+esc(r.error))+'</p>';return}
+      if(!r.ok){cont.innerHTML='<p class="u-meta">'+(r.error==='admin'?'Necesitas sesión de administrador (o la clave maestra) para ver esto.':'Error: '+esc(r.error))+'</p>';$('matriz').innerHTML='<tbody><tr><td class="u">Solo administrador.</td></tr></tbody>';return}
       $('uCnt').textContent='· '+r.usuarios.length;
+      renderMatriz(r.usuarios);
       cont.innerHTML=r.usuarios.map(u=>`
         <div class="usuario">
           <div class="u-top">
