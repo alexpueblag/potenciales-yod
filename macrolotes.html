@@ -342,6 +342,7 @@
     <div class="viz-card"><span class="k">Plano proporcional · a escala real (la carretera a la izquierda)</span><div id="vizPlan" class="viz-svg"></div></div>
     <div class="viz-card"><span class="k">El embudo del suelo · de ha a pesos</span><div id="vizEmbudo" class="viz-svg"></div></div>
     <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
+    <div class="viz-card"><span class="k">La corrida en curvas · gasto diferenciado, cobros y crédito</span><div id="vizCorrida" class="viz-svg"></div></div>
   </section>
 
   <div class="caso-bar">
@@ -770,7 +771,7 @@
     state={p,superficie,perimetro,sumaCesiones,vendiblePct,vendible,m2Vial,m2Banq,m2Verdes,m2Equip,m2Ret,m2DDV,mlVial,luminarias,mixTotal,mixValid,
       terrNaves,nNaves,m2NavesConst,ingNaves,terrMacro,nMacro,m2MacroVend,ingMacro,terrCom,nCom,m2ComVend,ingCom,terrViv,nViv,m2VivVend,ingViv,ingresos,
       obraFija,urbVariable,urbanizacion,construccion,directo,blandosDirecto,blandosIngresos,blandos,tierraPago,costoProyecto,utilidadPre,margenPre,
-      mesesUrb,totalMonths,flows,debtCap,peak,peakMonth,fundingGap,interest,cashInterest,feeDebt,debt,cash,equityUsed,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,
+      mesesUrb,totalMonths,flows,urbSerie,constSerie,debtCap,peak,peakMonth,fundingGap,interest,cashInterest,feeDebt,debt,cash,equityUsed,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,
       utilidadFinal,margenFinal,duenoUtilidad,ownerTotal,devDist,devIrr,devMoic,valorTerrenoM2,distribuible,
       empleos,aguaDia,demandaKva,cargaKw,ventasTruncadas,ingresoM2,costoM2,urbM2,spreadM2,spreadPct,colaProducto,colaMes,buildStart:0,buildFinish:mesesUrb,
       rentaN,rentaC,rentasNaves,rentasCom,terminalNaves,terminalCom,noiEstabNaves,noiEstabCom,noiAnualTotal,valorSalidaRenta,
@@ -841,7 +842,7 @@
     const filasF=[];r.flows.forEach((x,i)=>{if(i%12===0)filasF.push(`<tr class="year-row"><td colspan="7">AÑO ${Math.floor(i/12)+1}</td></tr>`);filasF.push(`<tr><td>${x.m}</td><td>${fmtM(x.rev)}</td><td>${fmtM(x.cost)}</td><td>${fmtM(x.equity)}</td><td>${fmtM(x.pik+x.fee)}</td><td>${fmtM(x.debt)}</td><td>${fmtM(x.caja)}</td></tr>`)});
     filasF.push(`<tr class="tot-row"><td>Σ ${r.totalMonths} meses</td><td>${fmtM(r.revTotal)}</td><td>${fmtM(r.costTotal)}</td><td>${fmtM(r.equityUsed)}</td><td>${fmtM(r.interest+r.feeDebt)}</td><td>${fmtM(r.debt)}</td><td>${fmtM(r.cash)}</td></tr>`);
     $('flowRows').innerHTML=filasF.join('');
-    renderProforma(r);renderLandDeal(r);dibujaAreas(r);dibujaMezcla(r);dibujaPlan(r);dibujaEmbudo(r);dibujaCascada(r);dibujaCurva(r);dibujaTornado(r);dibujaLectura(r);renderFormulas();refreshJson();
+    renderProforma(r);renderLandDeal(r);dibujaAreas(r);dibujaMezcla(r);dibujaPlan(r);dibujaEmbudo(r);dibujaCascada(r);dibujaCorrida(r);dibujaCurva(r);dibujaTornado(r);dibujaLectura(r);renderFormulas();refreshJson();
   }
   function renderProforma(r){
     const row=(l,v,k='')=>`<tr class="${k}"><td>${l}</td><td>${v}</td></tr>`,section=l=>`<tr class="section-row"><td colspan="2">${l}</td></tr>`,cashOk=Math.abs(r.cashReconciliation)<1;
@@ -997,6 +998,45 @@
     s+=`<line x1="6" y1="${y00}" x2="${W-6}" y2="${y00}" stroke="#ffffff26" stroke-width="1"/>`;
     s+=`<text x="8" y="${H-6}" font-size="9.5" fill="#8a8780">cada peso de ingreso y la mordida que se lo come · azul = la parte del dueño (${pct(r.p.pctDueno*100,0)})</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cascada de ingresos a reparto">${s}</svg>`;
+  }
+  function dibujaCorrida(r){
+    const el=$('vizCorrida');if(!el)return;const n=r.flows.length;if(!n)return;
+    const W=700,H=300,mL=10,mR=10,mT=40,mB=34,plotH=H-mT-mB;
+    const X=i=>mL+(W-mL-mR)*(n>1?i/(n-1):0);
+    const bw=Math.max(1.6,(W-mL-mR)/n*0.62);
+    const urb=r.urbSerie||[],con=r.constSerie||[];
+    // gasto diferenciado por mes: tierra (mes 0) + urbanización + naves + blandos (el resto)
+    const cats=r.flows.map((f,i)=>{const u=urb[i]||0,c=con[i]||0,t=i===0?r.tierraPago:0;const b=Math.max(0,f.cost-u-c-t);return {t,u,c,b,tot:f.cost}});
+    const maxUp=Math.max(...r.flows.map(f=>f.rev),1),maxDn=Math.max(...cats.map(x=>x.tot),1);
+    const esc=plotH/(maxUp+maxDn),y0=mT+maxUp*esc;
+    let s='';
+    // barras: cobros hacia arriba (verde), gasto diferenciado hacia abajo (apilado)
+    r.flows.forEach((f,i)=>{const x=X(i)-bw/2;
+      const hR=f.rev*esc;if(hR>.4)s+=`<rect x="${x}" y="${y0-hR}" width="${bw}" height="${hR}" fill="#8FBF8B" opacity=".78"/>`;
+      let y=y0;const seg=(v,col)=>{const h=v*esc;if(h>.3){s+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="${col}" opacity=".85"/>`;y+=h}};
+      seg(cats[i].t,'#a9a4f5');seg(cats[i].u,'#E0605A');seg(cats[i].c,'#D9A45B');seg(cats[i].b,'#cf7a74');});
+    s+=`<line x1="${mL}" y1="${y0}" x2="${W-mR}" y2="${y0}" stroke="#f4f1ea55" stroke-width="1"/>`;
+    // curvas de saldo (escala propia, punteado el eje): deuda viva y acumulado neto
+    let run=0;const netSerie=r.flows.map(f=>{run+=f.rev-f.cost-(f.pik+f.fee);return run});
+    const maxS=Math.max(r.peak,...netSerie.map(v=>Math.abs(v)),1);
+    const YD=v=>mT+plotH*(1-v/maxS);                 // deuda: 0 abajo → maxS arriba
+    const YN=v=>mT+plotH*(1-(v+maxS)/(2*maxS));      // neto: −maxS abajo → +maxS arriba
+    let dD='',dN='';
+    r.flows.forEach((f,i)=>{dD+=(i?' L':'M')+X(i).toFixed(1)+' '+YD(f.debt).toFixed(1);dN+=(i?' L':'M')+X(i).toFixed(1)+' '+YN(netSerie[i]).toFixed(1)});
+    s+=`<path d="${dD}" fill="none" stroke="#a9a4f5" stroke-width="2"/>`;
+    s+=`<path d="${dN}" fill="none" stroke="#e0c590" stroke-width="2" stroke-dasharray="6 4"/>`;
+    // anotaciones: pico de deuda, pago total del crédito, tablas y cierre
+    if(r.peak>1){const xp=X(r.peakMonth-1),yp=YD(r.peak);s+=`<circle cx="${xp}" cy="${yp}" r="3.4" fill="#a9a4f5"/><text x="${Math.min(xp+6,W-160)}" y="${Math.max(yp-7,12)}" font-size="9.5" font-weight="800" fill="#cbc7ff">crédito pico ${fmtM(r.peak)} · mes ${r.peakMonth} · pagado ${fmtM(r.debtRepayments)}</text>`}
+    else s+=`<text x="${W/2}" y="${mT-6}" font-size="9.5" font-weight="800" fill="#8FBF8B" text-anchor="middle">sin crédito dispuesto: los enganches fondean la obra</text>`;
+    let beMes=null;for(let i=0;i<n;i++){if(netSerie[i]>=0&&(i===0||netSerie[i-1]<0)){beMes=i+1;break}}
+    if(beMes&&netSerie[0]<0){const xb=X(beMes-1);s+=`<line x1="${xb}" y1="${mT}" x2="${xb}" y2="${H-mB}" stroke="#8FBF8B88" stroke-width="1.2" stroke-dasharray="5 3"/><text x="${xb+4}" y="${mT+12}" font-size="9" font-weight="800" fill="#a9d3a5">tablas · mes ${beMes}</text>`}
+    s+=`<text x="${X(n-1)-4}" y="${YN(netSerie[n-1])-8}" font-size="9.5" font-weight="800" fill="#e0c590" text-anchor="end">acumulado ${fmtM(netSerie[n-1])}</text>`;
+    // eje X y leyenda
+    for(let m=12;m<=n;m+=12)s+=`<text x="${X(m-1)}" y="${H-mB+12}" font-size="8.5" fill="#8a8780" text-anchor="middle">${m}</text>`;
+    const ley=[['#8FBF8B','cobros'],['#a9a4f5','tierra'],['#E0605A','urbanización'],['#D9A45B','naves'],['#cf7a74','blandos'],['#a9a4f5','— crédito vivo'],['#e0c590','--- acumulado neto']];
+    let lx=mL;ley.forEach(l=>{s+=`<rect x="${lx}" y="10" width="9" height="9" rx="2" fill="${l[0]}"/><text x="${lx+13}" y="18" font-size="9" fill="#b6b3aa">${l[1]}</text>`;lx+=l[1].length*5.6+34});
+    s+=`<text x="${mL}" y="${H-6}" font-size="9" fill="#8a8780">barras = flujos del mes (arriba cobra, abajo gasta por tipo) · líneas = saldos con su propia escala · meses abajo</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Corrida en curvas: gasto diferenciado, cobros y crédito">${s}</svg>`;
   }
   function dibujaTornado(r){
     const el=$('vizTornado');if(!el)return;const W=700,H=158,cx=W/2,y0=30,bh=18,gap=8;
