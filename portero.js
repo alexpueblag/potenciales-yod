@@ -99,7 +99,18 @@
       $('pgEnviar').disabled = false;
     };
     $('pgCorreo').addEventListener('keydown', e => { if (e.key === 'Enter') $('pgEnviar').click(); });
-    $('pgClave').onclick = () => dv.remove();   // deja al descubierto el gate de clave del board
+    $('pgClave').onclick = () => {
+      // si el board tiene su propio gate de clave, solo descubrirlo; si no (portal/tracks), pedirla aquí
+      const propio = document.getElementById('gate') || document.getElementById('mapGate');
+      if (propio) { dv.remove(); return; }
+      const inp = $('pgCorreo'); inp.type = 'password'; inp.placeholder = 'clave del equipo'; inp.value = ''; inp.focus();
+      $('pgEnviar').textContent = 'Entrar';
+      $('pgMsg').textContent = '';
+      $('pgEnviar').onclick = () => {
+        const v = inp.value.trim(); if (!v) { $('pgMsg').textContent = 'Escribe la clave'; return; }
+        localStorage.setItem(LSC, v); sessionStorage.removeItem('pyod_rol'); location.reload();
+      };
+    };
     // botón "Continuar con Google" (si hay client_id configurado)
     if (GCID && GCID !== 'PENDIENTE') {
       const arma = () => {
