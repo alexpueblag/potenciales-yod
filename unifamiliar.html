@@ -276,6 +276,25 @@
   <div class="breadcrumb"><a href="./">← Planificador de Potencial Inmobiliario</a></div>
   <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
 
+  <div class="caso-bar">
+    <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
+    <div class="caso-actions">
+      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
+      <button class="small-btn" id="btnGuardar">Guardar</button>
+    </div>
+  </div>
+
+  <section class="seguimiento" id="segPanel">
+    <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
+    <div class="estado-chips" id="estadoChips"></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. cotizar obra, avalúo, foto para ficha…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="notas-log" id="segLog">Sin notas todavía.</div>
+  </section>
+
   <section class="hero">
     <span class="kick">¿Qué da esta casa?</span>
     <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span></h1>
@@ -294,25 +313,6 @@
       <div class="viz-card"><span class="k">El río del dinero · de venta a utilidad</span><div id="vizCascada" class="viz-svg"></div></div>
       <div class="viz-card"><span class="k">¿Cuándo vender? · la curva patrimonial</span><div id="vizCurvaPat" class="viz-svg"></div></div>
     </div>
-  </section>
-
-  <div class="caso-bar">
-    <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
-    <div class="caso-actions">
-      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
-      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
-      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
-      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
-      <button class="small-btn" id="btnGuardar">Guardar</button>
-    </div>
-  </div>
-
-  <section class="seguimiento" id="segPanel">
-    <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
-    <div class="estado-chips" id="estadoChips"></div>
-    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. cotizar obra, avalúo, foto para ficha…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
-    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
-    <div class="notas-log" id="segLog">Sin notas todavía.</div>
   </section>
 
   <div class="reference-strip"><b>Caso de referencia · Casa Alysa Altozano (real).</b> Prellenado con el libro completo de Alysa: terreno 193.65 m² a $5,800, casa de 232.7 m² (205.3 habitables + cochera), obra cotizada ~$14,950/m², venta a $25,164/m² = $5.86 M, renta esperada $33,468/mes con plusvalía 7% y gastos reales (admón. 7.5% · seguro 0.75% · mantenimiento 5%). La tabla RETENER/VENDER es la misma lógica de su hoja FINANCIERO 2023-2043.</div>

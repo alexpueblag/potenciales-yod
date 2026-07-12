@@ -272,6 +272,25 @@
   <div class="breadcrumb"><a href="./">← Planificador de Potencial Inmobiliario</a></div>
   <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
 
+  <div class="caso-bar">
+    <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
+    <div class="caso-actions">
+      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
+      <button class="small-btn" id="btnGuardar">Guardar</button>
+    </div>
+  </div>
+
+  <section class="seguimiento" id="segPanel">
+    <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
+    <div class="estado-chips" id="estadoChips"></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. cotizar urbanización, comparables de lote…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="notas-log" id="segLog">Sin notas todavía.</div>
+  </section>
+
   <section class="hero">
     <span class="kick">¿Qué da este terreno en lotes?</span>
     <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span></h1>
@@ -290,25 +309,6 @@
       <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
       <div class="viz-card"><span class="k">La cartera · enganches y mensualidades</span><div id="vizCartera" class="viz-svg"></div></div>
     </div>
-  </section>
-
-  <div class="caso-bar">
-    <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
-    <div class="caso-actions">
-      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
-      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
-      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
-      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
-      <button class="small-btn" id="btnGuardar">Guardar</button>
-    </div>
-  </div>
-
-  <section class="seguimiento" id="segPanel">
-    <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
-    <div class="estado-chips" id="estadoChips"></div>
-    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. cotizar urbanización, comparables de lote…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
-    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
-    <div class="notas-log" id="segLog">Sin notas todavía.</div>
   </section>
 
   <div class="reference-strip"><b>Casos históricos ya sembrados:</b> Guaymas SFF (45 lotes, el origen), Hipódromo (25), Brunnen (12 campestres), Tuxtla (1,100) y el flip de Real del Arco — ábrelos en "Mis casos". ⚠ Los CODI originales traían la mensualidad de Guaymas ($20,791.67) pegada en los clones y cuadros que no cierran: este motor recalcula todo limpio desde los supuestos.</div>

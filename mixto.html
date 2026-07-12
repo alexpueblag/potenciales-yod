@@ -260,22 +260,6 @@
 <main class="container">
   <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
 
-  <section class="hero">
-    <span class="kick">¿Qué da este terreno?</span>
-    <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span></h1>
-    <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
-    <div class="hero-grid">
-      <div class="hcard"><span class="k">Utilidad antes de impuestos</span><div class="big serif" id="heroUtil">$0 M</div><div class="sub2" id="heroUtilSub">margen —</div></div>
-      <div class="hcard"><span class="k">TIR Developer</span><div class="big serif" id="heroTir">—</div><div class="sub2" id="heroTirSub">vs objetivo —</div></div>
-      <div class="hcard"><span class="k">Pico de deuda</span><div class="big serif" id="heroDeuda">$0 M</div><div class="sub2" id="heroDeudaSub">límite —</div></div>
-    </div>
-    <p class="lectura" id="heroLectura"></p>
-    <div class="hero-viz">
-      <div class="viz-card"><span class="k">Corte del edificio</span><div id="vizCorte" class="viz-svg"></div></div>
-      <div class="viz-card"><span class="k">Deuda mes a mes · cobros</span><div id="vizCurva" class="viz-svg"></div></div>
-    </div>
-  </section>
-
   <div class="caso-bar">
     <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
     <div class="caso-actions">
@@ -293,6 +277,22 @@
     <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. pedir avalúo, cita con dueño…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
     <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
     <div class="notas-log" id="segLog">Sin notas todavía. Guarda el caso primero para dar seguimiento.</div>
+  </section>
+
+  <section class="hero">
+    <span class="kick">¿Qué da este terreno?</span>
+    <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span></h1>
+    <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
+    <div class="hero-grid">
+      <div class="hcard"><span class="k">Utilidad antes de impuestos</span><div class="big serif" id="heroUtil">$0 M</div><div class="sub2" id="heroUtilSub">margen —</div></div>
+      <div class="hcard"><span class="k">TIR Developer</span><div class="big serif" id="heroTir">—</div><div class="sub2" id="heroTirSub">vs objetivo —</div></div>
+      <div class="hcard"><span class="k">Pico de deuda</span><div class="big serif" id="heroDeuda">$0 M</div><div class="sub2" id="heroDeudaSub">límite —</div></div>
+    </div>
+    <p class="lectura" id="heroLectura"></p>
+    <div class="hero-viz">
+      <div class="viz-card"><span class="k">Corte del edificio</span><div id="vizCorte" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">Deuda mes a mes · cobros</span><div id="vizCurva" class="viz-svg"></div></div>
+    </div>
   </section>
 
   <div class="reference-strip"><b>Caso de referencia preliminar · Hermosillo.</b> Los valores iniciales son orden de magnitud, no avalúo ni presupuesto: producto 60 / 90 / 120 m², lista $58,000/m² como meta premium por validar (un comparable vigente anuncia desde 56 m² y $2.22 M) y obra $24k/$17.5k por m². Antes de decidir, carga avalúo, tres cotizaciones y term sheet. <a href="https://invien.mx/proyectos/santa-monica/" target="_blank" rel="noopener">Comparable</a> · <a href="https://serviciosacs.com/servicios/construccion/" target="_blank" rel="noopener">Referencia de construcción</a></div>
