@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PPP Patrimonial / Rentas · Potenciales · YoDesarrollo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
+  :root{--bg:#0a0a0c;--card:#131317;--surface:rgba(255,255,255,.045);--text:#f4f1ea;--muted:#8a8780;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
+    --gold:#c9a96e;--goldc:#e0c590;--blue:#8ab8ff;--teal:#7fd4e8;--pink:#ff8aa1;--orange:#D9A45B;--purple:#a9a4f5;--green:#8FBF8B;--red:#E0605A;--dark:#0a0a0c}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Manrope',-apple-system,sans-serif;color:var(--text);margin:0;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,var(--bg)}
+  .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+  a{color:var(--goldc)}
+  /* ===== Gate ===== */
+  #gate{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+  #gate.off{display:none}
+  .gate-box{width:min(360px,92vw);text-align:center}
+  .gate-box img{height:34px;filter:brightness(0) invert(.92);margin-bottom:22px}
+  .gate-box h1{font-size:30px;margin:0 0 4px}
+  .gate-box p{color:var(--muted);font-size:12px;margin:0 0 22px}
+  .gate-box input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:12px;padding:13px 14px;color:var(--text);font:inherit;font-size:15px;text-align:center;letter-spacing:.06em}
+  .gate-box input:focus{outline:2px solid #c9a96e66;border-color:var(--gold)}
+  .gate-box button{width:100%;margin-top:10px;background:var(--gold);color:#0a0a0c;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .gate-err{color:var(--red);font-size:12px;min-height:18px;margin-top:10px;font-weight:700}
+  .gate-local{margin-top:16px;font-size:11px;color:var(--muted);text-decoration:underline;cursor:pointer;background:none;border:0;font-family:inherit}
+  /* ===== Header pegajoso (HUD) ===== */
+  .sticky-header{position:sticky;top:0;z-index:100;background:rgba(10,10,12,.94);backdrop-filter:blur(15px);padding:10px 16px 12px;border-bottom:1px solid #c9a96e59;box-shadow:0 4px 24px #0006}
+  .header-inner,.container{max-width:940px;margin:0 auto}.container{padding:16px 16px 80px}
+  .brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .brandrow img{height:20px;filter:brightness(0) invert(.92)}
+  .brandrow .kick{font-size:9px;font-weight:800;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+  .hud-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #ffffff14;font-size:12px;font-weight:600;color:#d8d4ca}
+  .hud-row:last-child{border:0;margin:0;padding:0}
+  .hud-item{display:flex;align-items:center;gap:5px;white-space:nowrap}.hud-val{font-size:14px;font-weight:800;letter-spacing:.3px}
+  .c-green{color:var(--green)}.c-pink{color:var(--pink)}.c-blue{color:var(--blue)}.c-orange{color:var(--orange)}.c-red{color:var(--red)}.c-purple{color:var(--purple)}.c-gold{color:var(--goldc)}
+  .urban-hud{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;row-gap:9px;margin:9px 0 7px;padding:8px 0;border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14}
+  .urban-item{min-width:0;text-align:center}
+  .urban-item span{display:block;color:#8a8780;font-size:9px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .urban-item b{display:block;color:#fff;font-size:13px;margin-top:2px;white-space:nowrap}
+  .urban-item:nth-child(1) b{color:var(--purple)}.urban-item:nth-child(2) b{color:var(--purple)}.urban-item:nth-child(3) b{color:var(--goldc)}.urban-item:nth-child(4) b{color:var(--green)}.urban-item:nth-child(5) b{color:var(--teal)}.urban-item:nth-child(6) b{color:var(--goldc)}.urban-item:nth-child(7) b{color:var(--green)}.urban-item:nth-child(8) b{color:var(--orange)}.urban-item:nth-child(9) b{color:var(--green)}.urban-item:nth-child(10) b{color:var(--blue)}
+  .split-bar{height:16px;background:#ffffff14;border-radius:8px;overflow:hidden;display:flex;margin-top:7px;box-shadow:inset 0 2px 4px #0006}
+  .split{height:100%;display:flex;justify-content:center;align-items:center;color:#0a0a0c;font-size:9px;font-weight:800;transition:width .25s;overflow:hidden}
+  /* ===== Hero del caso ===== */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#121218,#0c0c0f);border:1px solid var(--linea);border-radius:22px;padding:20px 20px 16px;margin-bottom:14px}
+  .hero::after{content:"";position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,#c9a96e2b,transparent 65%);pointer-events:none}
+  .hero .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  .hero h1{font-size:clamp(26px,5vw,38px);margin:6px 0 2px;line-height:1.05}
+  .hero .hsub{color:var(--muted);font-size:12px;margin:0 0 14px}
+  .hero .hsub b{color:var(--suave)}
+  .estado-pill{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--gold);color:var(--goldc);border-radius:12px;padding:4px 10px;margin-left:8px;vertical-align:middle}
+  .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .hcard{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 14px;min-width:0}
+  .hcard .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .hcard .big{font-size:clamp(22px,4vw,32px);line-height:1.1;margin:4px 0 2px;color:var(--goldc)}
+  .hcard .sub2{font-size:10.5px;color:var(--muted);line-height:1.4}
+  .lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14.5px;line-height:1.55;color:#d8d0bd;margin:12px 2px 2px;max-width:64ch}
+  .lectura b{color:var(--goldc);font-style:normal}
+  .hero-viz{display:grid;grid-template-columns:5fr 6fr;gap:10px;margin-top:12px}
+  .viz-card{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 12px 8px;min-width:0}
+  .viz-card .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .viz-svg{margin-top:6px}.viz-svg svg{display:block;width:100%;height:auto}
+  .viz-svg text{font-family:'Manrope',sans-serif}
+  .mixbar-wrap{margin:4px 0 10px}
+  .mixbar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--lineaf)}
+  .mixbar span{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#0a0a0c;white-space:nowrap;overflow:hidden;min-width:0;transition:width .3s}
+  .mixbar-leyenda{display:flex;gap:12px;flex-wrap:wrap;font-size:9.5px;color:var(--muted);margin-top:5px;font-weight:700}
+  .mixbar-leyenda i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+  .gauge{position:relative;height:14px;border-radius:7px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
+  .gauge-be{position:absolute;left:0;top:0;bottom:0;background:#e0605a55;border-right:2px solid var(--red)}
+  .gauge-col{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,#8fbf8b88,#8FBF8B)}
+  /* ===== Lentes de foco ===== */
+  .lentes{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+  .lentes::-webkit-scrollbar{display:none}
+  .lchip{flex-shrink:0;border:1px solid var(--lineaf);border-radius:20px;padding:8px 14px;font-size:11px;font-weight:800;color:var(--suave);background:transparent;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .lchip.on{background:var(--gold);color:#0a0a0c;border-color:var(--gold)}
+  .lchip .cnt{background:#00000033;border-radius:10px;padding:1px 7px;margin-left:5px;font-size:10px}
+  .lchip:not(.on) .cnt{background:#ffffff14;color:var(--goldc)}
+  .dimmed{opacity:.28;transition:opacity .25s}
+  /* ===== Barra del caso + seguimiento ===== */
+  .caso-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--card);border:1px solid var(--linea);border-radius:14px;flex-wrap:wrap}
+  .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+  .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+  .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
+  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#0a0a0c;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
+  .small-btn.danger{background:#e0605a26;color:var(--red)}
+  .small-btn:disabled{opacity:.4;cursor:default}
+  .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
+  .seguimiento.on{display:block}
+  .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+  .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+  .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
+  .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
+  .sync-dot{font-size:10px;color:var(--muted);font-weight:700}
+  .sync-dot.err{color:var(--orange)}
+  /* ===== Tarjetas del modelo ===== */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+  .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 4px 16px #00000040;border:1px solid var(--linea);transition:.25s;cursor:pointer;overflow:hidden}
+  .card:active{transform:scale(.985)}.card.open{box-shadow:0 12px 32px #00000070;border-color:var(--gold)}
+  .wide{grid-column:1/-1}
+  .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+  .title-wrap{display:flex;gap:10px;align-items:center}
+  .icon-box{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .card-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .edit-pill{background:rgba(255,255,255,.08);color:var(--muted);font-size:10px;font-weight:800;padding:6px 10px;border-radius:12px}
+  .card.open .edit-pill{background:var(--gold);color:#0a0a0c}
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .kpi-grid.tres{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:700px){.kpi-grid.tres{grid-template-columns:1fr 1fr}}
+  .kpi-box{background:var(--box);padding:10px 12px;border-radius:12px;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(255,255,255,.055);min-height:57px}
+  .kpi-box.full{grid-column:span 2}
+  .kpi-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+  .kpi-val{font-size:14px;font-weight:800;letter-spacing:-.3px}
+  .drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease;background:#0e0e12;margin:0 -16px -16px;padding:0 16px}
+  .drawer.active{max-height:3800px;opacity:1;padding:16px;border-top:1px solid var(--linea);margin-top:16px}
+  .input-group{margin-bottom:15px}.input-group:last-child{margin-bottom:4px}
+  .input-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}
+  .input-header label{font-size:11px;font-weight:800;color:var(--suave);text-transform:uppercase}
+  .val-display{font-size:12px;font-weight:800;color:var(--text);background:rgba(255,255,255,.08);padding:4px 8px;border-radius:6px;min-width:70px;text-align:right;cursor:text;border:1px solid transparent}
+  .val-display:hover{border-color:var(--lineaf);background:rgba(255,255,255,.12)}
+  .val-display:focus{outline:2px solid #c9a96e55;background:rgba(255,255,255,.12);border-color:var(--gold)}
+  input[type=range]{appearance:none;-webkit-appearance:none;width:100%;height:24px;background:transparent}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;height:24px;width:24px;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;margin-top:-9px;cursor:grab}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
+  input[type=range]::-moz-range-thumb{height:24px;width:24px;border:0;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;cursor:grab}
+  input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
+  .input-help{font-size:10.5px;line-height:1.4;color:var(--muted);margin-top:6px;padding:8px 10px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.18);border-radius:10px}
+  .subheading{font-size:10px;text-transform:uppercase;font-weight:800;color:var(--goldc);letter-spacing:.7px;margin:16px 0 8px;border-bottom:1px solid var(--linea);padding-bottom:6px}
+  .micro-readout{font-size:11px;line-height:1.45;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 10px;margin:10px 0}
+  .status-ok{color:#8FBF8B!important}.status-warn{color:#D9A45B!important}.status-bad{color:#E0605A!important}
+  details.advanced{background:rgba(255,255,255,.025);border:1px solid var(--linea);border-radius:12px;margin:16px 0 0;padding:0 12px}
+  details.advanced summary{padding:11px 0;cursor:pointer;color:var(--suave);font-size:11px;font-weight:800;text-transform:uppercase}
+  .advanced-content{padding:0 0 12px}
+  .help-legend{font-size:10px;color:var(--muted);margin:0 0 10px}.help-legend b{color:var(--suave)}
+  /* ===== Tratamiento del terreno / waterfall ===== */
+  .partner-guide{background:#c9a96e14;border:1px solid #c9a96e4d;border-radius:10px;padding:9px 10px;font-size:10.5px;line-height:1.45;color:#d9c9a8;margin-bottom:12px}
+  .partner-guide b{color:var(--goldc)}
+  .land-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0 12px}
+  .land-mode{border:1px solid var(--lineaf);border-radius:10px;background:rgba(255,255,255,.03);text-align:left;padding:9px;cursor:pointer;color:var(--suave);font-family:inherit}
+  .land-mode b{display:block;font-size:11px;color:var(--text)}
+  .land-mode span{display:block;margin-top:3px;font-size:9px;line-height:1.3;color:var(--muted)}
+  .land-mode.active{border-color:var(--gold);background:#c9a96e1c;box-shadow:0 0 0 1px #c9a96e55}
+  .land-deal-summary{background:#c9a96e10;border:1px solid #c9a96e40;border-radius:10px;padding:10px;font-size:11px;line-height:1.5;color:#d8d4ca;margin:10px 0}
+  .land-deal-summary b{color:var(--goldc)}
+  .waterfall-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0}
+  .waterfall-step{border-radius:8px;padding:7px 6px;background:rgba(255,255,255,.04);color:var(--muted);font-size:9px;line-height:1.25}
+  .waterfall-step b{display:block;font-size:10px;color:var(--suave);margin-bottom:2px}
+  .waterfall-step:nth-child(1){border-top:3px solid var(--red)}.waterfall-step:nth-child(2){border-top:3px solid var(--blue)}.waterfall-step:nth-child(3){border-top:3px solid var(--gold)}.waterfall-step:nth-child(4){border-top:3px solid var(--orange)}
+  /* ===== Ayudas (tooltips de factores) ===== */
+  .label-help{display:inline-flex;align-items:center;gap:5px;min-width:0}
+  .factor-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;padding:0;border:1px solid #c9a96e66;border-radius:50%;background:transparent;color:var(--goldc);font-size:11px;font-weight:900;cursor:help;font-family:inherit}
+  .factor-tooltip{display:none;position:absolute;z-index:200;left:-5px;top:23px;width:min(310px,70vw);padding:10px;border-radius:10px;background:#1c1c22;border:1px solid var(--lineaf);color:#f2ede2;box-shadow:0 8px 22px #000a;font:10.5px/1.42 'Manrope',sans-serif;text-transform:none;letter-spacing:0;text-align:left}
+  .factor-tooltip b{color:#fff}
+  .factor-tooltip .help-type{display:inline-block;margin:0 0 5px;padding:2px 5px;border-radius:5px;background:#c9a96e26;color:var(--goldc);font-size:9px;font-weight:800;text-transform:uppercase}
+  .factor-tooltip p{margin:4px 0}.factor-tooltip a{color:var(--goldc);text-decoration:underline}
+  .factor-help:hover .factor-tooltip,.factor-help:focus .factor-tooltip,.factor-help.open .factor-tooltip{display:block}
+  .kpi-box[data-kpi-help]{cursor:help}
+  /* ===== Herramientas avanzadas ===== */
+  .advanced-board{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:14px}
+  .advanced-board summary{cursor:pointer;font-weight:800;font-size:12px;color:var(--suave)}
+  .advanced-board[open] summary{margin-bottom:12px}
+  .two-advanced{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .formula-list{font-size:11px}
+  .formula-row{display:grid;grid-template-columns:132px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linea)}
+  .formula-row b{color:var(--text)}
+  .formula-row code{font-size:10px;color:var(--muted);white-space:normal}
+  .formula-btn{border:0;background:#c9a96e22;color:var(--goldc);border-radius:8px;font-size:10px;font-weight:800;padding:5px;cursor:pointer;font-family:inherit}
+  .formula-detail{background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:10px;font-size:11px;line-height:1.45;color:var(--suave);margin-top:9px}
+  .chip{border:0;background:#c9a96e22;color:var(--goldc);border-radius:12px;padding:4px 7px;margin:5px 4px 0 0;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
+  .flow-table{width:100%;border-collapse:collapse;font-size:11px;color:var(--suave)}
+  .flow-table th,.flow-table td{padding:7px 5px;border-bottom:1px solid var(--linea);text-align:right}
+  .flow-table th:first-child,.flow-table td:first-child{text-align:left}
+  .flow-scroll{max-height:420px;overflow:auto;border:1px solid var(--linea);border-radius:10px;padding:0 8px}
+  .year-row td{color:var(--goldc);font-weight:900;text-align:left!important;padding-top:12px;font-size:10px;letter-spacing:.08em}
+  .tot-row td{border-top:1px solid var(--lineaf);font-weight:900;color:var(--text)}
+  .json-editor{width:100%;min-height:190px;border:1px solid var(--lineaf);border-radius:10px;padding:10px;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical;background:#0e0e12;color:#d8d4ca}
+  .note{font-size:10px;line-height:1.45;color:var(--muted);margin:6px 0}
+  .proforma-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 15px}
+  .proforma-card{background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:12px;padding:11px}
+  .proforma-card h3{margin:0 0 7px;font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}
+  .mini-table{width:100%;border-collapse:collapse;font-size:10.5px;color:var(--suave)}
+  .mini-table td{padding:5px 0;border-bottom:1px solid var(--linea)}
+  .mini-table td:last-child{text-align:right;font-weight:800;color:var(--text)}
+  .mini-table .section-row td{padding-top:10px;border-bottom:0;color:var(--goldc);font-size:9px;font-weight:900;letter-spacing:.45px}
+  .mini-table .total-row td{border-top:1px solid var(--lineaf);color:var(--text);font-weight:900}
+  .covenant-line{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--linea);font-size:10.5px;color:var(--suave)}
+  .covenant-line b{white-space:nowrap}
+  .covenant-ok{color:#8FBF8B}.covenant-bad{color:#E0605A}.covenant-warn{color:#D9A45B}
+  .reference-strip{margin:-2px 0 16px;padding:9px 10px;border:1px solid #8fbf8b40;border-radius:11px;background:#8fbf8b0d;color:#b9c4b4;font-size:10.5px;line-height:1.45}
+  .reference-strip b{color:#a9d3a5}.reference-strip a{color:var(--goldc);font-weight:700}
+  /* ===== Modales y toast ===== */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto}
+  .overlay.on{display:flex}
+  .sheet{background:var(--card);border:1px solid var(--lineaf);border-radius:18px;max-width:480px;width:100%;padding:18px;margin:auto 0}
+  .sheet h2{font-size:22px;margin:0 0 2px}
+  .sheet .sh-sub{color:var(--muted);font-size:11.5px;margin:0 0 14px;line-height:1.45}
+  .fld{margin-bottom:11px}
+  .fld label{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}
+  .fld input,.fld textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:10px;padding:11px 12px;color:var(--text);font:inherit;font-size:13px}
+  .fld input:focus,.fld textarea:focus{outline:2px solid #c9a96e55;border-color:var(--gold)}
+  .fld textarea{min-height:56px;resize:vertical;font-size:12px}
+  .fld .hint{font-size:10px;color:var(--muted);margin-top:4px}
+  .sheet-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+  .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+  .caso-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--linea);cursor:pointer}
+  .caso-item:hover{background:rgba(255,255,255,.03)}
+  .caso-item .ci-n{font-size:13px;font-weight:700;color:var(--text)}
+  .caso-item .ci-m{font-size:10px;color:var(--muted);margin-top:2px}
+  .caso-item .ci-kpi{text-align:right;font-size:11px;font-weight:800;color:var(--goldc);white-space:nowrap}
+  .caso-item .ci-kpi span{display:block;font-size:9px;color:var(--muted);font-weight:700}
+  .badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:9px;padding:2px 7px;background:#c9a96e26;color:var(--goldc);margin-left:6px;vertical-align:1px}
+  #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1d1d22;border:1px solid var(--gold);color:var(--text);font-size:12px;font-weight:700;border-radius:12px;padding:11px 18px;z-index:600;transition:transform .3s;max-width:88vw;text-align:center;box-shadow:0 10px 30px #000a}
+  #toast.on{transform:translateX(-50%) translateY(0)}
+  .clave-banner{display:none;background:#d9a45b1a;border:1px solid #d9a45b55;color:#e8c896;border-radius:12px;padding:10px 12px;font-size:11.5px;margin-bottom:12px;line-height:1.5}
+  .clave-banner.on{display:block}
+  /* ===== Móvil ===== */
+  @media(max-width:700px){
+    .grid-2,.two-advanced,.proforma-grid{grid-template-columns:1fr}.wide{grid-column:auto}
+    .formula-row{grid-template-columns:1fr}
+    .hud-row{font-size:10px;flex-wrap:wrap;row-gap:3px}.hud-val{font-size:12px}
+    .brandrow .kick{overflow:hidden;text-overflow:ellipsis;max-width:52vw;letter-spacing:.12em}
+    .sticky-header{padding-left:11px;padding-right:11px}.container{padding-left:11px;padding-right:11px}
+    .urban-hud{grid-template-columns:repeat(3,1fr)}
+    .hero-grid{grid-template-columns:1fr}
+    .hero-viz{grid-template-columns:1fr}
+    .caso-bar{align-items:flex-start}.caso-actions{justify-content:flex-end}
+    .land-modes{grid-template-columns:1fr}.waterfall-steps{grid-template-columns:1fr 1fr}
+    .factor-tooltip{position:fixed;left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:55vh;overflow:auto}
+    .factor-help:hover .factor-tooltip{display:none}.factor-help.open .factor-tooltip{display:block}
+  }
+</style>
+<style>
+  /* ===== Extras del módulo Patrimonial ===== */
+  .breadcrumb{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:6px}
+  .breadcrumb a{color:var(--goldc);text-decoration:none}
+  .suelo-bar{height:17px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;display:flex;margin:7px 0 2px;box-shadow:inset 0 2px 4px #0006}
+  .suelo-chunk{height:100%;display:flex;align-items:center;justify-content:center;color:#0a0a0c;font-size:8.5px;font-weight:800;white-space:nowrap;overflow:hidden;transition:width .2s ease-out;min-width:0}
+  .grafs{display:grid;gap:14px;margin-bottom:16px}
+  .graf-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start}
+  .graf-row3 .viz-card{height:100%}
+  @media(max-width:860px){.graf-row3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="gate"><div class="gate-box">
+  <img src="img/yod-logo.png" alt="YoDesarrollo">
+  <h1 class="serif">PPP Patrimonial / Rentas</h1>
+  <p>Unidades en renta: NOI, recuperación y cuándo vender · acceso del equipo</p>
+  <input type="password" id="gateClave" placeholder="Clave del board" autocomplete="current-password">
+  <button id="gateBtn">Entrar</button>
+  <div class="gate-err" id="gateErr"></div>
+  <button class="gate-local" id="gateLocal">Trabajar sin conexión (no guarda en la nube)</button>
+</div></div>
+
+<div class="sticky-header"><div class="header-inner">
+  <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · PPP Patrimonial / Rentas</span></div>
+  <div class="suelo-bar" id="rentaBar" title="Cada peso de renta y a dónde se va"></div>
+  <div class="urban-hud" style="margin:4px 0 5px;padding:6px 0"><div class="urban-item"><span>Unidades</span><b id="hudUnidades" class="c-gold">0</b></div><div class="urban-item"><span>m² rentables</span><b id="hudRentable">0</b></div><div class="urban-item"><span>Renta/mes</span><b id="hudRentaMes" class="c-green">$0</b></div><div class="urban-item"><span>NOI/año</span><b id="hudNoi" class="c-green">$0</b></div><div class="urban-item"><span>Yield s/costo</span><b id="hudYield" class="c-purple">—</b></div><div class="urban-item"><span>Valor a cap</span><b id="hudValor" class="c-gold">$0</b></div><div class="urban-item"><span>CoC c/crédito</span><b id="hudCoc" class="c-blue">—</b></div><div class="urban-item"><span>DSCR</span><b id="hudDscr">—</b></div><div class="urban-item"><span>Recuperación</span><b id="hudRecup" class="c-orange">—</b></div><div class="urban-item"><span>Retener</span><b id="hudOptimo" class="c-purple">—</b></div></div>
+</div></div>
+
+<main class="container">
+  <div class="breadcrumb"><a href="./">← Planificador de Potencial Inmobiliario</a></div>
+  <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
+
+  <section class="hero">
+    <span class="kick">¿Qué patrimonio construye esta renta?</span>
+    <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span></h1>
+    <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
+    <div class="hero-grid">
+      <div class="hcard"><span class="k">Flujo neto anual (NOI)</span><div class="big serif" id="heroNoi">$0</div><div class="sub2" id="heroNoiSub">yield sobre costo —</div></div>
+      <div class="hcard"><span class="k">Valor creado</span><div class="big serif" id="heroValor">$0</div><div class="sub2" id="heroValorSub">valor a cap de mercado vs lo invertido</div></div>
+      <div class="hcard"><span class="k">El punto dulce del patrimonio</span><div class="big serif" id="heroOptimo">—</div><div class="sub2" id="heroOptimoSub">mientras crezca más que tu alternativa</div></div>
+    </div>
+    <p class="lectura" id="heroLectura"></p>
+  </section>
+
+  <section class="grafs">
+    <div class="graf-row3">
+      <div class="viz-card"><span class="k">El peso de renta · a dónde se va</span><div id="vizRio" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">Recuperación · lo invertido vs lo cobrado</span><div id="vizRecup" class="viz-svg"></div></div>
+      <div class="viz-card"><span class="k">¿Cuándo vender? · la curva patrimonial</span><div id="vizCurvaPat" class="viz-svg"></div></div>
+    </div>
+  </section>
+
+  <div class="caso-bar">
+    <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
+    <div class="caso-actions">
+      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
+      <button class="small-btn" id="btnGuardar">Guardar</button>
+    </div>
+  </div>
+
+  <section class="seguimiento" id="segPanel">
+    <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
+    <div class="estado-chips" id="estadoChips"></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. comparables de renta, avalúo, crédito…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="notas-log" id="segLog">Sin notas todavía.</div>
+  </section>
+
+  <div class="reference-strip"><b>El árbol patrimonial YOD:</b> Anara Horizontes 2022 (9 cuartos, el origen) → Real del Arco 2026 (16 deptos, 9.6% neto — prellenado de este board) → PLANTILLA → Depas Luis Puebla. Ábrelos en "Mis casos". La curva RETENER/VENDER usa la misma regla del board Unifamiliar: retener mientras el patrimonio crezca más que tu alternativa.</div>
+
+  <section class="grid-2">
+    <article class="card" data-card="dRenta"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">🔑</div><div class="card-title">Unidades &amp; Renta</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Unidades</span><span class="kpi-val c-gold" id="lblUnidades">0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta bruta mensual</span><span class="kpi-val c-green" id="lblRentaMes">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta efectiva anual</span><span class="kpi-val" id="lblRentaAnual">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta por m² rentable</span><span class="kpi-val c-blue" id="lblRentaM2">$0</span></div></div>
+      <div class="drawer" id="dRenta">
+        <div class="input-group"><div class="input-header"><label>Unidades / puertas en renta</label><div class="val-display" data-input="inUnidades">16</div></div><input type="range" id="inUnidades" min="1" max="60" step="1" value="16" data-color="var(--gold)"></div>
+        <div class="input-group"><div class="input-header"><label>Renta por unidad ($/mes)</label><div class="val-display" data-input="inRentaUnidadMes">$17,625</div></div><input type="range" id="inRentaUnidadMes" min="2000" max="60000" step="1" value="17625" data-color="var(--green)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>m² construidos</label><div class="val-display" data-input="inM2Construccion">1,950</div></div><input type="range" id="inM2Construccion" min="80" max="8000" step="1" value="1950" data-color="var(--gold)"></div>
+        <div class="input-group"><div class="input-header"><label>m² rentables</label><div class="val-display" data-input="inM2Rentable">1,444</div></div><input type="range" id="inM2Rentable" min="50" max="8000" step="1" value="1444" data-color="var(--green)"></div>
+        <div class="input-group"><div class="input-header"><label>Vacancia (%)</label><div class="val-display" data-input="inVacanciaPct">5%</div></div><input type="range" id="inVacanciaPct" min="0" max="25" step=".5" value="5" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Operación OpEx (% de renta) · admón + mant + predial</label><div class="val-display" data-input="inOpexPct">13%</div></div><input type="range" id="inOpexPct" min="0" max="35" step=".5" value="13" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Seguro (% del valor al año)</label><div class="val-display" data-input="inSeguroPct">0.5%</div></div><input type="range" id="inSeguroPct" min="0" max="2" step=".05" value=".5" data-color="var(--orange)" data-format="pct1"></div>
+        <div class="micro-readout" id="readRenta">Calculando renta…</div></div></article>
+
+    <article class="card" data-card="dInv"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)">🏗️</div><div class="card-title">Inversión &amp; Valor</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Inversión total</span><span class="kpi-val c-red" id="lblInversion">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Yield on cost (NOI/inversión)</span><span class="kpi-val c-purple" id="lblYield">—</span></div><div class="kpi-box"><span class="kpi-lbl">Valor a cap de mercado</span><span class="kpi-val c-gold" id="lblValorCap">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Valor creado (desarrollo)</span><span class="kpi-val c-green" id="lblValorCreado">$0</span></div></div>
+      <div class="drawer" id="dInv"><div class="partner-guide"><b>La jugada patrimonial YOD:</b> construir renta a costo de desarrollador. Si tu NOI cuesta 9-10% (yield on cost) y el mercado valúa a cap 7-8%, el valor creado es la diferencia — sin vender un solo m².</div>
+        <div class="input-group"><div class="input-header"><label>Inversión total ($) · terreno + obra + todo</label><div class="val-display" data-input="inInversionTotal">$29,760,000</div></div><input type="range" id="inInversionTotal" min="500000" max="150000000" step="10000" value="29760000" data-color="var(--red)" data-format="money"></div>
+        <div class="input-group"><div class="input-header"><label>¿Terreno aportado? (1 = sí, ya dentro de la inversión)</label><div class="val-display" data-input="inTerrenoAportado">1</div></div><input type="range" id="inTerrenoAportado" min="0" max="1" step="1" value="1" data-color="var(--orange)"></div>
+        <div class="input-group"><div class="input-header"><label>Cap rate de mercado (%) · para valuar el activo</label><div class="val-display" data-input="inCapRateMercado">8.0%</div></div><input type="range" id="inCapRateMercado" min="5" max="14" step=".25" value="8" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Plusvalía anual (%)</label><div class="val-display" data-input="inPlusvaliaPct">7.0%</div></div><input type="range" id="inPlusvaliaPct" min="0" max="15" step=".25" value="7" data-color="var(--green)" data-format="pct1"></div>
+        <div class="micro-readout" id="readInv">Calculando inversión…</div></div></article>
+
+    <article class="card" data-card="dCredito"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8ab8ff1f;color:var(--blue)">🏦</div><div class="card-title">Crédito vs Contado</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Crédito / Equity</span><span class="kpi-val c-blue" id="lblCredito">$0 / $0</span></div><div class="kpi-box"><span class="kpi-lbl">Mensualidad del crédito</span><span class="kpi-val c-red" id="lblMensCredito">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Cash-on-Cash</span><span class="kpi-val c-gold" id="lblCoc">—</span></div><div class="kpi-box"><span class="kpi-lbl">DSCR (NOI / servicio)</span><span class="kpi-val" id="lblDscr">—</span></div></div>
+      <div class="drawer" id="dCredito"><div class="partner-guide"><b>La pregunta de la PLANTILLA:</b> ¿apalancar o ir de contado? El crédito baja tu equity y sube el Cash-on-Cash mientras el DSCR aguante (sano ≥ 1.2). Con 0% de crédito ves el caso de contado puro.</div>
+        <div class="input-group"><div class="input-header"><label>Crédito (% de la inversión)</label><div class="val-display" data-input="inCreditoPct">0%</div></div><input type="range" id="inCreditoPct" min="0" max="80" step="5" value="0" data-color="var(--blue)" data-format="pct"></div>
+        <div class="input-group"><div class="input-header"><label>Tasa anual del crédito (%)</label><div class="val-display" data-input="inTasaCredito">12.5%</div></div><input type="range" id="inTasaCredito" min="6" max="20" step=".25" value="12.5" data-color="var(--blue)" data-format="pct1"></div>
+        <div class="input-group"><div class="input-header"><label>Plazo del crédito (años)</label><div class="val-display" data-input="inPlazoCredito">15</div></div><input type="range" id="inPlazoCredito" min="5" max="25" step="1" value="15" data-color="var(--blue)"></div>
+        <div class="micro-readout" id="readCredito">Calculando crédito…</div></div></article>
+
+    <article class="card" data-card="dHorizonte"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">📈</div><div class="card-title">Horizonte Patrimonial</div></div><div class="edit-pill">AJUSTAR</div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Recuperación (sin crédito)</span><span class="kpi-val c-orange" id="lblRecup">—</span></div><div class="kpi-box"><span class="kpi-lbl">Punto dulce (retener)</span><span class="kpi-val c-gold" id="lblOptimo">—</span></div><div class="kpi-box"><span class="kpi-lbl">Patrimonio al horizonte</span><span class="kpi-val c-green" id="lblPatrimonio">$0</span></div><div class="kpi-box"><span class="kpi-lbl">ROI patrimonial</span><span class="kpi-val c-purple" id="lblRoiPat">—</span></div></div>
+      <div class="drawer" id="dHorizonte">
+        <div class="input-group"><div class="input-header"><label>Horizonte (años)</label><div class="val-display" data-input="inHorizonte">10</div></div><input type="range" id="inHorizonte" min="3" max="25" step="1" value="10" data-color="var(--purple)"></div>
+        <div class="input-group"><div class="input-header"><label>Tu alternativa de inversión (% anual)</label><div class="val-display" data-input="inTasaAlternativa">10.0%</div></div><input type="range" id="inTasaAlternativa" min="4" max="25" step=".5" value="10" data-color="var(--gold)" data-format="pct1"></div>
+        <div class="subheading">Año por año · valor + rentas − crédito</div>
+        <div class="flow-scroll" style="max-height:300px"><table class="flow-table"><thead><tr><th>Año</th><th>Valor</th><th>Flujo neto</th><th>Acum.</th><th>Saldo crédito</th><th>Patrimonio</th><th>Crece</th><th>Señal</th></tr></thead><tbody id="rentaRows"></tbody></table></div>
+        <div class="micro-readout" id="readHorizonte">Calculando horizonte…</div></div></article>
+  </section>
+
+  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Proforma anual (año 1)</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores.</div></section><section><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando…</div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson">Actualizar JSON</button><button class="small-btn" id="applyJson">Aplicar JSON</button><button class="small-btn secondary" id="exportJson">Descargar JSON</button></div><p class="note">Cada renglón de la hoja PATRIMONIAL del Sheet es un caso.</p></details>
+</main>
+
+<div class="overlay" id="ovGuardar"><div class="sheet">
+  <h2 class="serif">Guardar caso</h2>
+  <p class="sh-sub">El caso se guarda como un renglón en la hoja PATRIMONIAL del Sheet. Elige una <b>palabra</b> para volver a él; si pones correo, te mandamos la palabra con el enlace directo.</p>
+  <div class="fld"><label>Nombre del caso</label><input id="gNombre" placeholder="ej. Real del Arco · 16 deptos"></div>
+  <div class="fld"><label>Palabra para volver</label><input id="gPalabra" placeholder="ej. real-del-arco-16" autocapitalize="none"><div class="hint">Una palabra por caso.</div></div>
+  <div class="fld"><label>Correo (opcional)</label><input id="gCorreo" type="email" placeholder="tucorreo@…"></div>
+  <div class="fld"><label>Notas del caso</label><textarea id="gNotas" placeholder="Fuente, dueño, condición por verificar…"></textarea></div>
+  <input class="hp" id="gWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar">Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar">Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo">Guardar</button></div>
+</div></div>
+
+<div class="overlay" id="ovCasos"><div class="sheet">
+  <h2 class="serif">Mis casos</h2>
+  <p class="sh-sub">Casos Patrimoniales. Toca uno para cargarlo, o ábrelo con su palabra.</p>
+  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra">Abrir</button></div>
+  <div id="listaCasos" style="margin-top:6px"><p class="note">Cargando…</p></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar">Cerrar</button></div>
+</div></div>
+
+<div id="toast"></div>
+<script>
+(() => {
+  /* ================== CONFIG DE NUBE ================== */
+  const NUBE={ENDPOINT:'https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec',TIPO:'patrimonial',SITE:'https://alexpueblag.github.io/potenciales-yod/',PAGE:'patrimonial.html'};
+  const cloudOn=/^https:\/\//.test(NUBE.ENDPOINT);
+  const LS={clave:'pyod_clave_v1',draft:'pyodp_draft_v1',cola:'pyodp_postq_v1'};
+  const ESTADOS=['EXPLORACIÓN','ANÁLISIS','PROPUESTA','NEGOCIACIÓN','CERRADO','DESCARTADO'];
+  let clave=localStorage.getItem(LS.clave)||'';
+  let caso={caso_id:'',palabra:'',correo:'',nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};
+  let cfgBoard={}, casosCache=[], modoLocal=!cloudOn;
+
+  const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
+  const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>Math.abs(n||0)>=1e6?'$'+((n||0)/1e6).toFixed(2)+' M':'$'+Math.round(n||0).toLocaleString('en-US'); const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%';
+  // Prellenado: Real del Arco 16 deptos (el patrimonial maduro, jun-2026)
+  const PRELLENADO={inUnidades:16,inRentaUnidadMes:17625,inM2Construccion:1950,inM2Rentable:1444,inVacanciaPct:5,inOpexPct:13,inSeguroPct:.5,
+    inInversionTotal:29760000,inTerrenoAportado:1,inCapRateMercado:8,inPlusvaliaPct:7,
+    inCreditoPct:0,inTasaCredito:12.5,inPlazoCredito:15,inHorizonte:10,inTasaAlternativa:10};
+  const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),PRELLENADO);
+  Object.entries(DEFAULTS).forEach(([id,v])=>{const c=$(id);if(c)c.value=v});
+
+  const factorHelp={
+    inUnidades:{t:'Unidades',k:'Producto',q:'Puertas en renta (deptos, cuartos, locales).',m:'Multiplica la renta.',d:'Proyecto (Real del Arco: 16; Anara: 9).'},
+    inRentaUnidadMes:{t:'Renta por unidad',k:'Comparable por validar',q:'$/mes por puerta.',m:'Todo el ingreso.',d:'Comparables de la zona (Anara $6k 2022 · RdA $17.6k 2026).'},
+    inM2Construccion:{t:'m² construidos',k:'Proyecto',q:'Total construido.',m:'Referencia de costo/m².',d:'Proyecto arquitectónico.'},
+    inM2Rentable:{t:'m² rentables',k:'Proyecto',q:'m² que generan renta.',m:'Renta por m² (eficiencia).',d:'RdA: 1,444 de 1,950 (74%).'},
+    inVacanciaPct:{t:'Vacancia',k:'Riesgo',q:'% del año sin inquilino.',m:'Reduce la renta efectiva.',d:'Rotación real del producto (5-7% plantilla).'},
+    inOpexPct:{t:'OpEx',k:'Operación',q:'% de la renta en operar: admón, mantenimiento, predial.',m:'Reduce el NOI.',d:'Plantilla: 11-15%.'},
+    inSeguroPct:{t:'Seguro',k:'Operación',q:'% de la INVERSIÓN al año en seguro.',m:'Reduce el NOI.',d:'Póliza de edificio.'},
+    inInversionTotal:{t:'Inversión total',k:'Dato del caso',q:'Todo lo invertido: terreno + obra + proyecto + trámites.',m:'Base del yield y la recuperación.',d:'RdA: $29.76M con terreno aportado.'},
+    inTerrenoAportado:{t:'Terreno aportado',k:'Estructura',q:'1 si el terreno ya está dentro de la inversión (aportado).',m:'Solo informativo del caso.',d:'Estructura del deal.'},
+    inCapRateMercado:{t:'Cap de mercado',k:'Mercado de capitales',q:'Tasa a la que el mercado valúa NOI estabilizado.',m:'Valor del activo = NOI ÷ cap. Menor cap = más valor.',d:'Residencial en renta MX ~7-9%.'},
+    inPlusvaliaPct:{t:'Plusvalía',k:'Mercado',q:'% anual de apreciación.',m:'Curva patrimonial y renta futura.',d:'Zona (RdA/poniente ~7%).'},
+    inCreditoPct:{t:'Crédito',k:'Decisión',q:'% de la inversión con crédito hipotecario.',m:'Baja equity, sube CoC, castiga DSCR.',d:'La pregunta central de la PLANTILLA.'},
+    inTasaCredito:{t:'Tasa',k:'Crédito',q:'Tasa anual del crédito.',m:'Servicio de deuda.',d:'Hipotecario comercial ~11-14%.'},
+    inPlazoCredito:{t:'Plazo',k:'Crédito',q:'Años del crédito.',m:'Mensualidad y saldo.',d:'Term sheet.'},
+    inHorizonte:{t:'Horizonte',k:'Estrategia',q:'Años que proyecta la tabla.',m:'Largo de la curva.',d:'Patrimonial: 10-20 años.'},
+    inTasaAlternativa:{t:'Tu alternativa',k:'Costo de oportunidad',q:'Lo que ganaría tu dinero en otro lado.',m:'Define el punto dulce RETENER/VENDER.',d:'Meta YOD ~10%+.'}};
+  function get(id){return Number($(id).value)||0} function txt(id,value){const e=$(id);if(e)e.textContent=value}
+  function inputValues(){return Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]))}
+  function updateColor(c){const min=Number(c.min),max=Number(c.max),v=Number(c.value),x=Math.max(0,Math.min(100,(v-min)/(max-min)*100));c.style.background=`linear-gradient(to right, ${c.dataset.color||'var(--gold)'} ${x}%, rgba(255,255,255,.14) ${x}%)`}
+  function displayValue(c){const v=Number(c.value),f=c.dataset.format||'';if(f==='pct')return pct(v,0);if(f==='pct1')return pct(v,1);if(f==='money')return fmtMoney(v);if(f==='decimal')return v.toFixed(1);return fmtN(v)}
+  function setControl(id,value){const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
+  function readPills(){document.querySelectorAll('.val-display[data-input]').forEach(p=>{p.contentEditable='true';p.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();p.blur()}});p.addEventListener('blur',()=>{const raw=p.textContent.replace(/[^0-9.\-]/g,''),n=Number(raw);if(Number.isFinite(n))setControl(p.dataset.input,n);calculate()})})}
+  function syncPills(){controls.forEach(c=>{const p=document.querySelector(`.val-display[data-input="${c.id}"]`);if(p&&document.activeElement!==p)p.textContent=displayValue(c);updateColor(c)})}
+  function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open')})})}
+
+  /* ================== MOTOR PATRIMONIAL ================== */
+  function calculate(){
+    const p={unidades:Math.max(1,Math.round(get('inUnidades'))),rentaU:get('inRentaUnidadMes'),m2Const:Math.max(1,get('inM2Construccion')),m2Rent:Math.max(1,get('inM2Rentable')),
+      vac:get('inVacanciaPct')/100,opex:get('inOpexPct')/100,seguro:get('inSeguroPct')/100,
+      inversion:Math.max(1,get('inInversionTotal')),terrenoAportado:Math.round(get('inTerrenoAportado')),capMercado:Math.max(.01,get('inCapRateMercado')/100),plus:get('inPlusvaliaPct')/100,
+      credito:get('inCreditoPct')/100,tasa:get('inTasaCredito')/100,plazo:Math.max(1,Math.round(get('inPlazoCredito'))),
+      horizonte:Math.max(1,Math.round(get('inHorizonte'))),tasaAlt:get('inTasaAlternativa')/100};
+    // 1) renta → NOI
+    const rentaMes=p.unidades*p.rentaU,rentaBrutaAnual=rentaMes*12,vacMonto=rentaBrutaAnual*p.vac,rentaEfectiva=rentaBrutaAnual-vacMonto;
+    const opexMonto=rentaEfectiva*p.opex,seguroMonto=p.inversion*p.seguro;
+    const noi=rentaEfectiva-opexMonto-seguroMonto;
+    const rentaM2=p.m2Rent?rentaMes/p.m2Rent:0;
+    // 2) valor
+    const yieldOnCost=noi/p.inversion,valorCap=noi/p.capMercado,valorCreado=valorCap-p.inversion;
+    const recupAnios=noi>0?p.inversion/noi:null;
+    // 3) crédito
+    const montoCredito=p.inversion*p.credito,equity=p.inversion-montoCredito;
+    const i=p.tasa/12,nMeses=p.plazo*12;
+    const mensCredito=montoCredito>0?montoCredito*i/(1-Math.pow(1+i,-nMeses)):0,servicioAnual=mensCredito*12;
+    const flujoConCredito=noi-servicioAnual,coc=equity>0?flujoConCredito/equity:null,dscr=servicioAnual>0?noi/servicioAnual:null;
+    // 4) horizonte patrimonial (valor + rentas − saldo crédito)
+    const rows=[];let acum=0,saldo=montoCredito,patrim0=valorCap-montoCredito,prev=patrim0,anioCorte=null;
+    for(let a=1;a<=p.horizonte;a++){
+      const valor=valorCap*Math.pow(1+p.plus,a),noiA=noi*Math.pow(1+p.plus,a-1);
+      let servA=0;if(saldo>0){for(let m=0;m<12;m++){const interes=saldo*i,abono=Math.min(mensCredito-interes,saldo);if(abono<=0)break;saldo-=abono;servA+=mensCredito}}
+      const flujo=noiA-servA;acum+=flujo;
+      const patrim=valor+acum-Math.max(0,saldo);
+      const crec=prev>0?(patrim-prev)/prev:0;
+      if(anioCorte===null&&crec<p.tasaAlt)anioCorte=a;
+      rows.push({a,valor,noiA,flujo,acum,saldo:Math.max(0,saldo),patrim,crec});prev=patrim}
+    const aniosRetener=anioCorte===null?p.horizonte:anioCorte-1;
+    const last=rows[rows.length-1]||{valor:valorCap,acum:0,patrim:patrim0,saldo:0};
+    const roiPat=p.inversion?(last.patrim-patrim0)/p.inversion:0;
+    state={p,rentaMes,rentaBrutaAnual,vacMonto,rentaEfectiva,opexMonto,seguroMonto,noi,rentaM2,
+      yieldOnCost,valorCap,valorCreado,recupAnios,montoCredito,equity,mensCredito,servicioAnual,flujoConCredito,coc,dscr,
+      rows,patrim0,aniosRetener,anioCorte,patrimH:last.patrim,valorH:last.valor,acumH:last.acum,roiPat};
+    render();guardarDraft();return state}
+
+  /* ================== RENDER ================== */
+  function render(){
+    const r=state;syncPills();
+    const sb=$('rentaBar');if(sb){const tot=Math.max(1,r.rentaBrutaAnual);const chunks=[['vacancia',r.vacMonto/tot,'#E0605A'],['opex',r.opexMonto/tot,'#D9A45B'],['seguro',r.seguroMonto/tot,'#b98d4e'],['crédito',Math.min(r.servicioAnual,Math.max(0,tot-r.vacMonto-r.opexMonto-r.seguroMonto))/tot,'#8ab8ff'],['FLUJO NETO',Math.max(0,r.noi-r.servicioAnual)/tot,'#8FBF8B']].filter(c=>c[1]>0.004);
+      sb.innerHTML=chunks.map(c=>`<span class="suelo-chunk" style="width:${c[1]*100}%;background:${c[2]}" title="${c[0]}: ${pct(c[1]*100,0)} de la renta">${c[1]>.1?c[0]:''}</span>`).join('')}
+    txt('hudUnidades',r.p.unidades);txt('hudRentable',fmtN(r.p.m2Rent)+' m²');txt('hudRentaMes',fmtMoney(r.rentaMes));txt('hudNoi',fmtM(r.noi));
+    txt('hudYield',pct(r.yieldOnCost*100,1));txt('hudValor',fmtM(r.valorCap));txt('hudCoc',r.coc===null?'—':pct(r.coc*100,1));txt('hudDscr',r.dscr===null?'—':r.dscr.toFixed(2));
+    txt('hudRecup',r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años');txt('hudOptimo',r.aniosRetener>=r.p.horizonte?r.p.horizonte+'+ años':r.aniosRetener+' años');
+    txt('heroNoi',fmtM(r.noi)+'/año');txt('heroNoiSub','yield on cost '+pct(r.yieldOnCost*100,2)+' · recuperación '+(r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'));
+    txt('heroValor',fmtM(r.valorCreado));txt('heroValorSub','activo vale '+fmtM(r.valorCap)+' a cap '+pct(r.p.capMercado*100,1)+' vs '+fmtM(r.p.inversion)+' invertidos');
+    txt('heroOptimo',r.aniosRetener>=r.p.horizonte?'retener '+r.p.horizonte+'+ años':r.aniosRetener===0?'vender ya':'retener ~'+r.aniosRetener+' años');
+    txt('heroOptimoSub',r.anioCorte===null?'el patrimonio crece más que tu '+pct(r.p.tasaAlt*100,0)+' todo el horizonte':'en el año '+r.anioCorte+' cae debajo de tu '+pct(r.p.tasaAlt*100,0));
+    const lect=$('heroLectura');if(lect)lect.innerHTML=`${r.p.unidades} unidades rentan <b>${fmtMoney(r.rentaMes)}/mes</b>; tras vacancia y operación queda un NOI de <b>${fmtM(r.noi)}/año</b> — ${pct(r.yieldOnCost*100,1)} sobre los ${fmtM(r.p.inversion)} invertidos. A cap de mercado ${pct(r.p.capMercado*100,1)} el activo vale <b>${fmtM(r.valorCap)}</b>${r.valorCreado>0?' (creaste <b>'+fmtM(r.valorCreado)+'</b> sin vender)':''}. ${r.montoCredito>0?'Con crédito, el Cash-on-Cash es <b>'+pct((r.coc||0)*100,1)+'</b> y el DSCR '+(r.dscr||0).toFixed(2)+'.':'Caso de contado puro (sube el crédito para ver el apalancado).'} Punto dulce: <b>${r.aniosRetener>=r.p.horizonte?'retener todo el horizonte':r.aniosRetener===0?'vender ya':'~'+r.aniosRetener+' años'}</b>.`;
+    txt('lblUnidades',r.p.unidades+' · '+fmtN(r.p.m2Rent)+' m² rentables');txt('lblRentaMes',fmtMoney(r.rentaMes));txt('lblRentaAnual',fmtM(r.rentaEfectiva));txt('lblRentaM2',fmtMoney(r.rentaM2)+'/m²');
+    $('readRenta').innerHTML=`<b>Renta:</b> ${r.p.unidades} × ${fmtMoney(r.p.rentaU)} = ${fmtMoney(r.rentaMes)}/mes (${fmtMoney(r.rentaM2)}/m² rentable). Anual bruta ${fmtM(r.rentaBrutaAnual)} − vacancia ${pct(r.p.vac*100,1)} (${fmtM(r.vacMonto)}) − OpEx ${pct(r.p.opex*100,1)} (${fmtM(r.opexMonto)}) − seguro ${fmtM(r.seguroMonto)} = <b>NOI ${fmtM(r.noi)}</b>.`;
+    txt('lblInversion',fmtM(r.p.inversion)+(r.p.terrenoAportado?' · terreno aportado':''));txt('lblYield',pct(r.yieldOnCost*100,2));txt('lblValorCap',fmtM(r.valorCap));
+    const vc=$('lblValorCreado');if(vc){vc.textContent=fmtM(r.valorCreado);vc.className='kpi-val '+(r.valorCreado>0?'c-green':'status-bad')}
+    $('readInv').innerHTML=`<b>El arbitraje del desarrollador:</b> tu NOI cuesta ${pct(r.yieldOnCost*100,2)} (yield on cost) y el mercado lo valúa a ${pct(r.p.capMercado*100,1)}. ${r.valorCreado>0?'Diferencia a favor: <b>'+fmtM(r.valorCreado)+'</b> de valor creado al terminar y estabilizar.':'<b>⚠ Sin arbitraje:</b> el activo vale menos de lo que cuesta — revisa renta, costo o cap.'}`;
+    txt('lblCredito',fmtM(r.montoCredito)+' / '+fmtM(r.equity));txt('lblMensCredito',fmtMoney(r.mensCredito)+'/mes');
+    txt('lblCoc',r.coc===null?'— (sin crédito)':pct(r.coc*100,1));txt('lblDscr',r.dscr===null?'— (sin crédito)':r.dscr.toFixed(2)+(r.dscr>=1.2?' ✓':' ⚠'));
+    $('readCredito').innerHTML=r.montoCredito>0?`<b>Apalancado:</b> crédito ${fmtM(r.montoCredito)} (${pct(r.p.credito*100,0)}) a ${pct(r.p.tasa*100,2)} × ${r.p.plazo} años → ${fmtMoney(r.mensCredito)}/mes (${fmtM(r.servicioAnual)}/año). Flujo tras deuda ${fmtM(r.flujoConCredito)} sobre equity ${fmtM(r.equity)} = <b>CoC ${pct((r.coc||0)*100,1)}</b> · DSCR ${(r.dscr||0).toFixed(2)} ${r.dscr>=1.2?'(sano)':'(apretado: el banco quiere ≥1.2)'}.`:`<b>Contado puro:</b> todo el NOI es tuyo (${pct(r.yieldOnCost*100,2)} sobre inversión). Sube el % de crédito para comparar el apalancado — la pregunta de la PLANTILLA.`;
+    txt('lblRecup',r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años');txt('lblOptimo',r.aniosRetener>=r.p.horizonte?r.p.horizonte+'+ años':r.aniosRetener+' años');
+    txt('lblPatrimonio',fmtM(r.patrimH)+' ('+r.p.horizonte+'a)');txt('lblRoiPat',pct(r.roiPat*100,0)+' s/inversión');
+    const rr=$('rentaRows');if(rr)rr.innerHTML=r.rows.map(x=>`<tr${x.a===r.anioCorte?' style="background:#c9a96e14"':''}><td>${x.a}</td><td>${fmtM(x.valor)}</td><td>${fmtM(x.flujo)}</td><td>${fmtM(x.acum)}</td><td>${fmtM(x.saldo)}</td><td>${fmtM(x.patrim)}</td><td>${pct(x.crec*100,1)}</td><td>${x.crec>=r.p.tasaAlt?'<span class="status-ok">RETENER</span>':'<span class="status-warn">VENDER</span>'}</td></tr>`).join('');
+    $('readHorizonte').innerHTML=`<b>Al año ${r.p.horizonte}:</b> el activo vale ${fmtM(r.valorH)}, llevas ${fmtM(r.acumH)} de flujos${r.montoCredito>0?' y el crédito va en '+fmtM(r.rows[r.rows.length-1]?.saldo||0):''}: patrimonio neto <b>${fmtM(r.patrimH)}</b> (partiste de ${fmtM(r.patrim0)}). La señal VENDER aparece cuando crece menos que tu ${pct(r.p.tasaAlt*100,0)}${r.anioCorte===null?' — en este horizonte nunca aparece.':' (año '+r.anioCorte+').'}`;
+    // semáforo
+    const warnings=[];
+    if(r.noi<=0)warnings.push('El NOI es NEGATIVO: la renta no cubre operación y seguro');
+    if(r.yieldOnCost<r.p.capMercado&&r.noi>0)warnings.push('Yield on cost ('+pct(r.yieldOnCost*100,1)+') debajo del cap de mercado ('+pct(r.p.capMercado*100,1)+'): no hay valor creado');
+    if(r.dscr!==null&&r.dscr<1.2)warnings.push('DSCR '+r.dscr.toFixed(2)+' debajo de 1.2: el crédito está apretado');
+    if(r.coc!==null&&r.coc<0)warnings.push('Cash-on-Cash NEGATIVO: la deuda se come todo el flujo');
+    if(r.recupAnios!==null&&r.recupAnios>15)warnings.push('Recuperación de '+r.recupAnios.toFixed(0)+' años: muy larga sin contar plusvalía');
+    if(!warnings.length)warnings.push('Renta, valor, crédito y horizonte pasan con los supuestos capturados.');
+    $('checks').innerHTML=warnings.map(w=>`<div class="${w.includes('pasan')?'status-ok':(w.includes('NEGATIVO'))?'status-bad':'status-warn'}">${w}</div>`).join('');
+    renderProforma(r);dibujaRio(r);dibujaRecup(r);dibujaCurvaPat(r);renderFormulas();refreshJson();
+  }
+  function renderProforma(r){
+    const row=(l,v,k='')=>`<tr class="${k}"><td>${l}</td><td>${v}</td></tr>`,section=l=>`<tr class="section-row"><td colspan="2">${l}</td></tr>`;
+    $('sourcesUses').innerHTML=[section('AÑO 1'),row('Renta bruta',fmtM(r.rentaBrutaAnual)),row('− Vacancia',fmtM(r.vacMonto)),row('− OpEx',fmtM(r.opexMonto)),row('− Seguro',fmtM(r.seguroMonto)),row('NOI',fmtM(r.noi),'total-row'),row('− Servicio de deuda',fmtM(r.servicioAnual)),row('Flujo al bolsillo',fmtM(r.noi-r.servicioAnual),'total-row'),section('VALOR'),row('Inversión',fmtM(r.p.inversion)),row('Valor a cap '+pct(r.p.capMercado*100,1),fmtM(r.valorCap)),row('Valor creado',fmtM(r.valorCreado),'total-row')].join('');
+    const line=(l,v,k)=>`<div class="covenant-line"><span>${l}</span><b class="${k}">${v}</b></div>`;
+    $('covenantPanel').innerHTML=[line('NOI anual',fmtM(r.noi),r.noi>0?'covenant-ok':'covenant-bad'),line('Yield on cost vs cap',`${pct(r.yieldOnCost*100,1)} / ${pct(r.p.capMercado*100,1)}`,r.yieldOnCost>=r.p.capMercado?'covenant-ok':'covenant-warn'),line('DSCR',r.dscr===null?'sin crédito':r.dscr.toFixed(2),r.dscr===null||r.dscr>=1.2?'covenant-ok':'covenant-bad'),line('Recuperación',r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años',r.recupAnios!==null&&r.recupAnios<=12?'covenant-ok':'covenant-warn'),line('Patrimonio al horizonte',fmtM(r.patrimH),'covenant-ok')].join('')+'<p class="note">Comparables de renta, avalúo y term sheet del crédito pendientes de validar por caso.</p>';
+  }
+  /* ================== INFOGRAFÍA ================== */
+  function dibujaRio(r){
+    const el=$('vizRio');if(!el)return;const W=340,H=330,mB=36,mT=18;
+    const pasos=[['Renta',r.rentaBrutaAnual,'#8FBF8B'],['Vacancia',-r.vacMonto,'#E0605A'],['OpEx',-r.opexMonto,'#D9A45B'],['Seguro',-r.seguroMonto,'#b98d4e']];
+    if(r.servicioAnual>0)pasos.push(['Crédito',-r.servicioAnual,'#8ab8ff']);
+    pasos.push(['FLUJO',null,'#c9a96e']);
+    const maxV=Math.max(r.rentaBrutaAnual,1),esc=(H-mT-mB)/maxV,xw=(W-16)/pasos.length,y00=H-mB;
+    let run=0,s='',xx=8;
+    pasos.forEach((pa,i)=>{
+      if(pa[1]===null){const v=r.noi-r.servicioAnual,hh=Math.max(2,Math.abs(v)*esc),yb=v>=0?y00-v*esc:y00;
+        s+=`<rect x="${xx}" y="${v>=0?yb:y00}" width="${xw-8}" height="${hh}" fill="${v>=0?'#c9a96e':'#E0605A'}"/>`;
+        s+=`<text x="${xx+(xw-8)/2}" y="${(v>=0?yb:y00+hh)+(v>=0?-5:11)}" font-size="8" font-weight="800" fill="${v>=0?'#e0c590':'#E0605A'}" text-anchor="middle">${fmtM(v)}</text>`;
+      }else{const v=pa[1],h=Math.max(1.5,Math.abs(v)*esc),yTopPrev=y00-run*esc;run+=v;const yTopNew=y00-run*esc,yy=v>=0?yTopNew:yTopPrev;
+        s+=`<rect x="${xx}" y="${yy}" width="${xw-8}" height="${h}" fill="${pa[2]}" opacity="${v>=0?1:.82}"/>`;
+        if(i<pasos.length-1)s+=`<line x1="${xx+xw-8}" y1="${yTopNew}" x2="${xx+xw}" y2="${yTopNew}" stroke="#ffffff30" stroke-width="1"/>`;
+        s+=`<text x="${xx+(xw-8)/2}" y="${yy-4}" font-size="7" font-weight="700" fill="${pa[2]}" text-anchor="middle">${v<0?'−':''}${fmtM(Math.abs(v))}</text>`}
+      s+=`<text x="${xx+(xw-8)/2}" y="${H-mB+11}" font-size="7" fill="#8a8780" text-anchor="middle">${pa[0]}</text>`;xx+=xw});
+    s+=`<line x1="6" y1="${y00}" x2="${W-6}" y2="${y00}" stroke="#ffffff26" stroke-width="1"/>`;
+    s+=`<text x="8" y="${H-8}" font-size="8" fill="#8a8780">renta anual y las mordidas hasta el flujo del bolsillo</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="El peso de renta">${s}</svg>`;
+  }
+  function dibujaRecup(r){
+    const el=$('vizRecup');if(!el)return;const W=340,H=330,mL=14,mR=12,mT=20,mB=38;
+    const n=Math.max(r.rows.length,1),maxY=Math.max(r.p.inversion,r.acumH,1)*1.06;
+    const X=a=>mL+(W-mL-mR)*(a/n),Y=v=>mT+(H-mT-mB)*(1-v/maxY);
+    let s='';
+    const yInv=Y(r.p.inversion);s+=`<line x1="${mL}" y1="${yInv}" x2="${W-mR}" y2="${yInv}" stroke="#E0605A" stroke-width="1.3" stroke-dasharray="5 4"/><text x="${mL+2}" y="${yInv-5}" font-size="8" font-weight="800" fill="#f4b8b3">inversión ${fmtM(r.p.inversion)}</text>`;
+    r.rows.forEach(x=>{const h=(x.flujo/maxY)*(H-mT-mB);if(h>.4)s+=`<rect x="${X(x.a)-6}" y="${H-mB-Math.max(0,h)}" width="12" height="${Math.max(0,h)}" fill="#8ab8ff44"/>`});
+    let d=`M${X(0)} ${Y(0)}`;r.rows.forEach(x=>{d+=` L${X(x.a)} ${Y(x.acum)}`});
+    s+=`<path d="${d}" fill="none" stroke="#8FBF8B" stroke-width="2"/>`;r.rows.forEach(x=>{s+=`<circle cx="${X(x.a)}" cy="${Y(x.acum)}" r="2.1" fill="#a9d3a5"/>`});
+    let cruce=null;for(const x of r.rows){if(x.acum>=r.p.inversion){cruce=x.a;break}}
+    if(cruce){const xc=X(cruce);s+=`<line x1="${xc}" y1="${mT}" x2="${xc}" y2="${H-mB}" stroke="#c9a96e" stroke-width="1.3" stroke-dasharray="5 4"/><text x="${xc}" y="${mT+9}" font-size="8.5" font-weight="800" fill="#e0c590" text-anchor="middle">tablas · año ${cruce}</text>`}
+    else s+=`<text x="${W-mR}" y="${mT+9}" font-size="8" fill="#8a8780" text-anchor="end">no recupera con rentas en ${r.p.horizonte} años (la plusvalía hace el resto)</text>`;
+    s+=`<line x1="${mL}" y1="${H-mB}" x2="${W-mR}" y2="${H-mB}" stroke="#ffffff22"/>`;
+    r.rows.forEach(x=>{if(x.a%2===0||n<=8)s+=`<text x="${X(x.a)}" y="${H-mB+11}" font-size="7.5" fill="#8a8780" text-anchor="middle">a${x.a}</text>`});
+    s+=`<text x="${mL}" y="${H-16}" font-size="8" fill="#8a8780">línea verde = rentas acumuladas · barras = flujo por año</text>`;
+    s+=`<text x="${mL}" y="${H-6}" font-size="8" fill="#8a8780">cruza la línea roja = recuperaste lo invertido solo con rentas</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Recuperación">${s}</svg>`;
+  }
+  function dibujaCurvaPat(r){
+    const el=$('vizCurvaPat');if(!el)return;const W=340,H=330,mL=14,mR=14,mT=22,mB=40;
+    const rows=r.rows,n=rows.length;if(!n){el.innerHTML='';return}
+    const maxY=Math.max(rows[n-1].patrim,r.patrim0)*1.04,X=a=>mL+(W-mL-mR)*(a/n),Y=v=>mT+(H-mT-mB)*(1-v/maxY);
+    let s='';
+    if(r.anioCorte!==null){const xc=X(r.anioCorte-0.5);
+      s+=`<rect x="${mL}" y="${mT}" width="${xc-mL}" height="${H-mT-mB}" fill="#8fbf8b0d"/><rect x="${xc}" y="${mT}" width="${W-mR-xc}" height="${H-mT-mB}" fill="#d9a45b12"/>`;
+      s+=`<line x1="${xc}" y1="${mT}" x2="${xc}" y2="${H-mB}" stroke="#c9a96e" stroke-width="1.4" stroke-dasharray="5 4"/>`;
+      s+=`<text x="${xc-4}" y="${mT+10}" font-size="8.5" font-weight="800" fill="#8FBF8B" text-anchor="end">RETENER</text><text x="${xc+4}" y="${mT+10}" font-size="8.5" font-weight="800" fill="#D9A45B">VENDER</text>`;}
+    else s+=`<text x="${W-mR}" y="${mT+10}" font-size="8.5" font-weight="800" fill="#8FBF8B" text-anchor="end">RETENER todo el horizonte</text>`;
+    rows.forEach(x=>{const h=(x.acum/maxY)*(H-mT-mB);if(h>.5)s+=`<rect x="${X(x.a)-5}" y="${H-mB-h}" width="10" height="${h}" fill="#8ab8ff4d"/>`});
+    let dv=`M${X(0)} ${Y(r.valorCap*1)}`;rows.forEach(x=>{dv+=` L${X(x.a)} ${Y(x.valor)}`});
+    s+=`<path d="${dv}" fill="none" stroke="#8a8780" stroke-width="1.2" stroke-dasharray="3 3"/>`;
+    let dp=`M${X(0)} ${Y(r.patrim0)}`;rows.forEach(x=>{dp+=` L${X(x.a)} ${Y(x.patrim)}`});
+    s+=`<path d="${dp} L${X(n)} ${H-mB} L${X(0)} ${H-mB} Z" fill="#c9a96e14"/><path d="${dp}" fill="none" stroke="#c9a96e" stroke-width="2"/>`;
+    rows.forEach(x=>{s+=`<circle cx="${X(x.a)}" cy="${Y(x.patrim)}" r="2.2" fill="#e0c590"/>`});
+    s+=`<circle cx="${X(0)}" cy="${Y(r.patrim0)}" r="3" fill="#f4f1ea"/><text x="${X(0)+5}" y="${Y(r.patrim0)-6}" font-size="8" fill="#b6b3aa">hoy ${fmtM(r.patrim0)}</text>`;
+    s+=`<text x="${X(n)}" y="${Y(rows[n-1].patrim)-8}" font-size="8.5" font-weight="800" fill="#e0c590" text-anchor="end">${fmtM(rows[n-1].patrim)}</text>`;
+    s+=`<line x1="${mL}" y1="${H-mB}" x2="${W-mR}" y2="${H-mB}" stroke="#ffffff22"/>`;
+    rows.forEach(x=>{if(x.a%2===0||n<=8)s+=`<text x="${X(x.a)}" y="${H-mB+11}" font-size="7.5" fill="#8a8780" text-anchor="middle">a${x.a}</text>`});
+    s+=`<text x="${mL}" y="${H-16}" font-size="8" fill="#8a8780">oro = valor + rentas − crédito · punteada = solo el activo</text>`;
+    s+=`<text x="${mL}" y="${H-6}" font-size="8" fill="#8a8780">barras azules = rentas acumuladas · corte cuando crece &lt; ${pct(r.p.tasaAlt*100,0)}</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Curva patrimonial">${s}</svg>`;
+  }
+  const formulaDefs=[
+    ['NOI','Renta efectiva − OpEx − seguro',['inRentaUnidadMes','inVacanciaPct','inOpexPct','inSeguroPct'],r=>`${fmtM(r.rentaEfectiva)} − ${fmtM(r.opexMonto)} − ${fmtM(r.seguroMonto)} = ${fmtM(r.noi)}`],
+    ['Yield on cost','NOI ÷ inversión',['inInversionTotal'],r=>`${fmtM(r.noi)} ÷ ${fmtM(r.p.inversion)} = ${pct(r.yieldOnCost*100,2)}`],
+    ['Valor del activo','NOI ÷ cap de mercado',['inCapRateMercado'],r=>`${fmtM(r.noi)} ÷ ${pct(r.p.capMercado*100,1)} = ${fmtM(r.valorCap)} (creado: ${fmtM(r.valorCreado)})`],
+    ['Cash-on-Cash','(NOI − servicio) ÷ equity',['inCreditoPct','inTasaCredito','inPlazoCredito'],r=>r.coc===null?'sin crédito':`(${fmtM(r.noi)} − ${fmtM(r.servicioAnual)}) ÷ ${fmtM(r.equity)} = ${pct(r.coc*100,1)}`],
+    ['Recuperación','Inversión ÷ NOI',['inInversionTotal'],r=>r.recupAnios===null?'—':`${fmtM(r.p.inversion)} ÷ ${fmtM(r.noi)} = ${r.recupAnios.toFixed(1)} años (solo rentas)`],
+    ['Punto dulce','Retener mientras el patrimonio crezca > tu alternativa',['inTasaAlternativa','inPlusvaliaPct'],r=>r.anioCorte===null?`nunca baja de ${pct(r.p.tasaAlt*100,0)} en ${r.p.horizonte} años`:`año ${r.anioCorte} → retener ~${r.aniosRetener} años`]
+  ];
+  function labelFor(id){const input=$(id);return input?.closest('.input-group')?.querySelector('label')?.textContent||id}
+  function renderFormulas(){$('formulaList').innerHTML=formulaDefs.map((f,i)=>`<div class="formula-row"><b>${f[0]}</b><code>${f[1]}</code><button class="formula-btn" data-formula="${i}">ver</button></div>`).join('');document.querySelectorAll('[data-formula]').forEach(b=>b.onclick=e=>openFormula(Number(e.currentTarget.dataset.formula)))}
+  function openFormula(i){const f=formulaDefs[i],r=state;$('formulaDetail').innerHTML=`<b>${f[0]}</b><br><code>${f[1]}</code><p>${f[3](r)}</p>${f[2].map(id=>`<button class="chip" data-jump="${id}">${labelFor(id)}</button>`).join('')}`;document.querySelectorAll('.chip[data-jump]').forEach(b=>b.onclick=()=>{const el=$(b.dataset.jump);const card=el?.closest('.card');if(card){card.scrollIntoView({behavior:'smooth',block:'center'});el.focus()}})}
+  function toggleDrawer(card){const drawer=$(card.dataset.card),was=drawer.classList.contains('active');document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'));document.querySelectorAll('.edit-pill').forEach(e=>e.textContent='AJUSTAR');if(!was){drawer.classList.add('active');card.classList.add('open');card.querySelector('.edit-pill').textContent='CERRAR';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),150)}}
+  /* ================== JSON / RESUMEN ================== */
+  function resumenActual(){const r=state||calculate();const num=(v,d=0)=>v===null||v===undefined||!isFinite(v)?'':Number(v.toFixed(d));return{
+    ventas:num(r.rentaEfectiva),costo_proyecto:num(r.p.inversion),utilidad:num(r.noi),margen_pct:num(r.rentaBrutaAnual?r.noi/r.rentaBrutaAnual*100:0,2),meses_totales:r.p.horizonte*12,
+    unidades:r.p.unidades,m2_construccion:num(r.p.m2Const,1),m2_habitable:num(r.p.m2Rent,1),
+    inversion_total:num(r.p.inversion),renta_mensual:num(r.rentaMes),renta_mes_total:num(r.rentaMes),noi_anual:num(r.noi),
+    cap_rate_pct:num(r.yieldOnCost*100,2),yield_on_cost_pct:num(r.yieldOnCost*100,2),valor_activo:num(r.valorCap),valor_creado:num(r.valorCreado),
+    coc_pct:r.coc===null?'':num(r.coc*100,2),dscr:r.dscr===null?'':num(r.dscr,2),credito_pct:num(r.p.credito*100,0),servicio_anual:num(r.servicioAnual),
+    recuperacion_anios:r.recupAnios===null?'':num(r.recupAnios,1),anios_retener:r.aniosRetener,plusvalia_pct:num(r.p.plus*100,2),
+    valor_horizonte:num(r.valorH),flujo_acum_horizonte:num(r.acumH),patrimonio_horizonte:num(r.patrimH),roi_patrimonial_pct:num(r.roiPat*100,1)}}
+  function refreshJson(){if(!$('jsonEditor')||!state)return;$('jsonEditor').value=JSON.stringify({schema:'potenciales-yod/patrimonial/v1',caso:{caso_id:caso.caso_id,nombre_caso:caso.nombre_caso,palabra:caso.palabra},inputs:inputValues(),resumen:resumenActual()},null,2)}
+  function applyJson(){try{const data=JSON.parse($('jsonEditor').value);if(data.schema&&data.schema!=='potenciales-yod/patrimonial/v1')throw Error();const vals=data.inputs||data;let n=0;Object.entries(vals).forEach(([id,v])=>{if($(id)&&Number.isFinite(Number(v))){setControl(id,v);n++}});if(!n)throw Error();calculate();$('checks').innerHTML='<div class="status-ok">JSON aplicado: '+n+' variables.</div>'}catch{$('checks').innerHTML='<div class="status-bad">JSON inválido.</div>'}}
+  function exportJson(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('jsonEditor').value],{type:'application/json'}));a.download=(caso.palabra||'patrimonial')+'-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+  /* ================== CAPA DE NUBE ================== */
+  let toastTimer=null;
+  function toast(msg,ms=3200){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('on'),ms)}
+  function apiGet(params){const q=new URLSearchParams(Object.assign({k:clave,tipo:NUBE.TIPO},params));return fetch(NUBE.ENDPOINT+'?'+q.toString()).then(r=>r.json())}
+  function apiPost(body){body=Object.assign({k:clave,tipo_desarrollo:NUBE.TIPO},body);return fetch(NUBE.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(r=>r.json())}
+  function nuevoRequestId(){return (crypto.randomUUID?.()||Date.now()+'-'+Math.random())}
+  function guardarDraft(){try{localStorage.setItem(LS.draft,JSON.stringify({inputs:inputValues(),caso}))}catch(e){}}
+  function cargarDraft(){try{const d=JSON.parse(localStorage.getItem(LS.draft)||'null');if(!d)return;if(d.inputs)Object.entries(d.inputs).forEach(([id,v])=>setControl(id,v));if(d.caso)caso=Object.assign(caso,d.caso)}catch(e){}}
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function fechaCorta(ts){const d=new Date(ts);return isNaN(d)?'':d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'2-digit'})}
+  function pintaCaso(){
+    const nombre=caso.nombre_caso||'Caso nuevo';
+    const h=$('heroNombre');h.innerHTML='';h.append(document.createTextNode(nombre));
+    const pill=document.createElement('span');pill.className='estado-pill';pill.id='heroEstado';pill.textContent=caso.estado||'EXPLORACIÓN';h.append(pill);
+    txt('heroSub',caso.caso_id?`palabra: ${caso.palabra} · v${caso.version||1}${caso.siguiente_paso?' · siguiente: '+caso.siguiente_paso:''}`:'Mueve los supuestos y guarda el caso con una palabra para volver.');
+    txt('casoNombreBar',caso.caso_id?`${nombre} · ${caso.palabra}`:'Caso nuevo (sin guardar)');
+    const dot=$('syncDot');dot.className='sync-dot';dot.textContent=modoLocal?'· sin nube':caso.caso_id?'· guardado en Sheet v'+(caso.version||1):'· sin guardar';
+    $('estadoChips').innerHTML=ESTADOS.map(e=>`<button class="echip${(caso.estado||'EXPLORACIÓN')===e?' on':''}" data-estado="${e}">${e}</button>`).join('');
+    document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>cambiarEstado(b.dataset.estado));
+    $('segSiguiente').value=caso.siguiente_paso||'';
+    $('segLog').textContent=caso.notas_seguimiento||'Sin notas todavía.'+(caso.caso_id?'':' Guarda el caso primero.');
+  }
+  function aplicarCasoRemoto(obj){
+    Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
+    caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',version:Number(obj.version||1)};
+    calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado')
+  }
+  async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
+  async function abrirPorPalabra(palabra){if(!palabra.trim())return;try{const r=await apiGet({recurso:'caso',palabra:palabra.trim()});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'No hay caso con esa palabra':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir')}}
+  async function cargarLista(){const cont=$('listaCasos');cont.innerHTML='<p class="note">Cargando…</p>';try{const r=await apiGet({recurso:'lista'});if(!r.ok){cont.innerHTML='<p class="note">Error: '+r.error+'</p>';if(r.error==='clave')reabrirGate();return}casosCache=r.casos||[];cfgBoard=r.config||cfgBoard;if(!casosCache.length){cont.innerHTML='<p class="note">Aún no hay casos Patrimoniales. Guarda el primero.</p>';return}cont.innerHTML=casosCache.map(c=>`<div class="caso-item" data-id="${c.caso_id}"><div><div class="ci-n">${esc(c.nombre_caso||c.palabra)}<span class="badge">${esc(c.estado||'—')}</span></div><div class="ci-m">palabra: ${esc(c.palabra)} · v${c.version||1} · ${fechaCorta(c.ts_actualizado)}${c.source==='test'?' · PRUEBA':''}</div></div><div class="ci-kpi">${c.utilidad!==''&&c.utilidad!==undefined?fmtM(Number(c.utilidad)):'—'}<span>NOI/año · ${c.unidades!==''&&c.unidades!==undefined?fmtN(Number(c.unidades))+' unidades':'—'}</span></div></div>`).join('');cont.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>abrirPorId(el.dataset.id))}catch(e){cont.innerHTML='<p class="note">Sin conexión. Reintenta.</p>'}}
+  async function guardarCaso(enviarCorreo){
+    if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}
+    const nombre=$('gNombre').value.trim(),palabra=$('gPalabra').value.trim(),correo=$('gCorreo').value.trim(),notas=$('gNotas').value;
+    if(!palabra){toast('Elige una palabra para volver a tu caso');return}
+    if(enviarCorreo&&!correo){toast('Pon un correo para enviarte la palabra');return}
+    const btns=[$('gGuardarSolo'),$('gGuardarEnviar')];btns.forEach(b=>b.disabled=true);
+    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
+    try{
+      const r=await apiPost(payload);
+      btns.forEach(b=>b.disabled=false);
+      if(!r.ok){
+        if(r.error==='palabra_ocupada')toast('Esa palabra ya es de otro caso: elige otra');
+        else if(r.error==='clave'){toast('La clave del board cambió');reabrirGate()}
+        else toast('No se guardó: '+r.error);
+        return}
+      if(!r.caso_id){$('gWeb').value='';toast('No se guardó: vuelve a intentar');return}
+      caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.correo=correo;caso.nombre_caso=nombre||'Caso sin nombre';caso.notas_caso=notas;caso.version=r.version;
+      pintaCaso();guardarDraft();cerrarOverlays();
+      toast(r.emailed?'Caso guardado · correo con la palabra enviado':'Caso guardado · palabra: '+caso.palabra)
+    }catch(e){btns.forEach(b=>b.disabled=false);encolar(payload);toast('Sin conexión: se guardará al reconectar')}
+  }
+  async function cambiarEstado(nuevo){
+    caso.estado=nuevo;pintaCaso();guardarDraft();
+    if(!caso.caso_id||modoLocal){toast(modoLocal?'Estado local (sin nube)':'Guarda el caso para que el estado viva en el Sheet');return}
+    await postSeguimiento({tipo:'estado',caso_id:caso.caso_id,estado:nuevo,request_id:nuevoRequestId()},'Estado: '+nuevo)
+  }
+  async function postSeguimiento(payload,okMsg){try{const r=await apiPost(payload);if(r.ok){toast(okMsg)}else if(r.error==='clave'){reabrirGate()}else toast('No se registró: '+r.error)}catch(e){encolar(payload);toast('Sin conexión: se registrará al reconectar')}}
+  function encolar(payload){try{let q=JSON.parse(localStorage.getItem(LS.cola)||'[]');
+    if(payload.tipo==='guardar')q=q.filter(x=>!(x.tipo==='guardar'&&((x.caso_id&&x.caso_id===payload.caso_id)||(!x.caso_id&&!payload.caso_id&&x.palabra===payload.palabra))));
+    q.push(payload);localStorage.setItem(LS.cola,JSON.stringify(q));const dot=$('syncDot');dot.className='sync-dot err';dot.textContent='· pendiente de sincronizar'}catch(e){}}
+  let drenando=false;
+  async function drenarCola(){if(drenando||modoLocal)return;let q;try{q=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){q=[]}
+    if(!q.length)return;
+    drenando=true;const resto=[];let claveVieja=false,conflicto=false;
+    try{
+      for(let i=0;i<q.length;i++){const payload=q[i];
+        try{const r=await apiPost(payload);
+          if(r.ok){if(payload.tipo==='guardar'&&!caso.caso_id){caso.caso_id=r.caso_id;caso.palabra=r.palabra||payload.palabra;caso.version=r.version;pintaCaso()}}
+          else if(r.error==='clave'){resto.push(...q.slice(i));claveVieja=true;break}
+          else if(r.error==='palabra_ocupada'&&payload.tipo==='guardar'){conflicto=true;toast('La palabra "'+payload.palabra+'" quedó ocupada: ese guardado pendiente NO se aplicó.',6000)}
+          else if(r.error!=='no_existe'&&r.error!=='palabra_ocupada'){resto.push(payload)}
+        }catch(e){resto.push(payload)}}
+      let actual;try{actual=JSON.parse(localStorage.getItem(LS.cola)||'[]')}catch(e){actual=q}
+      localStorage.setItem(LS.cola,JSON.stringify(resto.concat(actual.slice(q.length))));
+      if(claveVieja)reabrirGate();
+      else if(!resto.length&&!conflicto){toast('Cambios pendientes sincronizados');pintaCaso()}
+    }finally{drenando=false}}
+  function whatsApp(){
+    const r=state||calculate();
+    const linea=[`*${caso.nombre_caso||'PPP Patrimonial'}* · Potenciales YOD`,`${r.p.unidades} unidades · renta ${fmtMoney(r.rentaMes)}/mes`,`NOI ${fmtM(r.noi)}/año (yield ${pct(r.yieldOnCost*100,1)}) · valor a cap ${fmtM(r.valorCap)}`,`${r.montoCredito>0?'CoC '+pct((r.coc||0)*100,1)+' · DSCR '+(r.dscr||0).toFixed(2):'Contado puro'} · recuperación ${r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'}`,`Punto dulce: retener ~${r.aniosRetener} años · patrimonio a ${r.p.horizonte}a ${fmtM(r.patrimH)}`,caso.caso_id?`Abrir: ${NUBE.SITE}${NUBE.PAGE}?open=${caso.caso_id}`:''].filter(Boolean).join('\n');
+    const num=String(cfgBoard.whatsapp_num||'').replace(/\D/g,'');
+    window.open('https://wa.me/'+(num?num:'')+'?text='+encodeURIComponent(linea),'_blank')
+  }
+  /* ================== GATE / MODALES ================== */
+  function reabrirGate(){localStorage.removeItem(LS.clave);clave='';$('gate').classList.remove('off');$('gateErr').textContent='La clave cambió o es incorrecta'}
+  async function intentarEntrar(){
+    const v=$('gateClave').value.trim();if(!v){$('gateErr').textContent='Escribe la clave';return}
+    $('gateBtn').disabled=true;$('gateErr').textContent='';
+    const previa=clave;clave=v;
+    try{const r=await apiGet({recurso:'lista'});
+      if(r.ok){localStorage.setItem(LS.clave,clave);modoLocal=false;casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');$('modoLocalBanner').classList.remove('on');pintaCaso();drenarCola();procesarOpen();toast('Bienvenido · PPP Patrimonial / Rentas')}
+      else{clave=previa;$('gateErr').textContent=r.error==='clave'?'Clave incorrecta':'Error: '+r.error}
+    }catch(e){clave=previa;$('gateErr').textContent='Sin conexión con el Sheet.'}
+    $('gateBtn').disabled=false
+  }
+  function modoSinConexion(){modoLocal=true;$('gate').classList.add('off');$('modoLocalBanner').classList.add('on');pintaCaso()}
+  function procesarOpen(){const id=new URLSearchParams(location.search).get('open');if(id&&!modoLocal)abrirPorId(id)}
+  function abrirOverlay(id){$(id).classList.add('on')}
+  function cerrarOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on'))}
+  /* ================== ARRANQUE ================== */
+  document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
+  controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();
+  $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
+  $('gGuardarSolo').onclick=()=>guardarCaso(false);$('gGuardarEnviar').onclick=()=>guardarCaso(true);$('gCancelar').onclick=cerrarOverlays;
+  $('btnMisCasos').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave');return}abrirOverlay('ovCasos');cargarLista()};
+  $('casosCerrar').onclick=cerrarOverlays;
+  $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
+  $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
+  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de Real del Arco (16 deptos)')};
+  $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
+  $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
+  $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
+  $('btnWhats').onclick=whatsApp;
+  $('refreshJson').onclick=refreshJson;$('applyJson').onclick=applyJson;$('exportJson').onclick=exportJson;
+  $('gateBtn').onclick=intentarEntrar;$('gateClave').addEventListener('keydown',e=>{if(e.key==='Enter')intentarEntrar()});
+  $('gateLocal').onclick=modoSinConexion;
+  document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)cerrarOverlays()}));
+  window.addEventListener('online',drenarCola);setInterval(drenarCola,25000);
+  cargarDraft();calculate();pintaCaso();
+  if(modoLocal){$('gate').classList.add('off');$('modoLocalBanner').classList.add('on')}
+  else if(clave){apiGet({recurso:'lista'}).then(r=>{if(r.ok){casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');drenarCola();procesarOpen()}else{reabrirGate()}}).catch(()=>{modoSinConexion();toast('Sin conexión: trabajando en modo local')})}
+})();
+</script>
+</body>
+</html>
