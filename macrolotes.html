@@ -326,25 +326,6 @@
   <div class="breadcrumb"><a href="./">← Planificador de Potencial Inmobiliario</a></div>
   <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
 
-  <section class="hero">
-    <span class="kick">¿Qué da este terreno?</span>
-    <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span><span class="gate-agua g0" id="heroGate">⚠ agua: en veda</span></h1>
-    <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
-    <div class="hero-grid">
-      <div class="hcard"><span class="k">Utilidad neta antes de reparto</span><div class="big serif" id="heroUtil">$0 M</div><div class="sub2" id="heroUtilSub">margen —</div></div>
-      <div class="hcard"><span class="k">Lo que gana el dueño</span><div class="big serif" id="heroDueno">$0 M</div><div class="sub2" id="heroDuenoSub">$/m² de terreno</div></div>
-      <div class="hcard"><span class="k">TIR Developer · pico deuda</span><div class="big serif" id="heroTir">—</div><div class="sub2" id="heroTirSub">con el calendario capturado</div></div>
-    </div>
-    <p class="lectura" id="heroLectura"></p>
-  </section>
-
-  <section class="grafs">
-    <div class="viz-card"><span class="k">Plano proporcional · a escala real (la carretera a la izquierda)</span><div id="vizPlan" class="viz-svg"></div></div>
-    <div class="viz-card"><span class="k">El embudo del suelo · de ha a pesos</span><div id="vizEmbudo" class="viz-svg"></div></div>
-    <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
-    <div class="viz-card"><span class="k">La corrida en curvas · gasto diferenciado, cobros y crédito</span><div id="vizCorrida" class="viz-svg"></div></div>
-  </section>
-
   <div class="caso-bar">
     <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
     <div class="caso-actions">
@@ -363,6 +344,25 @@
     <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. gestoría CONAGUA, cita urbanista…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
     <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
     <div class="notas-log" id="segLog">Sin notas todavía.</div>
+  </section>
+
+  <section class="hero">
+    <span class="kick">¿Qué da este terreno?</span>
+    <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span><span class="gate-agua g0" id="heroGate">⚠ agua: en veda</span></h1>
+    <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
+    <div class="hero-grid">
+      <div class="hcard"><span class="k">Utilidad neta antes de reparto</span><div class="big serif" id="heroUtil">$0 M</div><div class="sub2" id="heroUtilSub">margen —</div></div>
+      <div class="hcard"><span class="k">Lo que gana el dueño</span><div class="big serif" id="heroDueno">$0 M</div><div class="sub2" id="heroDuenoSub">$/m² de terreno</div></div>
+      <div class="hcard"><span class="k">TIR Developer · pico deuda</span><div class="big serif" id="heroTir">—</div><div class="sub2" id="heroTirSub">con el calendario capturado</div></div>
+    </div>
+    <p class="lectura" id="heroLectura"></p>
+  </section>
+
+  <section class="grafs">
+    <div class="viz-card"><span class="k">Plano proporcional · a escala real (la carretera a la izquierda)</span><div id="vizPlan" class="viz-svg"></div></div>
+    <div class="viz-card"><span class="k">El embudo del suelo · de ha a pesos</span><div id="vizEmbudo" class="viz-svg"></div></div>
+    <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
+    <div class="viz-card"><span class="k">La corrida en curvas · gasto diferenciado, cobros y crédito</span><div id="vizCorrida" class="viz-svg"></div></div>
   </section>
 
   <div class="reference-strip"><b>Caso de referencia · La Cercada v4 (Carr. a Kino, 50 ha).</b> Valores del PPP corregido por el enjambre (30-jun): COS de naves 47.5% (comparable NOWUS real), eficiencia de subdivisión 92%, contingencia 12%, partidas de agua CONDICIONALES (pozo nuevo ilegal bajo veda: la partida correcta es adquisición de derechos CONAGUA, sin cotizar). Los 18 costos de urbanización son estimación de ingeniería — pedir presupuesto a constructor local antes de decidir.</div>
@@ -1001,42 +1001,54 @@
   }
   function dibujaCorrida(r){
     const el=$('vizCorrida');if(!el)return;const n=r.flows.length;if(!n)return;
-    const W=700,H=300,mL=10,mR=10,mT=40,mB=34,plotH=H-mT-mB;
+    // Partitura de dos bandas con el MISMO eje de tiempo:
+    // arriba los SALDOS (crédito vivo y acumulado neto), abajo el MES A MES (cobros y gasto por tipo).
+    const W=700,H=330,mL=10,mR=10;
+    const t1=30,b1=180;      // banda 1: saldos
+    const t2=200,b2=300;     // banda 2: flujos del mes
     const X=i=>mL+(W-mL-mR)*(n>1?i/(n-1):0);
     const bw=Math.max(1.6,(W-mL-mR)/n*0.62);
-    const urb=r.urbSerie||[],con=r.constSerie||[];
-    // gasto diferenciado por mes: tierra (mes 0) + urbanización + naves + blandos (el resto)
-    const cats=r.flows.map((f,i)=>{const u=urb[i]||0,c=con[i]||0,t=i===0?r.tierraPago:0;const b=Math.max(0,f.cost-u-c-t);return {t,u,c,b,tot:f.cost}});
-    const maxUp=Math.max(...r.flows.map(f=>f.rev),1),maxDn=Math.max(...cats.map(x=>x.tot),1);
-    const esc=plotH/(maxUp+maxDn),y0=mT+maxUp*esc;
     let s='';
-    // barras: cobros hacia arriba (verde), gasto diferenciado hacia abajo (apilado)
-    r.flows.forEach((f,i)=>{const x=X(i)-bw/2;
-      const hR=f.rev*esc;if(hR>.4)s+=`<rect x="${x}" y="${y0-hR}" width="${bw}" height="${hR}" fill="#8FBF8B" opacity=".78"/>`;
-      let y=y0;const seg=(v,col)=>{const h=v*esc;if(h>.3){s+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="${col}" opacity=".85"/>`;y+=h}};
-      seg(cats[i].t,'#a9a4f5');seg(cats[i].u,'#E0605A');seg(cats[i].c,'#D9A45B');seg(cats[i].b,'#cf7a74');});
-    s+=`<line x1="${mL}" y1="${y0}" x2="${W-mR}" y2="${y0}" stroke="#f4f1ea55" stroke-width="1"/>`;
-    // curvas de saldo (escala propia, punteado el eje): deuda viva y acumulado neto
+    /* ===== BANDA 1 · saldos (estilo depas) ===== */
     let run=0;const netSerie=r.flows.map(f=>{run+=f.rev-f.cost-(f.pik+f.fee);return run});
-    const maxS=Math.max(r.peak,...netSerie.map(v=>Math.abs(v)),1);
-    const YD=v=>mT+plotH*(1-v/maxS);                 // deuda: 0 abajo → maxS arriba
-    const YN=v=>mT+plotH*(1-(v+maxS)/(2*maxS));      // neto: −maxS abajo → +maxS arriba
-    let dD='',dN='';
-    r.flows.forEach((f,i)=>{dD+=(i?' L':'M')+X(i).toFixed(1)+' '+YD(f.debt).toFixed(1);dN+=(i?' L':'M')+X(i).toFixed(1)+' '+YN(netSerie[i]).toFixed(1)});
-    s+=`<path d="${dD}" fill="none" stroke="#a9a4f5" stroke-width="2"/>`;
-    s+=`<path d="${dN}" fill="none" stroke="#e0c590" stroke-width="2" stroke-dasharray="6 4"/>`;
-    // anotaciones: pico de deuda, pago total del crédito, tablas y cierre
-    if(r.peak>1){const xp=X(r.peakMonth-1),yp=YD(r.peak);s+=`<circle cx="${xp}" cy="${yp}" r="3.4" fill="#a9a4f5"/><text x="${Math.min(xp+6,W-160)}" y="${Math.max(yp-7,12)}" font-size="9.5" font-weight="800" fill="#cbc7ff">crédito pico ${fmtM(r.peak)} · mes ${r.peakMonth} · pagado ${fmtM(r.debtRepayments)}</text>`}
-    else s+=`<text x="${W/2}" y="${mT-6}" font-size="9.5" font-weight="800" fill="#8FBF8B" text-anchor="middle">sin crédito dispuesto: los enganches fondean la obra</text>`;
+    const maxS=Math.max(r.peak,r.debtCap*.35,...netSerie.map(v=>Math.abs(v)),1);
+    const y0s=t1+(b1-t1)/2;  // cero al centro de la banda
+    const YS=v=>y0s-(v/maxS)*(b1-t1)/2*.94;
+    s+=`<line x1="${mL}" y1="${y0s}" x2="${W-mR}" y2="${y0s}" stroke="#ffffff26" stroke-width="1"/>`;
+    // crédito vivo: área morada (como el board de depas)
+    let dD='';r.flows.forEach((f,i)=>{dD+=(i?' L':'M')+X(i).toFixed(1)+' '+YS(f.debt).toFixed(1)});
+    s+=`<path d="${dD} L${X(n-1)} ${y0s} L${X(0)} ${y0s} Z" fill="#a9a4f520"/><path d="${dD}" fill="none" stroke="#a9a4f5" stroke-width="1.9"/>`;
+    // acumulado neto: la J del proyecto en oro
+    let dN='';r.flows.forEach((f,i)=>{dN+=(i?' L':'M')+X(i).toFixed(1)+' '+YS(netSerie[i]).toFixed(1)});
+    s+=`<path d="${dN}" fill="none" stroke="#e0c590" stroke-width="2.1"/>`;
+    if(r.peak>1){const xp=X(r.peakMonth-1),yp=YS(r.peak),der=xp>W*.6;
+      s+=`<circle cx="${xp}" cy="${yp}" r="3.4" fill="#a9a4f5"/><text x="${der?xp-6:xp+6}" y="${Math.max(yp-7,t1+10)}" font-size="9.5" font-weight="800" fill="#cbc7ff" text-anchor="${der?'end':'start'}">crédito pico ${fmtM(r.peak)} · mes ${r.peakMonth} · pagado ${fmtM(r.debtRepayments)}</text>`}
+    else s+=`<text x="${mL+4}" y="${t1+11}" font-size="9.5" font-weight="800" fill="#8FBF8B">sin crédito dispuesto: los enganches fondean la obra</text>`;
     let beMes=null;for(let i=0;i<n;i++){if(netSerie[i]>=0&&(i===0||netSerie[i-1]<0)){beMes=i+1;break}}
-    if(beMes&&netSerie[0]<0){const xb=X(beMes-1);s+=`<line x1="${xb}" y1="${mT}" x2="${xb}" y2="${H-mB}" stroke="#8FBF8B88" stroke-width="1.2" stroke-dasharray="5 3"/><text x="${xb+4}" y="${mT+12}" font-size="9" font-weight="800" fill="#a9d3a5">tablas · mes ${beMes}</text>`}
-    s+=`<text x="${X(n-1)-4}" y="${YN(netSerie[n-1])-8}" font-size="9.5" font-weight="800" fill="#e0c590" text-anchor="end">acumulado ${fmtM(netSerie[n-1])}</text>`;
-    // eje X y leyenda
-    for(let m=12;m<=n;m+=12)s+=`<text x="${X(m-1)}" y="${H-mB+12}" font-size="8.5" fill="#8a8780" text-anchor="middle">${m}</text>`;
-    const ley=[['#8FBF8B','cobros'],['#a9a4f5','tierra'],['#E0605A','urbanización'],['#D9A45B','naves'],['#cf7a74','blandos'],['#a9a4f5','— crédito vivo'],['#e0c590','--- acumulado neto']];
-    let lx=mL;ley.forEach(l=>{s+=`<rect x="${lx}" y="10" width="9" height="9" rx="2" fill="${l[0]}"/><text x="${lx+13}" y="18" font-size="9" fill="#b6b3aa">${l[1]}</text>`;lx+=l[1].length*5.6+34});
-    s+=`<text x="${mL}" y="${H-6}" font-size="9" fill="#8a8780">barras = flujos del mes (arriba cobra, abajo gasta por tipo) · líneas = saldos con su propia escala · meses abajo</text>`;
-    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Corrida en curvas: gasto diferenciado, cobros y crédito">${s}</svg>`;
+    if(beMes&&netSerie[0]<0){const xb=X(beMes-1);s+=`<line x1="${xb}" y1="${t1}" x2="${xb}" y2="${b2}" stroke="#8FBF8B66" stroke-width="1.2" stroke-dasharray="5 3"/><text x="${xb+4}" y="${b1-6}" font-size="9" font-weight="800" fill="#a9d3a5">tablas · mes ${beMes}</text>`}
+    const yFin=YS(netSerie[n-1]);
+    s+=`<text x="${X(n-1)-4}" y="${Math.max(yFin-8,t1+10)}" font-size="10" font-weight="800" fill="#e0c590" text-anchor="end">acumulado ${fmtM(netSerie[n-1])} = la utilidad</text>`;
+    /* ===== BANDA 2 · el mes a mes ===== */
+    const maxUp=Math.max(...r.flows.map(f=>f.rev),1);
+    const urb=r.urbSerie||[],con=r.constSerie||[];
+    const cats=r.flows.map((f,i)=>{const u=urb[i]||0,c=con[i]||0,t=i===0?r.tierraPago:0;const b=Math.max(0,f.cost-u-c-t);return {t,u,c,b,tot:f.cost}});
+    const maxDn=Math.max(...cats.map(x=>x.tot),1);
+    const escF=(b2-t2)/(maxUp+maxDn),y0f=t2+maxUp*escF;
+    r.flows.forEach((f,i)=>{const x=X(i)-bw/2;
+      const hR=f.rev*escF;if(hR>.4)s+=`<rect x="${x}" y="${y0f-hR}" width="${bw}" height="${hR}" fill="#8FBF8B" opacity=".8"/>`;
+      let y=y0f;const seg=(v,col)=>{const h=v*escF;if(h>.3){s+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="${col}" opacity=".85"/>`;y+=h}};
+      seg(cats[i].t,'#a9a4f5');seg(cats[i].u,'#E0605A');seg(cats[i].c,'#D9A45B');seg(cats[i].b,'#cf7a74');});
+    s+=`<line x1="${mL}" y1="${y0f}" x2="${W-mR}" y2="${y0f}" stroke="#f4f1ea55" stroke-width="1"/>`;
+    s+=`<text x="${mL+2}" y="${y0f-5}" font-size="8.5" fill="#8FBF8B">↑ cobra</text><text x="${mL+2}" y="${y0f+11}" font-size="8.5" fill="#cf7a74">↓ gasta</text>`;
+    // marcas de etapas de obra en la banda 2
+    for(let e=1;e<=r.p.etapas;e++){const xe=X(Math.min((e-1)*r.p.mesesUrbEtapa,n-1));s+=`<line x1="${xe}" y1="${t2}" x2="${xe}" y2="${b2}" stroke="#e0605a33" stroke-width="1"/>`;if(e<=4)s+=`<text x="${xe+2}" y="${t2+9}" font-size="8" fill="#cf7a74">E${e}</text>`}
+    // eje de tiempo compartido
+    for(let m=12;m<=n;m+=12){s+=`<text x="${X(m-1)}" y="${b2+12}" font-size="8.5" fill="#8a8780" text-anchor="middle">${m}</text>`;s+=`<line x1="${X(m-1)}" y1="${b1+4}" x2="${X(m-1)}" y2="${t2-4}" stroke="#ffffff10" stroke-width="1"/>`}
+    // títulos de banda y leyenda
+    s+=`<text x="${mL}" y="${t1-8}" font-size="8.5" font-weight="800" fill="#8a8780" letter-spacing="1.5">LOS SALDOS · <tspan fill="#a9a4f5">crédito vivo</tspan> y <tspan fill="#e0c590">acumulado del proyecto</tspan></text>`;
+    s+=`<text x="${mL}" y="${t2-8}" font-size="8.5" font-weight="800" fill="#8a8780" letter-spacing="1.5">EL MES A MES · <tspan fill="#8FBF8B">cobros</tspan> vs gasto: <tspan fill="#a9a4f5">tierra</tspan> · <tspan fill="#E0605A">urbanización</tspan> · <tspan fill="#D9A45B">naves</tspan> · <tspan fill="#cf7a74">blandos</tspan></text>`;
+    s+=`<text x="${mL}" y="${H-6}" font-size="9" fill="#8a8780">mismo eje de meses en las dos bandas · el oro cruza el cero en "tablas" y termina en la utilidad</text>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Corrida: saldos arriba, mes a mes abajo">${s}</svg>`;
   }
   function dibujaTornado(r){
     const el=$('vizTornado');if(!el)return;const W=700,H=158,cx=W/2,y0=30,bh=18,gap=8;
