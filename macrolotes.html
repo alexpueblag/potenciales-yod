@@ -263,6 +263,8 @@
   /* ===== Gráficos ===== */
   .grafs{display:grid;gap:14px;margin-bottom:16px}
   .graf-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start}
+  .graf-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .graf-row2 .viz-card{height:100%}
   .graf-row3 .viz-card{height:100%}
   @media(max-width:860px){.graf-row3{grid-template-columns:1fr}}
   .tag-dummy{display:inline-block;background:#a9a4f526;color:#cbc7ff;border-radius:8px;font-size:8px;font-weight:900;padding:2px 7px;letter-spacing:.1em;margin-left:8px;vertical-align:2px}
@@ -337,8 +339,8 @@
   </section>
 
   <section class="grafs">
-    <div class="graf-row3">
-      <div class="viz-card"><span class="k">Plano proporcional · a escala real</span><div id="vizPlan" class="viz-svg"></div></div>
+    <div class="viz-card"><span class="k">Plano proporcional · a escala real (la carretera a la izquierda)</span><div id="vizPlan" class="viz-svg"></div></div>
+    <div class="graf-row2">
       <div class="viz-card"><span class="k">El embudo del suelo · de ha a pesos</span><div id="vizEmbudo" class="viz-svg"></div></div>
       <div class="viz-card"><span class="k">El río del dinero · a reparto</span><div id="vizCascada" class="viz-svg"></div></div>
     </div>
@@ -855,56 +857,56 @@
   function dibujaMezcla(r){const bar=$('vizMezcla'),ley=$('vizMezclaLey');if(!bar)return;const defs=[['Naves',r.p.mixNaves,'#c9a96e',`${fmtN(r.nNaves)} naves · ${fmtN(r.m2NavesConst)} m²`],['Macro',r.p.mixMacro,'#8ab8ff',`${fmtN(r.nMacro)} lotes · ${fmtN(r.m2MacroVend)} m²`],['Comercial',r.p.mixCom,'#7fd4e8',`${fmtN(r.nCom)} lotes · ${fmtN(r.m2ComVend)} m²`],['Vivienda',r.p.mixViv,'#8FBF8B',`${fmtN(r.nViv)} lotes · ${fmtN(r.m2VivVend)} m²`]].filter(d=>d[1]>0);const tot=Math.max(.0001,defs.reduce((a,d)=>a+d[1],0));bar.innerHTML=defs.map(d=>`<span style="width:${d[1]/tot*100}%;background:${d[2]}" title="${d[0]}: ${d[3]}">${d[1]/tot>.14?d[0]:''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} · ${d[3]}</span>`).join('')}
   function dibujaPlan(r){
     const el=$('vizPlan');if(!el)return;const p=r.p;
-    // Plano HONESTO: aspect ratio real y cada banda con su área exacta a escala.
-    const W=460,H=480,mB=34,mT=14;
-    const aspect=p.fondo/Math.max(1,p.frente);
-    let lotH=H-mT-mB,lotW=lotH/aspect;
-    const maxLotW=250;if(lotW>maxLotW){lotW=maxLotW;lotH=lotW*aspect;if(lotH>H-mT-mB){lotH=H-mT-mB;lotW=lotH/aspect}}
-    const x0=30,yG=mT+lotH;// yG = frente (carretera, abajo)
-    const escala=lotH/p.fondo;// px por metro de fondo
+    // Plano HORIZONTAL: carretera a la izquierda, el fondo corre hacia la derecha.
+    const W=700,H=320,mL=48,mR=246,mT=20,mB=34;
+    const aspect=p.fondo/Math.max(1,p.frente); // ancho del lote / alto del lote
+    let lotW=W-mL-mR,lotH=lotW/aspect;
+    const maxH=H-mT-mB;
+    if(lotH>maxH){lotH=maxH;lotW=lotH*aspect;if(lotW>W-mL-mR){lotW=W-mL-mR;lotH=lotW/aspect}}
+    const x0=mL,y0=mT+(maxH-lotH)/2,yFin=y0+lotH;
+    const escala=lotW/p.fondo; // px por metro de fondo
     let s='';
-    // presupuesto de alturas por área exacta (bandas de ancho completo ⇒ % área = % altura)
-    const hOf=frac=>frac*lotH;
-    const callesH=hOf(p.pctVial+p.pctBanq);
+    const wOf=frac=>frac*lotW;
+    const callesW=wOf(p.pctVial+p.pctBanq);
     const nCalles=Math.max(2,Math.min(18,Math.round(r.mlVial/Math.max(1,p.frente))));
-    // segmentos de abajo (carretera) hacia arriba
     const navesSub=Math.max(1,Math.min(8,nCalles-4));
     const segs=[];
-    segs.push({t:'ddv',h:hOf(p.pctDDV),c:'#E0605A',f:'#e0605a1a',lbl:'derecho de vía',dash:1});
+    segs.push({t:'ddv',w:wOf(p.pctDDV),c:'#E0605A',f:'#e0605a1a',lbl:'derecho de vía',dash:1});
     segs.push({t:'calle'});
-    if(p.mixCom>0)segs.push({t:'prod',h:hOf(r.terrCom/r.superficie),c:'#7fd4e8',f:'#7fd4e814',lbl:`${fmtN(r.nCom)} lotes comerciales · frente a carretera`,grid:Math.max(2,Math.round(r.nCom/2))});
+    if(p.mixCom>0)segs.push({t:'prod',w:wOf(r.terrCom/r.superficie),c:'#7fd4e8',f:'#7fd4e814',lbl:`${fmtN(r.nCom)} comerciales`,grid:Math.max(2,Math.round(r.nCom/2))});
     segs.push({t:'calle'});
-    for(let i=0;i<navesSub;i++){segs.push({t:'prod',h:hOf(r.terrNaves/r.superficie)/navesSub,c:'#c9a96e',f:'#c9a96e14',lbl:i===Math.floor(navesSub/2)?`${fmtN(r.nNaves)} naves PyME (NOWUS)`:'',grid:8});if(i<navesSub-1)segs.push({t:'calle'})}
-    if(p.mixViv>0){segs.push({t:'calle'});segs.push({t:'prod',h:hOf(r.terrViv/r.superficie),c:'#8FBF8B',f:'#8fbf8b14',lbl:`${fmtN(r.nViv)} lotes de vivienda`,grid:10})}
+    for(let i=0;i<navesSub;i++){segs.push({t:'prod',w:wOf(r.terrNaves/r.superficie)/navesSub,c:'#c9a96e',f:'#c9a96e14',lbl:i===Math.floor(navesSub/2)?`${fmtN(r.nNaves)} naves PyME (NOWUS)`:'',grid:8});if(i<navesSub-1)segs.push({t:'calle'})}
+    if(p.mixViv>0){segs.push({t:'calle'});segs.push({t:'prod',w:wOf(r.terrViv/r.superficie),c:'#8FBF8B',f:'#8fbf8b14',lbl:`${fmtN(r.nViv)} lotes vivienda`,grid:10})}
     segs.push({t:'calle'});
-    if(p.mixMacro>0)segs.push({t:'prod',h:hOf(r.terrMacro/r.superficie),c:'#8ab8ff',f:'#8ab8ff12',lbl:`${fmtN(r.nMacro)} macro-lotes industriales`,grid:Math.max(2,Math.round(r.nMacro/3))});
-    segs.push({t:'ces',h:hOf(p.pctEquip),c:'#a9a4f5',f:'#a9a4f51a',lbl:'equipamiento'});
-    segs.push({t:'ces',h:hOf(p.pctVerdes),c:'#8FBF8B',f:'#8fbf8b1f',lbl:'verdes + donación municipal'});
-    segs.push({t:'ces',h:hOf(p.pctRet),c:'#8ab8ff',f:'#8ab8ff1a',lbl:'retención pluvial',dash:1});
-    const nCalleSegs=segs.filter(x=>x.t==='calle').length,hCalle=nCalleSegs?callesH/nCalleSegs:0;
-    let y=yG;const vendZonas=[];
+    if(p.mixMacro>0)segs.push({t:'prod',w:wOf(r.terrMacro/r.superficie),c:'#8ab8ff',f:'#8ab8ff12',lbl:`${fmtN(r.nMacro)} macro-lotes`,grid:Math.max(2,Math.round(r.nMacro/3))});
+    segs.push({t:'ces',w:wOf(p.pctEquip),c:'#a9a4f5',f:'#a9a4f51a',lbl:'equipamiento'});
+    segs.push({t:'ces',w:wOf(p.pctVerdes),c:'#8FBF8B',f:'#8fbf8b1f',lbl:'verdes + donación'});
+    segs.push({t:'ces',w:wOf(p.pctRet),c:'#8ab8ff',f:'#8ab8ff1a',lbl:'retención pluvial',dash:1});
+    const nCalleSegs=segs.filter(x=>x.t==='calle').length,wCalle=nCalleSegs?callesW/nCalleSegs:0;
+    let x=x0;const vendZonas=[];
     segs.forEach(seg=>{
-      const h=seg.t==='calle'?hCalle:seg.h||0;if(h<=0){return}
-      y-=h;
-      if(seg.t==='calle'){s+=`<rect x="${x0}" y="${y}" width="${lotW}" height="${h}" fill="#000" stroke="#8a8780" stroke-width="${Math.min(1,h*.2)}"/>`;if(h>7)s+=`<line x1="${x0+4}" y1="${y+h/2}" x2="${x0+lotW-4}" y2="${y+h/2}" stroke="#f4f1ea33" stroke-width="1" stroke-dasharray="6 5"/>`}
-      else{s+=`<rect x="${x0}" y="${y}" width="${lotW}" height="${h}" fill="${seg.f}" stroke="${seg.c}" stroke-width="1.1"${seg.dash?' stroke-dasharray="4 3"':''}/>`;
-        if(seg.grid&&h>7){const cols=seg.grid;for(let i=1;i<cols;i++)s+=`<line x1="${x0+i*lotW/cols}" y1="${y}" x2="${x0+i*lotW/cols}" y2="${y+h}" stroke="${seg.c}2e" stroke-width="1"/>`}
-        if(seg.lbl&&h>=12)s+=`<text x="${x0+lotW/2}" y="${y+h/2+3}" font-size="8.5" font-weight="800" fill="${seg.c}" text-anchor="middle">${seg.lbl}</text>`;
-        if(seg.t==='prod')vendZonas.push([y,h]);}
+      const w=seg.t==='calle'?wCalle:seg.w||0;if(w<=0)return;
+      if(seg.t==='calle'){s+=`<rect x="${x}" y="${y0}" width="${w}" height="${lotH}" fill="#000" stroke="#8a8780" stroke-width="${Math.min(1,w*.2)}"/>`;if(w>7)s+=`<line x1="${x+w/2}" y1="${y0+4}" x2="${x+w/2}" y2="${yFin-4}" stroke="#f4f1ea33" stroke-width="1" stroke-dasharray="6 5"/>`}
+      else{s+=`<rect x="${x}" y="${y0}" width="${w}" height="${lotH}" fill="${seg.f}" stroke="${seg.c}" stroke-width="1.1"${seg.dash?' stroke-dasharray="4 3"':''}/>`;
+        if(seg.grid&&w>7){const rows=seg.grid;for(let i=1;i<rows;i++)s+=`<line x1="${x}" y1="${y0+i*lotH/rows}" x2="${x+w}" y2="${y0+i*lotH/rows}" stroke="${seg.c}2e" stroke-width="1"/>`}
+        if(seg.lbl&&w>=64)s+=`<text x="${x+w/2}" y="${y0+lotH/2+3}" font-size="8.5" font-weight="800" fill="${seg.c}" text-anchor="middle">${seg.lbl}</text>`;
+        else if(seg.lbl&&w>=13&&lotH>=70)s+=`<text x="${x+w/2}" y="${y0+lotH/2}" font-size="8" font-weight="800" fill="${seg.c}" text-anchor="middle" transform="rotate(-90 ${x+w/2} ${y0+lotH/2})">${seg.lbl}</text>`;
+        if(seg.t==='prod')vendZonas.push([x,w]);}
+      x+=w;
     });
-    // gate del agua: rayado rojo sobre TODO lo vendible mientras no haya derechos
+    // gate del agua: rayado rojo sobre lo vendible mientras no haya derechos
     if(p.gateAgua<2){
       s=`<defs><pattern id="veda" width="9" height="9" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="9" stroke="#E0605A" stroke-width="1.6" opacity=".4"/></pattern></defs>`+s;
-      vendZonas.forEach(([zy,zh])=>{s+=`<rect x="${x0}" y="${zy}" width="${lotW}" height="${zh}" fill="url(#veda)"/>`});
-      s+=`<text x="${x0+lotW/2}" y="${mT-3}" font-size="8.5" font-weight="800" fill="#E0605A" text-anchor="middle">⚠ vendible condicionado al agua (${p.gateAgua===0?'veda sin resolver':'en trámite'})</text>`;
+      vendZonas.forEach(([zx,zw])=>{s+=`<rect x="${zx}" y="${y0}" width="${zw}" height="${lotH}" fill="url(#veda)"/>`});
+      s+=`<text x="${x0+lotW/2}" y="${y0-6}" font-size="8.5" font-weight="800" fill="#E0605A" text-anchor="middle">⚠ vendible condicionado al agua (${p.gateAgua===0?'veda sin resolver':'en trámite'})</text>`;
     }
-    // contorno, carretera y cotas
-    s+=`<rect x="${x0}" y="${mT}" width="${lotW}" height="${lotH}" fill="none" stroke="#f4f1ea" stroke-width="1.5"/>`;
-    s+=`<line x1="${x0-10}" y1="${yG+9}" x2="${x0+lotW+10}" y2="${yG+9}" stroke="#f4f1ea" stroke-width="2"/><text x="${x0+lotW/2}" y="${yG+22}" font-size="8.5" fill="#cf7a74" text-anchor="middle">Carr. Hermosillo–Kino · frente ${fmtN(p.frente)} m</text>`;
-    s+=`<text x="${x0-8}" y="${(mT+yG)/2}" font-size="8" fill="#8a8780" text-anchor="middle" transform="rotate(-90 ${x0-8} ${(mT+yG)/2})">fondo ${fmtN(p.fondo)} m</text>`;
-    const esc100=100*escala;if(esc100>8)s+=`<line x1="${x0+lotW+14}" y1="${yG}" x2="${x0+lotW+14}" y2="${yG-esc100}" stroke="#8a8780" stroke-width="2"/><text x="${x0+lotW+19}" y="${yG-esc100/2+3}" font-size="7.5" fill="#8a8780">100 m</text>`;
+    // contorno, carretera (izquierda, vertical) y cotas
+    s+=`<rect x="${x0}" y="${y0}" width="${lotW}" height="${lotH}" fill="none" stroke="#f4f1ea" stroke-width="1.5"/>`;
+    s+=`<line x1="${x0-9}" y1="${y0-8}" x2="${x0-9}" y2="${yFin+8}" stroke="#f4f1ea" stroke-width="2"/><text x="${x0-15}" y="${(y0+yFin)/2}" font-size="8.5" fill="#cf7a74" text-anchor="middle" transform="rotate(-90 ${x0-15} ${(y0+yFin)/2})">Carr. Hermosillo–Kino · frente ${fmtN(p.frente)} m</text>`;
+    s+=`<text x="${x0+lotW/2}" y="${yFin+14}" font-size="8" fill="#8a8780" text-anchor="middle">fondo ${fmtN(p.fondo)} m →</text>`;
+    const esc100=100*escala;if(esc100>8)s+=`<line x1="${x0+lotW-esc100}" y1="${yFin+22}" x2="${x0+lotW}" y2="${yFin+22}" stroke="#8a8780" stroke-width="2"/><text x="${x0+lotW-esc100/2}" y="${yFin+31}" font-size="7.5" fill="#8a8780" text-anchor="middle">100 m</text>`;
     // leyenda a la derecha: el reparto del suelo en ha
-    const lx=x0+lotW+34;let ly=mT+8;
+    const lx=x0+lotW+30;let ly=mT+6;
     const fila=(c,nom,dato,bold)=>{s+=`<rect x="${lx}" y="${ly-7}" width="9" height="9" rx="2" fill="${c}"/><text x="${lx+14}" y="${ly+1}" font-size="9"${bold?' font-weight="800"':''} fill="${bold?'#f4f1ea':'#b6b3aa'}">${nom}</text><text x="${lx+14}" y="${ly+12}" font-size="8.5" fill="#8a8780">${dato}</text>`;ly+=26};
     s+=`<text x="${lx}" y="${ly}" font-size="8.5" font-weight="800" fill="#8a8780" letter-spacing="2">EL REPARTO DEL SUELO</text>`;ly+=18;
     if(p.mixNaves>0)fila('#c9a96e','Naves PyME',`${fmtHa(r.terrNaves)} · ${fmtN(r.nNaves)} naves · ${fmtM(r.ingNaves)}`,1);
@@ -918,7 +920,7 @@
     fila('#E0605A','Derecho de vía',fmtHa(r.m2DDV));
     ly+=2;s+=`<line x1="${lx}" y1="${ly-12}" x2="${W-10}" y2="${ly-12}" stroke="#ffffff22"/><text x="${lx}" y="${ly}" font-size="9.5" font-weight="800" fill="#e0c590">${fmtHa(r.superficie)} → ${fmtHa(r.vendible)} vendibles (${pct(r.vendiblePct*100,0)})</text>`;ly+=13;
     s+=`<text x="${lx}" y="${ly}" font-size="8.5" fill="#8a8780">~${fmtN(r.empleos)} empleos · agua ${r.aguaDia.toFixed(0)} m³/día · ${fmtN(r.demandaKva)} kVA</text>`;
-    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plano proporcional del terreno">${s}</svg>`;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plano proporcional del terreno (horizontal)">${s}</svg>`;
   }
   function dibujaCurva(r){
     const el=$('vizCurva');if(!el)return;const W=330,H=196,mL=8,mR=8,mT=16,mB=26,n=r.flows.length;
