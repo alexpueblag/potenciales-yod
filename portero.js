@@ -7,6 +7,7 @@
 (() => {
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec';
   const LSC = 'pyod_clave_v1';
+  const GCID = '920448126277-couctb56pjm4p5vm0tebsj1g592heka9.apps.googleusercontent.com';   // OAuth client_id (público) — 'PENDIENTE' oculta el botón de Google
   const pagina = (location.pathname.split('/').pop() || 'index.html').replace('.html', '') || 'index';
   const SIN_GATE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.singate !== undefined);
   const MODO_SUAVE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.gate === 'suave');
@@ -76,6 +77,7 @@
       <input type="email" id="pgCorreo" placeholder="tucorreo@…" autocomplete="email">
       <button class="pg-btn" id="pgEnviar">Enviarme la liga</button>
       <button class="pg-btn ws" id="pgWs">Pedir acceso por WhatsApp</button>
+      <div id="pgGoogle" style="margin-top:10px;display:flex;justify-content:center"></div>
       <div class="pg-msg" id="pgMsg"></div>
       <button class="pg-alt" id="pgClave">Tengo una clave del equipo</button>
     </div>`;
@@ -98,6 +100,25 @@
     };
     $('pgCorreo').addEventListener('keydown', e => { if (e.key === 'Enter') $('pgEnviar').click(); });
     $('pgClave').onclick = () => dv.remove();   // deja al descubierto el gate de clave del board
+    // botón "Continuar con Google" (si hay client_id configurado)
+    if (GCID && GCID !== 'PENDIENTE') {
+      const arma = () => {
+        try {
+          google.accounts.id.initialize({ client_id: GCID, callback: async resp => {
+            $('pgMsg').textContent = 'Verificando con Google…';
+            try {
+              const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', credential: resp.credential, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
+              if (r.ok && r.autorizado && r.token) { localStorage.setItem(LSC, r.token); $('pgMsg').textContent = '✓ Dentro — cargando…'; location.reload(); }
+              else if (r.ok && !r.autorizado) { $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:'; const ws = $('pgWs'); ws.style.display = 'block'; ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank'); }
+              else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
+            } catch (e) { $('pgMsg').textContent = 'Sin conexión — reintenta'; }
+          } });
+          google.accounts.id.renderButton(document.getElementById('pgGoogle'), { theme: 'outline', size: 'large', text: 'continue_with', locale: 'es', width: 280 });
+        } catch (e) {}
+      };
+      if (window.google && google.accounts) arma();
+      else { const sc = document.createElement('script'); sc.src = 'https://accounts.google.com/gsi/client'; sc.async = true; sc.onload = arma; document.head.appendChild(sc); }
+    }
   }
   function engancharGates() {
     // modo suave (boards con gate propio): nunca tapar; solo ofrecer la liga dentro de su gate
