@@ -27,7 +27,7 @@ BD: Google Sheet **"YOD - POTENCIALES"** · 1 hoja por tipo de desarrollo · **1
 
 - Sitio: https://alexpueblag.github.io/potenciales-yod/
 - Apps Script (editor): https://script.google.com/d/115k1wTxnEdPaPyAVqDo9-N2mAhS5d50eoQT9W83nxrXe99EfPhwpC_dw/edit
-- `/exec`: `https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec`
+- `/exec`: `https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec`
 - Sheet: lo crea `setup()` (el ID queda en Script Properties, llave `SHEET_ID`).
 - Motor original de referencia: `~/Documents/Codex/2026-07-09/crea-una-tarea-programada-llamada-weekday/outputs/torre-ruisenor-v3.html`
 

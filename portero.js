@@ -5,7 +5,7 @@
  *   · ☎ WhatsApp · ⤓ export · (Nm ×E) minutos y eventos al cerrar.
  */
 (() => {
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzCoMIKfgiKELs0efVYE0q20UfPXif-6rvfjZlCPgVuTTIljFqsMrUa9uE_4E18QHgB/exec';
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
   const LSC = 'pyod_clave_v1';
   const GCID = '920448126277-couctb56pjm4p5vm0tebsj1g592heka9.apps.googleusercontent.com';   // OAuth client_id (público) — 'PENDIENTE' oculta el botón de Google
   const pagina = (location.pathname.split('/').pop() || 'index.html').replace('.html', '') || 'index';
