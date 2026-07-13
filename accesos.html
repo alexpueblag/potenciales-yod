@@ -120,7 +120,7 @@
   const k=()=>localStorage.getItem(LSC)||'';
   const post=b=>fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({k:k(),request_id:(crypto.randomUUID?.()||Date.now()+'')},b))}).then(r=>r.json());
 
-  const CODES=[['*','Todo'],['MA','Macro'],['MX','Mixto'],['UN','Unifam'],['RE','Resid'],['PA','Patrim'],['MP','Mapa'],['TA','T·Alysa'],['TM','T·María'],['AL','Alquimia'],['RM','Miramar']];
+  const CODES=[['*','Todo'],['PT','Portal'],['MA','Macro'],['MX','Mixto'],['UN','Unifam'],['RE','Resid'],['PA','Patrim'],['MP','Mapa'],['TA','T·Alysa'],['TM','T·María'],['TC','T·Codes'],['AL','Alquimia'],['RM','Miramar'],['AC','Accesos']];
   function boardsDe(u){const b=String(u.boards||'*').trim();return b===''?'*':b}
   function tieneCode(b,c){if(b==='*')return true;return b.toUpperCase().split(/[,|; ]+/).indexOf(c)>-1}
   function renderMatriz(usuarios){
