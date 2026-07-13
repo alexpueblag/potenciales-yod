@@ -184,7 +184,7 @@
 
   function initMap(){
     if(map)return;
-    map=L.map('map',{zoomControl:true,attributionControl:true,gestureHandling:true,gestureHandlingOptions:{duration:1200,text:{touch:'Usa dos dedos para mover el mapa',scroll:'Usa ctrl + scroll para hacer zoom',scrollMac:'Usa \u2318 + scroll para hacer zoom'}}}).setView([25.5,-104],5);
+    map=L.map('map',{zoomControl:false,attributionControl:true,gestureHandling:true,gestureHandlingOptions:{duration:1200,text:{touch:'Usa dos dedos para mover el mapa',scroll:'Usa ctrl + scroll para hacer zoom',scrollMac:'Usa \u2318 + scroll para hacer zoom'}}}).setView([25.5,-104],5);window._zc=L.control.zoom({position:'bottomleft'}).addTo(map);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
     capa=L.layerGroup().addTo(map);
     window._pyodMap=map;
@@ -219,7 +219,7 @@
     let total=0,html='';
     tipos.forEach((t,i)=>{const r=listas[i];if(!r||!r.ok||!r.casos.length)return;const T=TIPOS[t];total+=r.casos.length;
       html+=`<div class="lt-tipo" style="color:${T.hex}">${T.e} ${esc(T.n)} · ${r.casos.length}</div>`;
-      html+=r.casos.map(c=>{const dato=[c.utilidad!==''&&c.utilidad!==undefined?'$'+(Number(c.utilidad)/1e6).toFixed(1)+' M':null,c.estado||null].filter(Boolean).join(' · ');
+      html+=r.casos.map(c=>{const dato=[c.utilidad!==''&&c.utilidad!==undefined?(n=>(n<0?'-$':'$')+Math.abs(n).toFixed(1)+' M')(Number(c.utilidad)/1e6),c.estado||null].filter(Boolean).join(' · ');
         return `<a class="lt-item" href="${PAGINAS[t]}?open=${esc(c.caso_id)}"><i style="background:${T.hex}"></i><span class="nm">${esc(c.nombre_caso||c.palabra)}<span class="dt">${esc(c.palabra)}${dato?' · '+esc(dato):''}</span></span><span class="ir">→</span></a>`}).join('');
     });
     $('cntTodos').textContent=total;

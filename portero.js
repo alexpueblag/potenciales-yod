@@ -11,7 +11,10 @@
   const pagina = (location.pathname.split('/').pop() || 'index.html').replace('.html', '') || 'index';
   const SIN_GATE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.singate !== undefined);
   const MODO_SUAVE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.gate === 'suave');
-  const CODIGO = { index: 'PT', mapa: 'MP', macrolotes: 'MA', mixto: 'MX', unifamiliar: 'UN', residencial: 'RE', patrimonial: 'PA', 'track-alysa': 'TA', 'track-maria': 'TM', 'track-codesarrollos': 'TC', accesos: 'AC' }[pagina] || pagina.slice(0, 2).toUpperCase();
+  const EN_MIRAMAR = /real-miramar-board/.test(location.pathname);
+  const CODIGO = EN_MIRAMAR
+    ? ({ index: 'MR', tramites: 'MT', direccion: 'MD', evidencia: 'ME', cuentas: 'MC' }[pagina] || 'M' + pagina.slice(0, 1).toUpperCase())
+    : ({ index: 'PT', mapa: 'MP', macrolotes: 'MA', mixto: 'MX', unifamiliar: 'UN', residencial: 'RE', patrimonial: 'PA', 'track-alysa': 'TA', 'track-maria': 'TM', 'track-codesarrollos': 'TC', accesos: 'AC' }[pagina] || pagina.slice(0, 2).toUpperCase());
 
   /* 1) canje de liga: ?sesion=TOKEN → credencial local */
   const q = new URLSearchParams(location.search);
@@ -106,6 +109,8 @@
       const inp = $('pgCorreo'); inp.type = 'password'; inp.placeholder = 'clave del equipo'; inp.value = ''; inp.focus();
       $('pgEnviar').textContent = 'Entrar';
       $('pgMsg').textContent = '';
+      const parr = dv.querySelector('.pg-box p'); if (parr) parr.textContent = 'Escribe la clave del equipo para entrar en este dispositivo.';
+      const gbtn = document.getElementById('pgGoogle'); if (gbtn) gbtn.style.display = 'none';
       $('pgEnviar').onclick = () => {
         const v = inp.value.trim(); if (!v) { $('pgMsg').textContent = 'Escribe la clave'; return; }
         localStorage.setItem(LSC, v); sessionStorage.removeItem('pyod_rol'); location.reload();
@@ -242,7 +247,18 @@
   [data-tema="claro"] .badge.porconfirmar{background:#2f5fc01f;color:#2b52a4}
   [data-tema="claro"] .thumb{background:#ece7db}
   #temaBtn{position:fixed;right:14px;bottom:14px;z-index:1300;width:42px;height:42px;border-radius:50%;border:1px solid var(--lineaf);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center}
-  [data-tema="claro"] #temaBtn{box-shadow:0 6px 18px rgba(0,0,0,.18)}`;
+  [data-tema="claro"] #temaBtn{box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  [data-tema="claro"] .pg-msg{color:#8a6a2a}
+  [data-tema="claro"] .pg-alt{color:#5f594e}
+  [data-tema="claro"] .pg-box p,[data-tema="claro"] .pp-l,[data-tema="claro"] .panel .sub,[data-tema="claro"] .pie,[data-tema="claro"] .urban-item span{color:#5f594e}
+  [data-tema="claro"] .badge.active,[data-tema="claro"] .badge.activo{color:#2e6b3a}
+  [data-tema="claro"] .badge.review{color:#2b52a4}
+  [data-tema="claro"] .badge.maintenance,[data-tema="claro"] .badge.soon{color:#8a5a10}
+  [data-tema="claro"] .badge.revocado{color:#a03530}
+  [data-tema="claro"] .gate-agua.g0{color:#a03530;background:#e0605a1a}
+  [data-tema="claro"] .gate-agua.g1{color:#8a5a10;background:#d9a45b26}
+  [data-tema="claro"] .gate-agua.g2{color:#2e6b3a;background:#8fbf8b26}
+  [data-tema="claro"] .echip.on,[data-tema="claro"] .esc-chip.on,[data-tema="claro"] .estr-btn.on{color:#fff}`;
   const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   const guardado = localStorage.getItem(LST);
