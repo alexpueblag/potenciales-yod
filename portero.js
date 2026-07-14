@@ -12,6 +12,11 @@
   const SIN_GATE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.singate !== undefined);
   const MODO_SUAVE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.gate === 'suave');
   const EN_MIRAMAR = /real-miramar-board/.test(location.pathname);
+  const oauthHash = new URLSearchParams(location.hash.replace(/^#/, ''));
+  const oauthAccessToken = oauthHash.get('access_token');
+  const oauthError = oauthHash.get('error');
+  const oauthState = oauthHash.get('state');
+  if (oauthAccessToken || oauthError) history.replaceState(null, '', location.pathname + location.search);
   const CODIGO = EN_MIRAMAR
     ? ({ index: 'MR', tramites: 'MT', direccion: 'MD', evidencia: 'ME', cuentas: 'MC' }[pagina] || 'M' + pagina.slice(0, 1).toUpperCase())
     : ({ index: 'PT', mapa: 'MP', macrolotes: 'MA', mixto: 'MX', unifamiliar: 'UN', residencial: 'RE', patrimonial: 'PA', 'track-alysa': 'TA', 'track-maria': 'TM', 'track-codesarrollos': 'TC', accesos: 'AC' }[pagina] || pagina.slice(0, 2).toUpperCase());
@@ -116,22 +121,60 @@
         localStorage.setItem(LSC, v); sessionStorage.removeItem('pyod_rol'); location.reload();
       };
     };
-    // Google Identity Services usa /gsi/transform incluso con initTokenClient.
-    // En algunos navegadores esa ventana no devuelve el callback y queda en ciclo.
-    // Mientras se registra la URL de retorno OAuth en Google Cloud, no abrimos esa
-    // ruta: el acceso seguro por liga mágica permanece disponible y funcional.
+    const completaGoogle = async accessToken => {
+      const esperado = sessionStorage.getItem('pyod_oauth_state');
+      sessionStorage.removeItem('pyod_oauth_state');
+      if (!esperado || !oauthState || esperado !== oauthState) {
+        $('pgMsg').textContent = 'Google no pudo validar el regreso — inténtalo otra vez.';
+        return;
+      }
+      $('pgEnviar').disabled = true;
+      $('pgMsg').textContent = 'Verificando con Google…';
+      try {
+        const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', access_token: accessToken, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
+        if (r.ok && r.autorizado && r.token) {
+          const v = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(r.token) + '&cb=' + Date.now(), { cache: 'no-store' }).then(x => x.json());
+          if (!v || !v.ok) { $('pgMsg').textContent = 'Google confirmó tu cuenta, pero la sesión no se activó (' + ((v && v.error) || 'red') + '). Reintenta.'; return; }
+          $('pgMsg').textContent = '✓ Dentro — cargando…';
+          localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol');
+          if (/\/aurum-board\//.test(location.pathname)) {
+            window.__PYOD_BOOT = r.token; dv.remove();
+            window.dispatchEvent(new CustomEvent('pyod-authenticated', { detail: { token: r.token } }));
+          } else location.reload();
+        } else if (r.ok && !r.autorizado) {
+          $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:';
+          const ws = $('pgWs'); ws.style.display = 'block';
+          ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank');
+        } else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
+      } catch (e) { $('pgMsg').textContent = 'Sin conexión — reintenta'; }
+      $('pgEnviar').disabled = false;
+    };
+
+    // OAuth por redirección directa. Google vuelve al board y nunca utiliza
+    // accounts.google.com/gsi/transform, que era el origen del ciclo.
     if (GCID && GCID !== 'PENDIENTE') {
       const cont = document.getElementById('pgGoogle');
-      const aviso = document.createElement('button');
-      aviso.type = 'button';
-      aviso.textContent = 'Google en ajuste · entrar por correo';
-      aviso.style.cssText = 'width:280px;max-width:100%;padding:10px 14px;border:1px solid #747775;border-radius:4px;background:#fff;color:#1f1f1f;font:600 14px Arial,sans-serif;cursor:pointer';
-      aviso.onclick = () => {
-        $('pgCorreo').focus();
-        $('pgMsg').textContent = 'Escribe tu correo y te enviaremos una liga segura para entrar.';
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = 'G  Continuar con Google';
+      b.style.cssText = 'width:280px;max-width:100%;padding:10px 14px;border:1px solid #747775;border-radius:4px;background:#fff;color:#1f1f1f;font:600 14px Arial,sans-serif;cursor:pointer';
+      b.onclick = () => {
+        const state = crypto.randomUUID?.() || Date.now() + '' + Math.random();
+        sessionStorage.setItem('pyod_oauth_state', state);
+        const p = new URLSearchParams({
+          client_id: GCID,
+          redirect_uri: 'https://alexpueblag.github.io/aurum-board/',
+          response_type: 'token',
+          scope: 'openid email profile',
+          include_granted_scopes: 'true',
+          prompt: 'select_account',
+          state
+        });
+        location.assign('https://accounts.google.com/o/oauth2/v2/auth?' + p);
       };
-      cont.replaceChildren(aviso);
+      cont.replaceChildren(b);
     }
+    if (oauthError) $('pgMsg').textContent = 'Google canceló el acceso — puedes intentarlo otra vez.';
+    else if (oauthAccessToken) completaGoogle(oauthAccessToken);
   }
   function engancharGates() {
     // modo suave (boards con gate propio): nunca tapar; solo ofrecer la liga dentro de su gate
