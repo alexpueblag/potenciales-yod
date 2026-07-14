@@ -135,7 +135,8 @@
                   if (!v || !v.ok) { $('pgMsg').textContent = 'Google confirmó tu cuenta, pero la sesión no se activó (' + ((v && v.error) || 'red') + '). Reintenta.'; return; }
                   $('pgMsg').textContent = '✓ Dentro — cargando…';
                   if (/\/aurum-board\//.test(location.pathname)) {
-                    const u = new URL(location.href); u.searchParams.set('sesion', r.token); location.replace(u.toString());
+                    window.__PYOD_BOOT = r.token; localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol');
+                    dv.remove(); window.dispatchEvent(new CustomEvent('pyod-authenticated', { detail: { token: r.token } }));
                   } else {
                     localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol'); location.reload();
                   }
