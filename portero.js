@@ -133,11 +133,13 @@
       try {
         const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', access_token: accessToken, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
         if (r.ok && r.autorizado && r.token) {
-          const v = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(r.token) + '&cb=' + Date.now(), { cache: 'no-store' }).then(x => x.json());
-          if (!v || !v.ok) { $('pgMsg').textContent = 'Google confirmó tu cuenta, pero la sesión no se activó (' + ((v && v.error) || 'red') + '). Reintenta.'; return; }
           $('pgMsg').textContent = '✓ Dentro — cargando…';
           localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol');
-          if (/\/aurum-board\//.test(location.pathname)) {
+          const destino = sessionStorage.getItem('pyod_oauth_destino');
+          sessionStorage.removeItem('pyod_oauth_destino');
+          if (destino && destino.indexOf(location.origin + '/') === 0 && destino !== location.href.split('#')[0]) {
+            location.replace(destino);
+          } else if (/\/aurum-board\//.test(location.pathname)) {
             window.__PYOD_BOOT = r.token; dv.remove();
             window.dispatchEvent(new CustomEvent('pyod-authenticated', { detail: { token: r.token } }));
           } else location.reload();
@@ -160,6 +162,7 @@
       b.onclick = () => {
         const state = crypto.randomUUID?.() || Date.now() + '' + Math.random();
         sessionStorage.setItem('pyod_oauth_state', state);
+        sessionStorage.setItem('pyod_oauth_destino', location.href.split('#')[0]);
         const p = new URLSearchParams({
           client_id: GCID,
           redirect_uri: 'https://alexpueblag.github.io/aurum-board/',
@@ -173,7 +176,11 @@
       };
       cont.replaceChildren(b);
     }
-    if (oauthError) $('pgMsg').textContent = 'Google canceló el acceso — puedes intentarlo otra vez.';
+    if (oauthError) {
+      sessionStorage.removeItem('pyod_oauth_state');
+      sessionStorage.removeItem('pyod_oauth_destino');
+      $('pgMsg').textContent = 'Google canceló el acceso — puedes intentarlo otra vez.';
+    }
     else if (oauthAccessToken) completaGoogle(oauthAccessToken);
   }
   function engancharGates() {
