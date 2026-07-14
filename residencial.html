@@ -7,6 +7,7 @@
 <title>PPP Lotes Residenciales · Potenciales · YoDesarrollo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 <style>
   /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
   :root{--bg:#17140F;--card:#131317;--surface:rgba(255,255,255,.045);--text:#F1EDE3;--muted:#8A8272;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
@@ -86,17 +87,22 @@
   .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
   .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
   .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
-  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#17140F;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
-  .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
-  .small-btn.danger{background:#e0605a26;color:var(--red)}
+  .small-btn{border:1px solid var(--gold);border-radius:9px;background:#17140F;color:#F6F3ED;font-size:11px;font-weight:600;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:filter .15s,border-color .15s}
+  .small-btn i{font-size:13px;line-height:1}
+  .small-btn:hover{filter:brightness(1.25)}
+  .small-btn.secondary{background:rgba(255,255,255,.04);color:var(--suave);border:1px solid var(--linea)}
+  .small-btn.secondary:hover{border-color:var(--gold);filter:none}
+  .small-btn.danger{background:rgba(255,255,255,.04);color:var(--red);border:1px solid var(--linea)}
+  .small-btn.danger:hover{border-color:var(--red);filter:none}
   .small-btn:disabled{opacity:.4;cursor:default}
   .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
   .seguimiento.on{display:block}
   .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
-  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
-  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
+  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .echip.on{background:rgba(154,123,63,.2);border-color:transparent;color:#F6F3ED}
   .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
   .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
+  .seg-row input:focus{outline:2px solid #B98B3C55;border-color:var(--gold)}
   .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
   .sync-dot{font-size:10px;color:var(--muted);font-weight:700}
   .sync-dot.err{color:var(--orange)}
@@ -275,19 +281,19 @@
   <div class="caso-bar">
     <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
     <div class="caso-actions">
-      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
-      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
-      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
-      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
-      <button class="small-btn" id="btnGuardar">Guardar</button>
+      <button class="small-btn secondary" id="btnMisCasos"><i class="ti ti-folder"></i>Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo"><i class="ti ti-plus"></i>Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento"><i class="ti ti-list-check"></i>Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
+      <button class="small-btn" id="btnGuardar"><i class="ti ti-device-floppy"></i>Guardar</button>
     </div>
   </div>
 
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
     <div class="estado-chips" id="estadoChips"></div>
-    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. cotizar urbanización, comparables de lote…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
-    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. cotizar urbanización, comparables de lote…)"><button class="small-btn" id="btnSegPaso"><i class="ti ti-check"></i>Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota"><i class="ti ti-pencil"></i>Anotar</button></div>
     <div class="notas-log" id="segLog">Sin notas todavía.</div>
   </section>
 
@@ -314,7 +320,7 @@
   <div class="reference-strip"><b>Casos históricos ya sembrados:</b> Guaymas SFF (45 lotes, el origen), Hipódromo (25), Brunnen (12 campestres), Tuxtla (1,100) y el flip de Real del Arco — ábrelos en "Mis casos". ⚠ Los CODI originales traían la mensualidad de Guaymas ($20,791.67) pegada en los clones y cuadros que no cierran: este motor recalcula todo limpio desde los supuestos.</div>
 
   <section class="grid-2">
-    <article class="card" data-card="dTerreno"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">📐</div><div class="card-title">Terreno &amp; Cuadro de Áreas</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dTerreno"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)"><i class="ti ti-ruler-2"></i></div><div class="card-title">Terreno &amp; Cuadro de Áreas</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Superficie</span><span class="kpi-val" id="lblSup">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Cesiones</span><span class="kpi-val c-orange" id="lblCesiones">0%</span></div><div class="kpi-box"><span class="kpi-lbl">Vendible bruto</span><span class="kpi-val c-green" id="lblVendible">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Para lotes (neto)</span><span class="kpi-val c-gold" id="lblResid">0 m²</span></div></div>
       <div class="drawer" id="dTerreno">
         <div class="input-group"><div class="input-header"><label>Superficie del terreno (m²)</label><div class="val-display" data-input="inSuperficie">17,928</div></div><input type="range" id="inSuperficie" min="500" max="500000" step="1" value="17928" data-color="var(--purple)"></div>
@@ -327,7 +333,7 @@
         <div class="input-group"><div class="input-header"><label>Eficiencia de subdivisión (%)</label><div class="val-display" data-input="inEfSubdiv">95%</div></div><input type="range" id="inEfSubdiv" min="75" max="100" step="1" value="95" data-color="var(--blue)" data-format="pct"></div>
         <div class="micro-readout" id="readAreas">Calculando cuadro…</div></div></article>
 
-    <article class="card" data-card="dProducto"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">🏘️</div><div class="card-title">Lotes, Comercial &amp; Precios</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dProducto"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)"><i class="ti ti-map-2"></i></div><div class="card-title">Lotes, Comercial &amp; Precios</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Lotes</span><span class="kpi-val c-gold" id="lblLotes">0 de 0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Precio por lote</span><span class="kpi-val c-green" id="lblPrecioLote">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Comercial</span><span class="kpi-val" style="color:var(--teal)" id="lblComercial">0 m² → $0</span></div><div class="kpi-box"><span class="kpi-lbl">Ingresos totales</span><span class="kpi-val c-green" id="lblIngresos">$0 M</span></div></div>
       <div class="drawer" id="dProducto">
         <div class="input-group"><div class="input-header"><label>m² por lote</label><div class="val-display" data-input="inM2Lote">206</div></div><input type="range" id="inM2Lote" min="90" max="10000" step="1" value="206" data-color="var(--gold)"></div>
@@ -342,7 +348,7 @@
         <div class="input-group"><div class="input-header"><label>Costo de la casa club ($)</label><div class="val-display" data-input="inCostoCasaClub">$0</div></div><input type="range" id="inCostoCasaClub" min="0" max="30000000" step="250000" value="0" data-color="var(--purple)" data-format="money"></div>
         <div class="micro-readout" id="readProducto">Calculando producto…</div></div></article>
 
-    <article class="card" data-card="dFin"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8ab8ff1f;color:var(--blue)">💳</div><div class="card-title">Lotes Financiados (el motor)</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dFin"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8ab8ff1f;color:var(--blue)"><i class="ti ti-credit-card"></i></div><div class="card-title">Lotes Financiados (el motor)</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Mensualidad por lote</span><span class="kpi-val c-blue" id="lblMensualidad">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Retorno por financiamiento</span><span class="kpi-val c-gold" id="lblRetFin">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Cartera pico (saldo por cobrar)</span><span class="kpi-val c-purple" id="lblCartera">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Cola de cobranza</span><span class="kpi-val c-orange" id="lblColaCobranza">0 meses</span></div></div>
       <div class="drawer" id="dFin"><div class="partner-guide"><b>Tu esquema real:</b> el comprador da un <b>enganche</b> y el saldo se cobra en <b>mensualidades con interés</b> — el financiamiento es un ingreso más del proyecto (no un descuento). La cartera es el activo: crece con cada venta y se drena con cada cobro.</div>
         <div class="input-group"><div class="input-header"><label>Lotes financiados (% del total)</label><div class="val-display" data-input="inPctFinanciados">70%</div></div><input type="range" id="inPctFinanciados" min="0" max="100" step="5" value="70" data-color="var(--blue)" data-format="pct"></div>
@@ -352,7 +358,7 @@
         <div class="input-group"><div class="input-header"><label>Contado: meses para el saldo</label><div class="val-display" data-input="inMesesSaldoContado">3</div></div><input type="range" id="inMesesSaldoContado" min="1" max="12" step="1" value="3" data-color="var(--green)"></div>
         <div class="micro-readout" id="readFin">Calculando financiamiento…</div></div></article>
 
-    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)">🚧</div><div class="card-title">Urbanización &amp; Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)"><i class="ti ti-tools"></i></div><div class="card-title">Urbanización &amp; Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Urbanización</span><span class="kpi-val c-red" id="lblUrb">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Blandos + trámites</span><span class="kpi-val" id="lblBlandos">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Costo total</span><span class="kpi-val c-red" id="lblCostoTotal">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Spread del m² de lote</span><span class="kpi-val c-gold" id="lblSpread">$0 /m²</span></div></div>
       <div class="drawer" id="dCostos">
         <div class="input-group"><div class="input-header"><label>Urbanización ($/m² VENDIBLE bruto)</label><div class="val-display" data-input="inUrbM2">$1,800</div></div><input type="range" id="inUrbM2" min="300" max="4000" step="10" value="1800" data-color="var(--red)" data-format="money"></div>
@@ -361,7 +367,7 @@
         <div class="input-group"><div class="input-header"><label>Blandos s/ingresos (%) · admón + comisión + mkt</label><div class="val-display" data-input="inBlandosPct">8.0%</div></div><input type="range" id="inBlandosPct" min="0" max="20" step=".5" value="8" data-color="var(--gold)" data-format="pct1"></div>
         <div class="micro-readout" id="readCostos">Calculando costos…</div></div></article>
 
-    <article class="card" data-card="dCapital"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)">🌍</div><div class="card-title">Tierra, Calendario &amp; Capital</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dCapital"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)"><i class="ti ti-world"></i></div><div class="card-title">Tierra, Calendario &amp; Capital</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Tratamiento del terreno</span><span class="kpi-val" id="lblTierraModo">—</span></div><div class="kpi-box"><span class="kpi-lbl">Etapas</span><span class="kpi-val c-orange" id="lblEtapas">—</span></div><div class="kpi-box"><span class="kpi-lbl">Absorción</span><span class="kpi-val c-green" id="lblAbsorcion">—</span></div><div class="kpi-box"><span class="kpi-lbl">Meses totales</span><span class="kpi-val" id="lblMeses">0</span></div><div class="kpi-box"><span class="kpi-lbl">Dueño por m² vs mercado</span><span class="kpi-val c-blue" id="lblDuenoM2">$0</span></div><div class="kpi-box full"><span class="kpi-lbl">Condición de crédito</span><span class="kpi-val" id="lblCondPIK">—</span></div></div>
       <div class="drawer" id="dCapital"><div class="partner-guide"><b>Reparto fiel al PPP:</b> el dueño que aporta tierra recibe su % de la utilidad <b>antes de costos financieros</b>; el crédito puente corre por cuenta del developer.</div>
         <div class="subheading">1. Tratamiento del terreno</div>
@@ -385,7 +391,7 @@
         <div class="micro-readout" id="readCapital">Calculando flujo…</div></div></article>
   </section>
 
-  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, corrida y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity</th><th>PIK + fee</th><th>Deuda</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson">Actualizar JSON</button><button class="small-btn" id="applyJson">Aplicar JSON</button><button class="small-btn secondary" id="exportJson">Descargar JSON</button></div><p class="note">Cada renglón de la hoja RESIDENCIAL del Sheet es un caso; la corrida completa vive en la hoja FLUJO.</p></details>
+  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, corrida y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity</th><th>PIK + fee</th><th>Deuda</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson"><i class="ti ti-refresh"></i>Actualizar JSON</button><button class="small-btn" id="applyJson"><i class="ti ti-check"></i>Aplicar JSON</button><button class="small-btn secondary" id="exportJson"><i class="ti ti-download"></i>Descargar JSON</button></div><p class="note">Cada renglón de la hoja RESIDENCIAL del Sheet es un caso; la corrida completa vive en la hoja FLUJO.</p></details>
 </main>
 
 <div class="overlay" id="ovGuardar"><div class="sheet">
@@ -396,15 +402,15 @@
   <div class="fld"><label>Correo (opcional)</label><input id="gCorreo" type="email" placeholder="tucorreo@…"></div>
   <div class="fld"><label>Notas del caso</label><textarea id="gNotas" placeholder="Fuente, dueño, condición por verificar…"></textarea></div>
   <input class="hp" id="gWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
-  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar">Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar">Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo">Guardar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar"><i class="ti ti-x"></i>Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar"><i class="ti ti-mail"></i>Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo"><i class="ti ti-device-floppy"></i>Guardar</button></div>
 </div></div>
 
 <div class="overlay" id="ovCasos"><div class="sheet">
   <h2 class="serif">Mis casos</h2>
   <p class="sh-sub">Casos de Lotes Residenciales. Toca uno para cargarlo, o ábrelo con su palabra.</p>
-  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra">Abrir</button></div>
+  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra"><i class="ti ti-folder-open"></i>Abrir</button></div>
   <div id="listaCasos" style="margin-top:6px"><p class="note">Cargando…</p></div>
-  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar">Cerrar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar"><i class="ti ti-x"></i>Cerrar</button></div>
 </div></div>
 
 <div id="toast"></div>

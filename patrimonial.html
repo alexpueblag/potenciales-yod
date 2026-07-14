@@ -7,6 +7,7 @@
 <title>PPP Patrimonial / Rentas · Potenciales · YoDesarrollo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 <style>
   /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
   :root{--bg:#17140F;--card:#131317;--surface:rgba(255,255,255,.045);--text:#F1EDE3;--muted:#8A8272;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
@@ -86,17 +87,22 @@
   .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
   .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
   .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
-  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#17140F;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
-  .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
-  .small-btn.danger{background:#e0605a26;color:var(--red)}
+  .small-btn{border:1px solid var(--gold);border-radius:9px;background:#17140F;color:#F6F3ED;font-size:11px;font-weight:600;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:filter .15s,border-color .15s}
+  .small-btn i{font-size:13px;line-height:1}
+  .small-btn:hover{filter:brightness(1.25)}
+  .small-btn.secondary{background:rgba(255,255,255,.04);color:var(--suave);border:1px solid var(--linea)}
+  .small-btn.secondary:hover{border-color:var(--gold);filter:none}
+  .small-btn.danger{background:rgba(255,255,255,.04);color:var(--red);border:1px solid var(--linea)}
+  .small-btn.danger:hover{border-color:var(--red);filter:none}
   .small-btn:disabled{opacity:.4;cursor:default}
   .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
   .seguimiento.on{display:block}
   .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
-  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
-  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
+  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .echip.on{background:rgba(154,123,63,.2);border-color:transparent;color:#F6F3ED}
   .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
   .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
+  .seg-row input:focus{outline:2px solid #B98B3C55;border-color:var(--gold)}
   .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
   .sync-dot{font-size:10px;color:var(--muted);font-weight:700}
   .sync-dot.err{color:var(--orange)}
@@ -272,19 +278,19 @@
   <div class="caso-bar">
     <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
     <div class="caso-actions">
-      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
-      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
-      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
-      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
-      <button class="small-btn" id="btnGuardar">Guardar</button>
+      <button class="small-btn secondary" id="btnMisCasos"><i class="ti ti-folder"></i>Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo"><i class="ti ti-plus"></i>Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento"><i class="ti ti-list-check"></i>Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
+      <button class="small-btn" id="btnGuardar"><i class="ti ti-device-floppy"></i>Guardar</button>
     </div>
   </div>
 
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
     <div class="estado-chips" id="estadoChips"></div>
-    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. comparables de renta, avalúo, crédito…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
-    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. comparables de renta, avalúo, crédito…)"><button class="small-btn" id="btnSegPaso"><i class="ti ti-check"></i>Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota"><i class="ti ti-pencil"></i>Anotar</button></div>
     <div class="notas-log" id="segLog">Sin notas todavía.</div>
   </section>
 
@@ -311,7 +317,7 @@
   <div class="reference-strip"><b>El árbol patrimonial YOD:</b> Anara Horizontes 2022 (9 cuartos, el origen) → Real del Arco 2026 (16 deptos, 9.6% neto — prellenado de este board) → PLANTILLA → Depas Luis Puebla. Ábrelos en "Mis casos". La curva RETENER/VENDER usa la misma regla del board Unifamiliar: retener mientras el patrimonio crezca más que tu alternativa.</div>
 
   <section class="grid-2">
-    <article class="card" data-card="dRenta"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">🔑</div><div class="card-title">Unidades &amp; Renta</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dRenta"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)"><i class="ti ti-key"></i></div><div class="card-title">Unidades &amp; Renta</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Unidades</span><span class="kpi-val c-gold" id="lblUnidades">0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta bruta mensual</span><span class="kpi-val c-green" id="lblRentaMes">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta efectiva anual</span><span class="kpi-val" id="lblRentaAnual">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta por m² rentable</span><span class="kpi-val c-blue" id="lblRentaM2">$0</span></div></div>
       <div class="drawer" id="dRenta">
         <div class="input-group"><div class="input-header"><label>Unidades / puertas en renta</label><div class="val-display" data-input="inUnidades">16</div></div><input type="range" id="inUnidades" min="1" max="60" step="1" value="16" data-color="var(--gold)"></div>
@@ -323,7 +329,7 @@
         <div class="input-group"><div class="input-header"><label>Seguro (% del valor al año)</label><div class="val-display" data-input="inSeguroPct">0.5%</div></div><input type="range" id="inSeguroPct" min="0" max="2" step=".05" value=".5" data-color="var(--orange)" data-format="pct1"></div>
         <div class="micro-readout" id="readRenta">Calculando renta…</div></div></article>
 
-    <article class="card" data-card="dInv"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)">🏗️</div><div class="card-title">Inversión &amp; Valor</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dInv"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)"><i class="ti ti-hammer"></i></div><div class="card-title">Inversión &amp; Valor</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Inversión total</span><span class="kpi-val c-red" id="lblInversion">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Yield on cost (NOI/inversión)</span><span class="kpi-val c-purple" id="lblYield">—</span></div><div class="kpi-box"><span class="kpi-lbl">Valor a cap de mercado</span><span class="kpi-val c-gold" id="lblValorCap">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Valor creado (desarrollo)</span><span class="kpi-val c-green" id="lblValorCreado">$0</span></div></div>
       <div class="drawer" id="dInv"><div class="partner-guide"><b>La jugada patrimonial YOD:</b> construir renta a costo de desarrollador. Si tu NOI cuesta 9-10% (yield on cost) y el mercado valúa a cap 7-8%, el valor creado es la diferencia — sin vender un solo m².</div>
         <div class="input-group"><div class="input-header"><label>Inversión total ($) · terreno + obra + todo</label><div class="val-display" data-input="inInversionTotal">$29,760,000</div></div><input type="range" id="inInversionTotal" min="500000" max="150000000" step="10000" value="29760000" data-color="var(--red)" data-format="money"></div>
@@ -332,7 +338,7 @@
         <div class="input-group"><div class="input-header"><label>Plusvalía anual (%)</label><div class="val-display" data-input="inPlusvaliaPct">7.0%</div></div><input type="range" id="inPlusvaliaPct" min="0" max="15" step=".25" value="7" data-color="var(--green)" data-format="pct1"></div>
         <div class="micro-readout" id="readInv">Calculando inversión…</div></div></article>
 
-    <article class="card" data-card="dCredito"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8ab8ff1f;color:var(--blue)">🏦</div><div class="card-title">Crédito vs Contado</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dCredito"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8ab8ff1f;color:var(--blue)"><i class="ti ti-building-bank"></i></div><div class="card-title">Crédito vs Contado</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Crédito / Equity</span><span class="kpi-val c-blue" id="lblCredito">$0 / $0</span></div><div class="kpi-box"><span class="kpi-lbl">Mensualidad del crédito</span><span class="kpi-val c-red" id="lblMensCredito">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Cash-on-Cash</span><span class="kpi-val c-gold" id="lblCoc">—</span></div><div class="kpi-box"><span class="kpi-lbl">DSCR (NOI / servicio)</span><span class="kpi-val" id="lblDscr">—</span></div></div>
       <div class="drawer" id="dCredito"><div class="partner-guide"><b>La pregunta de la PLANTILLA:</b> ¿apalancar o ir de contado? El crédito baja tu equity y sube el Cash-on-Cash mientras el DSCR aguante (sano ≥ 1.2). Con 0% de crédito ves el caso de contado puro.</div>
         <div class="input-group"><div class="input-header"><label>Crédito (% de la inversión)</label><div class="val-display" data-input="inCreditoPct">0%</div></div><input type="range" id="inCreditoPct" min="0" max="80" step="5" value="0" data-color="var(--blue)" data-format="pct"></div>
@@ -340,7 +346,7 @@
         <div class="input-group"><div class="input-header"><label>Plazo del crédito (años)</label><div class="val-display" data-input="inPlazoCredito">15</div></div><input type="range" id="inPlazoCredito" min="5" max="25" step="1" value="15" data-color="var(--blue)"></div>
         <div class="micro-readout" id="readCredito">Calculando crédito…</div></div></article>
 
-    <article class="card" data-card="dHorizonte"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">📈</div><div class="card-title">Horizonte Patrimonial</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dHorizonte"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)"><i class="ti ti-chart-line"></i></div><div class="card-title">Horizonte Patrimonial</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Recuperación (sin crédito)</span><span class="kpi-val c-orange" id="lblRecup">—</span></div><div class="kpi-box"><span class="kpi-lbl">Punto dulce (retener)</span><span class="kpi-val c-gold" id="lblOptimo">—</span></div><div class="kpi-box"><span class="kpi-lbl">Patrimonio al horizonte</span><span class="kpi-val c-green" id="lblPatrimonio">$0</span></div><div class="kpi-box"><span class="kpi-lbl">ROI patrimonial</span><span class="kpi-val c-purple" id="lblRoiPat">—</span></div></div>
       <div class="drawer" id="dHorizonte">
         <div class="input-group"><div class="input-header"><label>Horizonte (años)</label><div class="val-display" data-input="inHorizonte">10</div></div><input type="range" id="inHorizonte" min="3" max="25" step="1" value="10" data-color="var(--purple)"></div>
@@ -350,7 +356,7 @@
         <div class="micro-readout" id="readHorizonte">Calculando horizonte…</div></div></article>
   </section>
 
-  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Proforma anual (año 1)</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores.</div></section><section><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando…</div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson">Actualizar JSON</button><button class="small-btn" id="applyJson">Aplicar JSON</button><button class="small-btn secondary" id="exportJson">Descargar JSON</button></div><p class="note">Cada renglón de la hoja PATRIMONIAL del Sheet es un caso.</p></details>
+  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Proforma anual (año 1)</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores.</div></section><section><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando…</div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson"><i class="ti ti-refresh"></i>Actualizar JSON</button><button class="small-btn" id="applyJson"><i class="ti ti-check"></i>Aplicar JSON</button><button class="small-btn secondary" id="exportJson"><i class="ti ti-download"></i>Descargar JSON</button></div><p class="note">Cada renglón de la hoja PATRIMONIAL del Sheet es un caso.</p></details>
 </main>
 
 <div class="overlay" id="ovGuardar"><div class="sheet">
@@ -361,15 +367,15 @@
   <div class="fld"><label>Correo (opcional)</label><input id="gCorreo" type="email" placeholder="tucorreo@…"></div>
   <div class="fld"><label>Notas del caso</label><textarea id="gNotas" placeholder="Fuente, dueño, condición por verificar…"></textarea></div>
   <input class="hp" id="gWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
-  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar">Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar">Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo">Guardar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar"><i class="ti ti-x"></i>Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar"><i class="ti ti-mail"></i>Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo"><i class="ti ti-device-floppy"></i>Guardar</button></div>
 </div></div>
 
 <div class="overlay" id="ovCasos"><div class="sheet">
   <h2 class="serif">Mis casos</h2>
   <p class="sh-sub">Casos Patrimoniales. Toca uno para cargarlo, o ábrelo con su palabra.</p>
-  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra">Abrir</button></div>
+  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra"><i class="ti ti-folder-open"></i>Abrir</button></div>
   <div id="listaCasos" style="margin-top:6px"><p class="note">Cargando…</p></div>
-  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar">Cerrar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar"><i class="ti ti-x"></i>Cerrar</button></div>
 </div></div>
 
 <div id="toast"></div>

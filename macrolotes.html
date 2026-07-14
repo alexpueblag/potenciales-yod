@@ -7,6 +7,7 @@
 <title>PPP Macro Lotes · Potenciales · YoDesarrollo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 <style>
   /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
   :root{--bg:#17140F;--card:#131317;--surface:rgba(255,255,255,.045);--text:#F1EDE3;--muted:#8A8272;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
@@ -86,17 +87,22 @@
   .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
   .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
   .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
-  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#17140F;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
-  .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
-  .small-btn.danger{background:#e0605a26;color:var(--red)}
+  .small-btn{border:1px solid var(--gold);border-radius:9px;background:#17140F;color:#F6F3ED;font-size:11px;font-weight:600;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:filter .15s,border-color .15s}
+  .small-btn i{font-size:13px;line-height:1}
+  .small-btn:hover{filter:brightness(1.25)}
+  .small-btn.secondary{background:rgba(255,255,255,.04);color:var(--suave);border:1px solid var(--linea)}
+  .small-btn.secondary:hover{border-color:var(--gold);filter:none}
+  .small-btn.danger{background:rgba(255,255,255,.04);color:var(--red);border:1px solid var(--linea)}
+  .small-btn.danger:hover{border-color:var(--red);filter:none}
   .small-btn:disabled{opacity:.4;cursor:default}
   .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
   .seguimiento.on{display:block}
   .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
-  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
-  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
+  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .echip.on{background:rgba(154,123,63,.2);border-color:transparent;color:#F6F3ED}
   .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
   .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
+  .seg-row input:focus{outline:2px solid #B98B3C55;border-color:var(--gold)}
   .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
   .sync-dot{font-size:10px;color:var(--muted);font-weight:700}
   .sync-dot.err{color:var(--orange)}
@@ -270,8 +276,9 @@
   .tag-dummy{display:inline-block;background:#a9a4f526;color:#cbc7ff;border-radius:8px;font-size:8px;font-weight:900;padding:2px 7px;letter-spacing:.1em;margin-left:8px;vertical-align:2px}
   .estrategia-row{display:flex;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:wrap}
   .estrategia-row .et{font-size:10px;font-weight:800;color:var(--suave);text-transform:uppercase;min-width:70px}
-  .estr-btn{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:12px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
-  .estr-btn.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
+  .estr-btn{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+  .estr-btn i{font-size:13px}
+  .estr-btn.on{background:rgba(154,123,63,.2);border-color:transparent;color:#F6F3ED}
   @media(max-width:700px){.graf-row2{grid-template-columns:1fr}}
   /* KPIs del metro (HUD) */
   .mkpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:2px}
@@ -329,11 +336,11 @@
   <div class="caso-bar">
     <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
     <div class="caso-actions">
-      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
-      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
-      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
-      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
-      <button class="small-btn" id="btnGuardar">Guardar</button>
+      <button class="small-btn secondary" id="btnMisCasos"><i class="ti ti-folder"></i>Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo"><i class="ti ti-plus"></i>Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento"><i class="ti ti-list-check"></i>Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
+      <button class="small-btn" id="btnGuardar"><i class="ti ti-device-floppy"></i>Guardar</button>
     </div>
   </div>
 
@@ -341,8 +348,8 @@
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
     <div class="estado-chips" id="estadoChips"></div>
-    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. gestoría CONAGUA, cita urbanista…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
-    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. gestoría CONAGUA, cita urbanista…)"><button class="small-btn" id="btnSegPaso"><i class="ti ti-check"></i>Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota"><i class="ti ti-pencil"></i>Anotar</button></div>
     <div class="notas-log" id="segLog">Sin notas todavía.</div>
   </section>
 
@@ -368,7 +375,7 @@
   <div class="reference-strip"><b>Caso de referencia · La Cercada v4 (Carr. a Kino, 50 ha).</b> Valores del PPP corregido por el enjambre (30-jun): COS de naves 47.5% (comparable NOWUS real), eficiencia de subdivisión 92%, contingencia 12%, partidas de agua CONDICIONALES (pozo nuevo ilegal bajo veda: la partida correcta es adquisición de derechos CONAGUA, sin cotizar). Los 18 costos de urbanización son estimación de ingeniería — pedir presupuesto a constructor local antes de decidir.</div>
 
   <section class="grid-2">
-    <article class="card" data-card="dTerreno"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">📐</div><div class="card-title">Terreno &amp; Cuadro de Áreas</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dTerreno"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)"><i class="ti ti-ruler-2"></i></div><div class="card-title">Terreno &amp; Cuadro de Áreas</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Frente × Fondo</span><span class="kpi-val" id="lblFxF">500 × 1,000 m</span></div><div class="kpi-box"><span class="kpi-lbl">Superficie / Perímetro</span><span class="kpi-val" id="lblSupPer">50 ha · 3,000 ml</span></div><div class="kpi-box"><span class="kpi-lbl">Área Vendible</span><span class="kpi-val c-green" id="lblVendible">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Vialidades</span><span class="kpi-val c-orange" id="lblVialidades">0 m²</span></div></div>
       <div class="areas-bar" id="vizAreas"></div><div class="mixbar-leyenda" id="vizAreasLey"></div>
       <div class="drawer" id="dTerreno"><div class="subheading">Geometría</div>
@@ -385,7 +392,7 @@
         <div class="input-group"><div class="input-header"><label>Derecho de vía / restricción carretera (%)</label><div class="val-display" data-input="inPctDDV">2%</div></div><input type="range" id="inPctDDV" min="0" max="15" step="1" value="2" data-color="var(--red)" data-format="pct"></div>
         <div class="micro-readout" id="readAreas">Calculando cuadro de áreas…</div></div></article>
 
-    <article class="card" data-card="dMezcla"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">🏭</div><div class="card-title">Mezcla de Producto e Ingresos</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dMezcla"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)"><i class="ti ti-building-factory"></i></div><div class="card-title">Mezcla de Producto e Ingresos</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Naves PyME</span><span class="kpi-val c-gold" id="lblNaves">0 → $0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Macro-lotes</span><span class="kpi-val c-blue" id="lblMacro">0 → $0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Comercial</span><span class="kpi-val" style="color:var(--teal)" id="lblCom">0 → $0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Lotes vivienda</span><span class="kpi-val c-green" id="lblViv">0 → $0 M</span></div><div class="kpi-box full"><span class="kpi-lbl">Ingreso / m² vendible</span><span class="kpi-val c-green" id="lblIngresoM2">$0</span></div></div>
       <div class="mixbar-wrap"><div class="mixbar" id="vizMezcla"></div><div class="mixbar-leyenda" id="vizMezclaLey"></div></div>
       <div class="drawer" id="dMezcla"><div class="subheading">Reparto del área vendible (%) · debe sumar 100</div>
@@ -406,8 +413,8 @@
         <div class="input-group"><div class="input-header"><label>Lote comercial ($/m²)</label><div class="val-display" data-input="inPreCom">$4,500</div></div><input type="range" id="inPreCom" min="1000" max="15000" step="100" value="4500" data-color="var(--teal)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>Lote de vivienda ($/m²)</label><div class="val-display" data-input="inPreVivLote">$1,800</div></div><input type="range" id="inPreVivLote" min="500" max="6000" step="50" value="1800" data-color="var(--green)" data-format="money"></div>
         <div class="subheading">Estrategia por producto · vender o quedar rentando</div>
-        <div class="estrategia-row"><span class="et">Naves</span><button type="button" class="estr-btn on" data-estr="naves" data-val="0">Vender</button><button type="button" class="estr-btn" data-estr="naves" data-val="1">Rentar (BTR)</button></div>
-        <div class="estrategia-row"><span class="et">Comercial</span><button type="button" class="estr-btn on" data-estr="com" data-val="0">Vender lotes</button><button type="button" class="estr-btn" data-estr="com" data-val="1">Ground lease</button></div>
+        <div class="estrategia-row"><span class="et">Naves</span><button type="button" class="estr-btn on" data-estr="naves" data-val="0"><i class="ti ti-cash"></i>Vender</button><button type="button" class="estr-btn" data-estr="naves" data-val="1"><i class="ti ti-key"></i>Rentar (BTR)</button></div>
+        <div class="estrategia-row"><span class="et">Comercial</span><button type="button" class="estr-btn on" data-estr="com" data-val="0"><i class="ti ti-cash"></i>Vender lotes</button><button type="button" class="estr-btn" data-estr="com" data-val="1"><i class="ti ti-building-store"></i>Ground lease</button></div>
         <div class="input-group"><div class="input-header"><label>Renta de nave ($/m²/mes)</label><div class="val-display" data-input="inRentaNave">$95</div></div><input type="range" id="inRentaNave" min="40" max="250" step="5" value="95" data-color="var(--gold)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>Renta de lote comercial ($/m²/mes)</label><div class="val-display" data-input="inRentaCom">$35</div></div><input type="range" id="inRentaCom" min="10" max="150" step="5" value="35" data-color="var(--teal)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>Vacancia (%)</label><div class="val-display" data-input="inVacancia">5%</div></div><input type="range" id="inVacancia" min="0" max="30" step="1" value="5" data-color="var(--orange)" data-format="pct"></div>
@@ -416,7 +423,7 @@
         <div class="input-group"><div class="input-header"><label>Meses de operación antes de vender el activo</label><div class="val-display" data-input="inMesesSalida">12</div></div><input type="range" id="inMesesSalida" min="0" max="60" step="1" value="12" data-color="var(--gold)"></div>
         <div class="micro-readout" id="readMezcla">Calculando mezcla…</div></div></article>
 
-    <article class="card" data-card="dUrb"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)">🚧</div><div class="card-title">Urbanización (obra de cabecera)</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dUrb"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)"><i class="ti ti-tools"></i></div><div class="card-title">Urbanización (obra de cabecera)</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Subtotal Urbanización</span><span class="kpi-val c-red" id="lblUrbTotal">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">$ / m² vendible</span><span class="kpi-val" id="lblUrbM2">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Luminarias / Barda</span><span class="kpi-val c-orange" id="lblLumBarda">0 · 0 ml</span></div><div class="kpi-box"><span class="kpi-lbl">Obra fija (PTAR, subest., agua…)</span><span class="kpi-val" id="lblObraFija">$0 M</span></div></div>
       <div class="drawer" id="dUrb"><div class="subheading">Partidas por m² (cantidad calculada del cuadro de áreas)</div>
         <div class="input-group"><div class="input-header"><label>Despalme y limpieza ($/m² terreno)</label><div class="val-display" data-input="inPuDespalme">$20</div></div><input type="range" id="inPuDespalme" min="0" max="100" step="5" value="20" data-color="var(--red)" data-format="money"></div>
@@ -441,7 +448,7 @@
         <div class="input-group"><div class="input-header"><label>Señalética y nomenclatura ($)</label><div class="val-display" data-input="inPuSenaletica">$400,000</div></div><input type="range" id="inPuSenaletica" min="0" max="3000000" step="50000" value="400000" data-color="var(--muted)" data-format="money"></div>
         <div class="micro-readout" id="readUrb">Calculando urbanización…</div></div></article>
 
-    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#B98B3C1f;color:var(--gold)">🏗️</div><div class="card-title">Construcción de Naves + Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#B98B3C1f;color:var(--gold)"><i class="ti ti-hammer"></i></div><div class="card-title">Construcción de Naves + Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Construcción de Naves</span><span class="kpi-val c-red" id="lblConstNaves">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Blandos e Indirectos</span><span class="kpi-val" id="lblBlandos">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Costo Total del Proyecto</span><span class="kpi-val c-red" id="lblCostoTotal">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Spread del Metro (utilidad/m²)</span><span class="kpi-val c-gold" id="lblSpreadM2">$0 /m²</span></div></div>
       <div class="drawer" id="dCostos"><div class="subheading">Construcción</div>
         <div class="input-group"><div class="input-header"><label>Costo de construcción de nave ($/m²)</label><div class="val-display" data-input="inCostoNave">$7,800</div></div><input type="range" id="inCostoNave" min="4000" max="16000" step="100" value="7800" data-color="var(--red)" data-format="money"></div>
@@ -457,7 +464,7 @@
         <div class="input-group"><div class="input-header"><label>Mercadotecnia (%)</label><div class="val-display" data-input="inMktPct">2.0%</div></div><input type="range" id="inMktPct" min="0" max="8" step=".5" value="2" data-color="var(--gold)" data-format="pct1"></div>
         <div class="micro-readout" id="readCostos">Calculando costos…</div></div></article>
 
-    <article class="card" data-card="dCapital"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)">🌍</div><div class="card-title">Capital, Calendario &amp; Reparto</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dCapital"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)"><i class="ti ti-world"></i></div><div class="card-title">Capital, Calendario &amp; Reparto</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Tratamiento del terreno</span><span class="kpi-val" id="lblTierraModo">Aporta · 25% utilidad</span></div><div class="kpi-box"><span class="kpi-lbl">Etapas de urbanización</span><span class="kpi-val c-orange" id="lblEtapas">3 × 10 meses</span></div><div class="kpi-box"><span class="kpi-lbl">Absorción</span><span class="kpi-val c-green" id="lblAbsorcion">—</span></div><div class="kpi-box"><span class="kpi-lbl">Meses totales · cola</span><span class="kpi-val" id="lblMesesTotales">0</span></div><div class="kpi-box"><span class="kpi-lbl">Dueño por m² vs mercado</span><span class="kpi-val c-blue" id="lblDuenoM2">$0</span></div><div class="kpi-box full"><span class="kpi-lbl">Condición de crédito</span><span class="kpi-val" id="lblCondPIK">—</span></div></div>
       <div class="drawer" id="dCapital"><div class="partner-guide"><b>El PPP reparte utilidad, no caja:</b> el dueño aporta el terreno y recibe su % de la utilidad del proyecto <b>antes de costos financieros</b> (el crédito puente y sus intereses corren por cuenta del developer, igual que en el PPP presentado). Si el dueño vende (no aporta), el terreno se paga al cierre y su % baja a 0.</div>
         <div class="subheading">1. Tratamiento del terreno</div>
@@ -488,7 +495,7 @@
         <div class="input-group"><div class="input-header"><label>TIR objetivo developer (%)</label><div class="val-display" data-input="inTirObjetivo">25.0%</div></div><input type="range" id="inTirObjetivo" min="0" max="100" step=".5" value="25" data-color="var(--orange)" data-format="pct1"></div>
         <div class="micro-readout" id="readCapital">Calculando flujo…</div></div></article>
 
-    <article class="card" data-card="dAgua"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)">🚰</div><div class="card-title">Agua, Energía &amp; Polo</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dAgua"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)"><i class="ti ti-droplet"></i></div><div class="card-title">Agua, Energía &amp; Polo</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box full" id="boxGate" style="border-color:#e0605a66;background:#e0605a12"><span class="kpi-lbl" style="color:#f4b8b3">Gate del agua — bloqueante</span><span class="kpi-val c-red" id="lblGate">EN VEDA · sin resolver</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda de agua</span><span class="kpi-val c-blue" id="lblAguaDia">0 m³/día</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda eléctrica</span><span class="kpi-val c-orange" id="lblKva">0 kVA</span></div><div class="kpi-box"><span class="kpi-lbl">Empleos estimados</span><span class="kpi-val c-green" id="lblEmpleos">0</span></div><div class="kpi-box"><span class="kpi-lbl">Eficiencia de suelo</span><span class="kpi-val c-green" id="lblEficSuelo">—</span></div></div>
       <div class="drawer" id="dAgua"><div class="subheading">Gate del agua (veda Costa de Hermosillo)</div>
         <div class="land-modes"><button type="button" class="gate-mode land-mode active" data-gate="0"><b>⚠ En veda · sin resolver</b><span>Pozo nuevo es ilegal. El caso queda en rojo.</span></button><button type="button" class="gate-mode land-mode" data-gate="1"><b>En trámite</b><span>Gestoría CONAGUA / derechos en proceso.</span></button><button type="button" class="gate-mode land-mode" data-gate="2"><b>Derechos asignados</b><span>Fuente de agua resuelta y documentada.</span></button></div>
@@ -506,7 +513,7 @@
         <div class="micro-readout" id="readAgua">Calculando dotaciones…</div></div></article>
   </section>
 
-  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, corrida y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo (8 pasos del PPP)</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity</th><th>PIK + fee</th><th>Deuda</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson">Actualizar JSON</button><button class="small-btn" id="applyJson">Aplicar JSON</button><button class="small-btn secondary" id="exportJson">Descargar JSON</button></div><p class="note">Cada renglón de la hoja MACROLOTES del Sheet es un caso; la corrida completa vive en la hoja FLUJO.</p></details>
+  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, corrida y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo del caso</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo (8 pasos del PPP)</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity</th><th>PIK + fee</th><th>Deuda</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson"><i class="ti ti-refresh"></i>Actualizar JSON</button><button class="small-btn" id="applyJson"><i class="ti ti-check"></i>Aplicar JSON</button><button class="small-btn secondary" id="exportJson"><i class="ti ti-download"></i>Descargar JSON</button></div><p class="note">Cada renglón de la hoja MACROLOTES del Sheet es un caso; la corrida completa vive en la hoja FLUJO.</p></details>
 </main>
 
 <div class="overlay" id="ovGuardar"><div class="sheet">
@@ -517,15 +524,15 @@
   <div class="fld"><label>Correo (opcional)</label><input id="gCorreo" type="email" placeholder="tucorreo@…"></div>
   <div class="fld"><label>Notas del caso</label><textarea id="gNotas" placeholder="Fuente, dueño, condición por verificar…"></textarea></div>
   <input class="hp" id="gWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
-  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar">Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar">Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo">Guardar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar"><i class="ti ti-x"></i>Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar"><i class="ti ti-mail"></i>Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo"><i class="ti ti-device-floppy"></i>Guardar</button></div>
 </div></div>
 
 <div class="overlay" id="ovCasos"><div class="sheet">
   <h2 class="serif">Mis casos</h2>
   <p class="sh-sub">Casos de Macro Lotes. Toca uno para cargarlo, o ábrelo con su palabra.</p>
-  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra">Abrir</button></div>
+  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra"><i class="ti ti-folder-open"></i>Abrir</button></div>
   <div id="listaCasos" style="margin-top:6px"><p class="note">Cargando…</p></div>
-  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar">Cerrar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar"><i class="ti ti-x"></i>Cerrar</button></div>
 </div></div>
 
 <div id="toast"></div>

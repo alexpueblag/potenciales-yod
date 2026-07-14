@@ -5,6 +5,7 @@
 <title>Planificador de Potencial Inmobiliario · YoDesarrollo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css">
 <script>
@@ -41,8 +42,10 @@
   .panel h1{font-size:17px;margin:0}
   .panel .sub2{font-size:10px;color:var(--muted);margin:2px 0 8px;line-height:1.4}
   .chips{display:flex;flex-wrap:wrap;gap:5px}
-  .chip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:13px;padding:5px 9px;font-size:9.5px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px}
-  .chip i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .chip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:5px 9px;font-size:9.5px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px}
+  .chip:not(.off){background:rgba(154,123,63,.2);color:#F6F3ED;border-color:transparent}
+  .chip i:not(.ti){width:7px;height:7px;border-radius:50%;display:inline-block}
+  .chip i.ti{font-size:12px}
   .chip .n{background:#ffffff14;border-radius:8px;padding:0 5px;font-size:9px;color:var(--goldc)}
   .chip.off{opacity:.32}
   /* desplegable: todos los PPP */
@@ -116,7 +119,7 @@
     <h1 class="serif">¿Dónde hemos planeado?</h1>
     <p class="sub2">Escoge por el mapa (toca un pin y abre su board) o por los planificadores de abajo.</p>
     <div class="chips" id="chips"></div>
-    <div class="todos"><button id="btnTodos" type="button">📂 Todos los PPP <span class="n" id="cntTodos">…</span><span>▾</span></button>
+    <div class="todos"><button id="btnTodos" type="button"><i class="ti ti-folder"></i> Todos los PPP <span class="n" id="cntTodos">…</span><span>▾</span></button>
     <div id="listaTodos"></div></div>
   </div>
   <div id="mapGate"><div class="mg-box">
@@ -137,31 +140,31 @@
   </div>
   <div class="grid">
     <a class="ppp on" href="macrolotes.html">
-      <span class="icono">🏭</span>
+      <span class="icono"><i class="ti ti-building-factory"></i></span>
       <h2 class="serif">PPP Macro Lotes</h2>
       <p>Parque industrial / polo horizontal: cuadro de áreas, naves PyME, macro-lotes, comercial y vivienda; urbanización por partidas, etapas y gate de agua.</p>
       <span class="estado">Activo</span><span class="flecha">→</span>
     </a>
     <a class="ppp on" href="mixto.html">
-      <span class="icono">🏢</span>
+      <span class="icono"><i class="ti ti-building-skyscraper"></i></span>
       <h2 class="serif">PPP Mixto / Depas</h2>
       <p>Desarrollo vertical de usos mixtos: COS/CUS, mezcla de tipologías, preventa, PIK y waterfall, dotaciones y corte del edificio en vivo.</p>
       <span class="estado">Activo</span><span class="flecha">→</span>
     </a>
     <a class="ppp on" href="residencial.html">
-      <span class="icono">🏘️</span>
+      <span class="icono"><i class="ti ti-map-2"></i></span>
       <h2 class="serif">PPP Desarrollo Lotes Residenciales</h2>
       <p>Lotificación con tu esquema real: lotes financiados (enganche + mensualidades con interés), comercial, casa club y la cartera como protagonista.</p>
       <span class="estado">Activo</span><span class="flecha">→</span>
     </a>
     <a class="ppp on" href="patrimonial.html">
-      <span class="icono">💼</span>
+      <span class="icono"><i class="ti ti-briefcase"></i></span>
       <h2 class="serif">PPP Patrimonial / Rentas</h2>
       <p>Unidades en renta: NOI, yield on cost vs cap de mercado (valor creado), crédito vs contado, recuperación y la curva de cuándo vender.</p>
       <span class="estado">Activo</span><span class="flecha">→</span>
     </a>
     <a class="ppp on" href="unifamiliar.html" style="grid-column:1/-1">
-      <span class="icono">🏡</span>
+      <span class="icono"><i class="ti ti-home"></i></span>
       <h2 class="serif">PPP Unifamiliar</h2>
       <p>Casa por casa: programa de espacios, obra real por m², vender al terminar o retener en renta — con la curva patrimonial de "¿cuándo vender?".</p>
       <span class="estado">Activo</span><span class="flecha">→</span>
@@ -177,7 +180,7 @@
   const ENDPOINT='https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
   const LSK='pyod_clave_v1';
   const $=id=>document.getElementById(id);
-  const TIPOS={macrolotes:{n:'Macro Lotes',e:'🏭',hex:'#B98B3C'},vertical:{n:'Mixto / Depas',e:'🏢',hex:'#8ab8ff'},unifamiliar:{n:'Unifamiliar',e:'🏡',hex:'#8FBF8B'},residencial:{n:'Lotes Residenciales',e:'🏘️',hex:'#7fd4e8'},patrimonial:{n:'Patrimonial / Rentas',e:'💼',hex:'#a9a4f5'}};
+  const TIPOS={macrolotes:{n:'Macro Lotes',e:'🏭',ic:'ti-building-factory',hex:'#B98B3C'},vertical:{n:'Mixto / Depas',e:'🏢',ic:'ti-building-skyscraper',hex:'#8ab8ff'},unifamiliar:{n:'Unifamiliar',e:'🏡',ic:'ti-home',hex:'#8FBF8B'},residencial:{n:'Lotes Residenciales',e:'🏘️',ic:'ti-map-2',hex:'#7fd4e8'},patrimonial:{n:'Patrimonial / Rentas',e:'💼',ic:'ti-briefcase',hex:'#a9a4f5'}};
   let clave=localStorage.getItem(LSK)||'', map=null, capa=null, pines=[], bounds=null, filtros=new Set(Object.keys(TIPOS));
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const urlOk=s=>{const v=String(s??'').trim();return /^(https?:\/\/|mailto:)/i.test(v)?v:'';};
@@ -209,7 +212,7 @@
   window.addEventListener('resize',()=>{if(map)map.invalidateSize()});
   function renderChips(){
     const counts={};pines.forEach(p=>counts[p.tipo]=(counts[p.tipo]||0)+1);
-    $('chips').innerHTML=Object.entries(TIPOS).filter(([t])=>counts[t]).map(([t,T])=>`<button class="chip${filtros.has(t)?'':' off'}" data-t="${t}"><i style="background:${T.hex}"></i>${T.e} ${T.n}<span class="n">${counts[t]}</span></button>`).join('');
+    $('chips').innerHTML=Object.entries(TIPOS).filter(([t])=>counts[t]).map(([t,T])=>`<button class="chip${filtros.has(t)?'':' off'}" data-t="${t}"><i style="background:${T.hex}"></i><i class="ti ${T.ic}"></i> ${T.n}<span class="n">${counts[t]}</span></button>`).join('');
     document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const t=b.dataset.t;filtros.has(t)?filtros.delete(t):filtros.add(t);pinta()});
   }
   const PAGINAS={macrolotes:'macrolotes.html',vertical:'mixto.html',unifamiliar:'unifamiliar.html',residencial:'residencial.html',patrimonial:'patrimonial.html'};
@@ -219,7 +222,7 @@
     let total=0,html='';
     tipos.forEach((t,i)=>{const r=listas[i];if(!r||!r.ok||!r.casos.length)return;const T=TIPOS[t];total+=r.casos.length;
       html+=`<div class="lt-tipo" style="color:${T.hex}">${T.e} ${esc(T.n)} · ${r.casos.length}</div>`;
-      html+=r.casos.map(c=>{const dato=[c.utilidad!==''&&c.utilidad!==undefined?(n=>(n<0?'-$':'$')+Math.abs(n).toFixed(1)+' M')(Number(c.utilidad)/1e6),c.estado||null].filter(Boolean).join(' · ');
+      html+=r.casos.map(c=>{const dato=[c.utilidad!==''&&c.utilidad!==undefined?(n=>(n<0?'-$':'$')+Math.abs(n).toFixed(1)+' M')(Number(c.utilidad)/1e6):null,c.estado||null].filter(Boolean).join(' · ');
         return `<a class="lt-item" href="${PAGINAS[t]}?open=${esc(c.caso_id)}"><i style="background:${T.hex}"></i><span class="nm">${esc(c.nombre_caso||c.palabra)}<span class="dt">${esc(c.palabra)}${dato?' · '+esc(dato):''}</span></span><span class="ir">→</span></a>`}).join('');
     });
     $('cntTodos').textContent=total;

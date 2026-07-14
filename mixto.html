@@ -7,6 +7,7 @@
 <title>PPP Mixto / Depas · Potenciales · YoDesarrollo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
 <style>
   /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
   :root{--bg:#17140F;--card:#131317;--surface:rgba(255,255,255,.045);--text:#F1EDE3;--muted:#8A8272;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
@@ -86,17 +87,22 @@
   .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
   .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
   .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
-  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#17140F;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
-  .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
-  .small-btn.danger{background:#e0605a26;color:var(--red)}
+  .small-btn{border:1px solid var(--gold);border-radius:9px;background:#17140F;color:#F6F3ED;font-size:11px;font-weight:600;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:filter .15s,border-color .15s}
+  .small-btn i{font-size:13px;line-height:1}
+  .small-btn:hover{filter:brightness(1.25)}
+  .small-btn.secondary{background:rgba(255,255,255,.04);color:var(--suave);border:1px solid var(--linea)}
+  .small-btn.secondary:hover{border-color:var(--gold);filter:none}
+  .small-btn.danger{background:rgba(255,255,255,.04);color:var(--red);border:1px solid var(--linea)}
+  .small-btn.danger:hover{border-color:var(--red);filter:none}
   .small-btn:disabled{opacity:.4;cursor:default}
   .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
   .seguimiento.on{display:block}
   .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
-  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
-  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
+  .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
+  .echip.on{background:rgba(154,123,63,.2);border-color:transparent;color:#F6F3ED}
   .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
   .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
+  .seg-row input:focus{outline:2px solid #B98B3C55;border-color:var(--gold)}
   .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
   .sync-dot{font-size:10px;color:var(--muted);font-weight:700}
   .sync-dot.err{color:var(--orange)}
@@ -264,19 +270,19 @@
   <div class="caso-bar">
     <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
     <div class="caso-actions">
-      <button class="small-btn secondary" id="btnMisCasos">Mis casos</button>
-      <button class="small-btn secondary" id="btnNuevo">Nuevo</button>
-      <button class="small-btn secondary" id="btnSeguimiento">Seguimiento</button>
-      <button class="small-btn secondary" id="btnWhats">WhatsApp</button>
-      <button class="small-btn" id="btnGuardar">Guardar</button>
+      <button class="small-btn secondary" id="btnMisCasos"><i class="ti ti-folder"></i>Mis casos</button>
+      <button class="small-btn secondary" id="btnNuevo"><i class="ti ti-plus"></i>Nuevo</button>
+      <button class="small-btn secondary" id="btnSeguimiento"><i class="ti ti-list-check"></i>Seguimiento</button>
+      <button class="small-btn secondary" id="btnWhats"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
+      <button class="small-btn" id="btnGuardar"><i class="ti ti-device-floppy"></i>Guardar</button>
     </div>
   </div>
 
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
     <div class="estado-chips" id="estadoChips"></div>
-    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. pedir avalúo, cita con dueño…)"><button class="small-btn" id="btnSegPaso">Fijar paso</button></div>
-    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota">Anotar</button></div>
+    <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. pedir avalúo, cita con dueño…)"><button class="small-btn" id="btnSegPaso"><i class="ti ti-check"></i>Fijar paso</button></div>
+    <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota"><i class="ti ti-pencil"></i>Anotar</button></div>
     <div class="notas-log" id="segLog">Sin notas todavía. Guarda el caso primero para dar seguimiento.</div>
   </section>
 
@@ -299,7 +305,7 @@
   <div class="reference-strip"><b>Caso de referencia preliminar · Hermosillo.</b> Los valores iniciales son orden de magnitud, no avalúo ni presupuesto: producto 60 / 90 / 120 m², lista $58,000/m² como meta premium por validar (un comparable vigente anuncia desde 56 m² y $2.22 M) y obra $24k/$17.5k por m². Antes de decidir, carga avalúo, tres cotizaciones y term sheet. <a href="https://invien.mx/proyectos/santa-monica/" target="_blank" rel="noopener">Comparable</a> · <a href="https://serviciosacs.com/servicios/construccion/" target="_blank" rel="noopener">Referencia de construcción</a></div>
 
   <section class="grid-2">
-    <article class="card" data-card="dArq"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)">🏢</div><div class="card-title">Arquitectura (COS/CUS)</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dArq"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)"><i class="ti ti-building-skyscraper"></i></div><div class="card-title">Arquitectura (COS/CUS)</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Superficie Terreno</span><span class="kpi-val" id="lblTerreno">2,500 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Área Libre Mínima</span><span class="kpi-val c-green" id="lblAreaLibre">750 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Huella Máx (COS)</span><span class="kpi-val c-orange" id="lblHuella">1,750 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Construible (CUS)</span><span class="kpi-val c-purple" id="lblConstruible">15,000 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Área Comercial PB</span><span class="kpi-val c-blue" id="lblComercial">1,250 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Inventario Vivienda</span><span class="kpi-val" id="lblDeptos">117 unid.</span></div><div class="kpi-box"><span class="kpi-lbl">Vendible Vivienda</span><span class="kpi-val c-green" id="lblVendViv">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Vendible Locales</span><span class="kpi-val c-teal" id="lblVendLoc" style="color:var(--teal)">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Núcleo Vertical (circ.)</span><span class="kpi-val c-purple" id="lblNucleoV">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Pasillos Horizontales</span><span class="kpi-val c-purple" id="lblPasillosH">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Amenidades</span><span class="kpi-val c-gold" id="lblAmenidades">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Vendible Total</span><span class="kpi-val c-green" id="lblVendTotal">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Cajones (venta + visitas)</span><span class="kpi-val c-orange" id="lblCajonesTot">0</span></div><div class="kpi-box"><span class="kpi-lbl">Elevadores Est.</span><span class="kpi-val c-purple" id="lblElevadores">0</span></div></div>
       <div class="drawer" id="dArq"><div class="subheading">Variables originales</div>
         <div class="input-group"><div class="input-header"><label>Terreno (m²)</label><div class="val-display" data-input="inTerreno">2500</div></div><input type="range" id="inTerreno" min="500" max="10000" step="50" value="2500" data-color="var(--purple)"></div>
@@ -338,7 +344,7 @@
           <div class="micro-readout" id="readVol">Calculando volumetría…</div></div></details>
       </div></article>
 
-    <article class="card" data-card="dVentas"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)">💰</div><div class="card-title">Ventas &amp; Ingresos</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dVentas"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)"><i class="ti ti-cash"></i></div><div class="card-title">Ventas &amp; Ingresos</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Ticket Lista (Depto)</span><span class="kpi-val c-green" id="lblTicket">$4.99 M</span></div><div class="kpi-box"><span class="kpi-lbl">Precio Preventa/m²</span><span class="kpi-val" id="lblPrePrev">$49.4k</span></div><div class="kpi-box full"><span class="kpi-lbl">Estructura Enganche (Flujo Libre)</span><span class="kpi-val c-gold" id="lblEnganche">30% / 20% / 50%</span></div><div class="kpi-box full"><span class="kpi-lbl">Ritmo de Preventa</span><span class="kpi-val c-green" id="lblRitmoPreventa">0 depas / mes</span></div><div class="kpi-box full"><span class="kpi-lbl">Colchón sobre punto de equilibrio</span><div class="gauge" id="vizColchon"><div class="gauge-be" id="gBE"></div><div class="gauge-col" id="gCol"></div></div><span class="kpi-val" id="lblColchon" style="margin-top:5px">—</span></div></div>
       <div class="drawer" id="dVentas"><div class="subheading">Variables originales</div>
         <div class="input-group"><div class="input-header"><label>Precio Lista Viv ($/m²)</label><div class="val-display" data-input="inPreViv">$55,000</div></div><input type="range" id="inPreViv" min="10000" max="150000" step="500" value="55000" data-color="var(--green)" data-format="money"></div>
@@ -354,7 +360,7 @@
           <div class="micro-readout" id="readVentas">Calculando mezcla de ventas…</div></div></details>
       </div></article>
 
-    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)">🏗️</div><div class="card-title">Costos Directos</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)"><i class="ti ti-hammer"></i></div><div class="card-title">Costos Directos</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Total Rasante + Sótano</span><span class="kpi-val c-red" id="lblObraTotal">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Soft Costs (Indir/Impr)</span><span class="kpi-val" id="lblSoft">$0 M</span></div><div class="kpi-box full"><span class="kpi-lbl">Costo Total (Sin Financiar)</span><span class="kpi-val" id="lblCostoDuro">$0 M</span></div></div>
       <div class="drawer" id="dCostos"><div class="subheading">Variables originales</div>
         <div class="input-group"><div class="input-header"><label>Obra Rasante ($/m²)</label><div class="val-display" data-input="inCostRas">$22,000</div></div><input type="range" id="inCostRas" min="5000" max="80000" step="500" value="22000" data-color="var(--red)" data-format="money"></div>
@@ -370,7 +376,7 @@
           <div class="micro-readout" id="readCostos">Calculando fuentes y usos…</div></div></details>
       </div></article>
 
-    <article class="card" data-card="dMacro"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)">🌍</div><div class="card-title">Macro &amp; PIK</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dMacro"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#d9a45b1f;color:var(--orange)"><i class="ti ti-world"></i></div><div class="card-title">Macro &amp; PIK</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Valor Tierra (MXN)</span><span class="kpi-val" id="lblTierraMXN">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Intereses Acumulados</span><span class="kpi-val c-orange" id="lblIntPIK">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">MOIC Dueño</span><span class="kpi-val c-blue" id="lblMoicDueno">—</span></div><div class="kpi-box"><span class="kpi-lbl">TIR Dueño</span><span class="kpi-val c-blue" id="lblTirDueno">—</span></div><div class="kpi-box full"><span class="kpi-lbl">Condición de Crédito</span><span class="kpi-val" id="lblCondPIK">—</span></div><div class="kpi-box full"><span class="kpi-lbl">Socios &amp; retorno</span><span class="kpi-val c-gold" id="lblSocios">Editar reparto en AJUSTAR</span></div></div>
       <div class="drawer" id="dMacro"><div class="subheading">Variables originales</div>
         <div class="input-group"><div class="input-header"><label>Tasa PIK Anual (%)</label><div class="val-display" data-input="inPIK">14.5%</div></div><input type="range" id="inPIK" min="0" max="40" step=".5" value="14.5" data-color="var(--orange)" data-format="pct1"></div>
@@ -394,7 +400,7 @@
           <div class="micro-readout" id="readCapital">Calculando waterfall…</div></div></details>
       </div></article>
 
-    <article class="card wide" data-card="dDota"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)">🚰</div><div class="card-title">Dotaciones &amp; Infraestructura</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card wide" data-card="dDota"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)"><i class="ti ti-droplet"></i></div><div class="card-title">Dotaciones &amp; Infraestructura</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid tres"><div class="kpi-box"><span class="kpi-lbl">Agua Potable</span><span class="kpi-val c-blue" id="lblAgua">0 m³/día</span></div><div class="kpi-box"><span class="kpi-lbl">Drenaje</span><span class="kpi-val" id="lblDrenaje">0 m³/día</span></div><div class="kpi-box"><span class="kpi-lbl">Cisterna Sugerida</span><span class="kpi-val c-teal" style="color:var(--teal)" id="lblCisterna">0 m³</span></div><div class="kpi-box"><span class="kpi-lbl">Carga Eléctrica Instalada</span><span class="kpi-val c-orange" id="lblCargaKw">0 kW</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda Estimada</span><span class="kpi-val c-orange" id="lblDemandaKva">0 kVA</span></div><div class="kpi-box"><span class="kpi-lbl">Áreas Comunes Servidas</span><span class="kpi-val c-purple" id="lblComunes">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Gas Estacionario</span><span class="kpi-val c-orange" id="lblGas">0 L</span></div><div class="kpi-box"><span class="kpi-lbl">Cuarto de Basura</span><span class="kpi-val" id="lblBasura">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Densidad</span><span class="kpi-val c-purple" id="lblDensidad">0 viv/ha</span></div><div class="kpi-box"><span class="kpi-lbl">Área Permeable</span><span class="kpi-val c-green" id="lblPermeable">0 m²</span></div><div class="kpi-box"><span class="kpi-lbl">Retención Pluvial Ref.</span><span class="kpi-val c-blue" id="lblPluvial">0 m³</span></div><div class="kpi-box"><span class="kpi-lbl">Cuota Mant. Promedio</span><span class="kpi-val c-gold" id="lblCuota">$0 /mes</span></div></div>
       <div class="drawer" id="dDota"><div class="subheading">Agua y drenaje</div>
         <div class="input-group"><div class="input-header"><label>Dotación de agua (L/hab/día)</label><div class="val-display" data-input="inDotAguaHab">200</div></div><input type="range" id="inDotAguaHab" min="50" max="500" step="10" value="200" data-color="var(--blue)"></div>
@@ -418,7 +424,7 @@
         <div class="micro-readout" id="readUrbano">Calculando indicadores urbanos…</div></div></article>
   </section>
 
-  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, flujo y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo de fondeo</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity</th><th>PIK + fee</th><th>Deuda</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson">Actualizar JSON</button><button class="small-btn" id="applyJson">Aplicar JSON</button><button class="small-btn secondary" id="exportJson">Descargar JSON</button></div><p class="note">Las fórmulas son visibles y sus factores son editables. El JSON edita todos los factores simultáneamente sin alterar la lógica protegida del motor. El caso también es editable directo en el Google Sheet: cada renglón de la hoja VERTICAL es un caso.</p></details>
+  <details class="advanced-board" id="advBoard"><summary>Herramientas avanzadas · proforma, fórmulas, flujo y JSON</summary><div class="proforma-grid"><section class="proforma-card"><h3>Fuentes y usos</h3><table class="mini-table"><tbody id="sourcesUses"></tbody></table></section><section class="proforma-card"><h3>Semáforo de fondeo</h3><div id="covenantPanel">Calculando…</div></section></div><div class="two-advanced"><section><div class="subheading">Relaciones del modelo</div><div class="formula-list" id="formulaList"></div><div class="formula-detail" id="formulaDetail">Selecciona una relación para ver sus valores y los campos que la controlan.</div><div class="subheading">Verificación automática</div><div class="micro-readout" id="checks">Calculando verificaciones…</div></section><section><div class="subheading">Flujo mensual de caja</div><p class="note" id="flujoCaption" style="margin-top:-4px"></p><div class="flow-scroll"><table class="flow-table"><thead><tr><th>Mes</th><th>Cobros</th><th>Costos</th><th>Equity</th><th>PIK + fee</th><th>Deuda</th><th>Caja</th></tr></thead><tbody id="flowRows"></tbody></table></div></section></div><div class="subheading">Editor JSON del supuesto actual</div><textarea class="json-editor" id="jsonEditor" spellcheck="false"></textarea><div class="sheet-actions" style="justify-content:flex-start"><button class="small-btn secondary" id="refreshJson"><i class="ti ti-refresh"></i>Actualizar JSON</button><button class="small-btn" id="applyJson"><i class="ti ti-check"></i>Aplicar JSON</button><button class="small-btn secondary" id="exportJson"><i class="ti ti-download"></i>Descargar JSON</button></div><p class="note">Las fórmulas son visibles y sus factores son editables. El JSON edita todos los factores simultáneamente sin alterar la lógica protegida del motor. El caso también es editable directo en el Google Sheet: cada renglón de la hoja VERTICAL es un caso.</p></details>
 </main>
 
 <div class="overlay" id="ovGuardar"><div class="sheet">
@@ -429,15 +435,15 @@
   <div class="fld"><label>Correo (opcional)</label><input id="gCorreo" type="email" placeholder="tucorreo@…"><div class="hint">Recibirás la palabra y el botón "Abrir mi caso".</div></div>
   <div class="fld"><label>Notas del caso</label><textarea id="gNotas" placeholder="Fuente, fecha de avalúo, condición por verificar…"></textarea></div>
   <input class="hp" id="gWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
-  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar">Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar">Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo">Guardar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="gCancelar"><i class="ti ti-x"></i>Cancelar</button><button class="small-btn secondary" id="gGuardarEnviar"><i class="ti ti-mail"></i>Guardar y enviar correo</button><button class="small-btn" id="gGuardarSolo"><i class="ti ti-device-floppy"></i>Guardar</button></div>
 </div></div>
 
 <div class="overlay" id="ovCasos"><div class="sheet">
   <h2 class="serif">Mis casos</h2>
   <p class="sh-sub">Cada renglón del Sheet es un caso. Toca uno para cargarlo, o ábrelo con su palabra.</p>
-  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra">Abrir</button></div>
+  <div class="seg-row"><input id="abrirPalabra" placeholder="Abrir con palabra…" autocapitalize="none"><button class="small-btn" id="btnAbrirPalabra"><i class="ti ti-folder-open"></i>Abrir</button></div>
   <div id="listaCasos" style="margin-top:6px"><p class="note">Cargando…</p></div>
-  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar">Cerrar</button></div>
+  <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar"><i class="ti ti-x"></i>Cerrar</button></div>
 </div></div>
 
 <div id="toast"></div>
