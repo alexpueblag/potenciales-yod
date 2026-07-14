@@ -53,6 +53,19 @@
     padding:11px 18px;border-radius:11px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;box-shadow:0 12px 30px rgba(35,29,20,.25);max-width:88%}
   #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
   #toast.err{background:var(--red);color:#fff}
+  .liga-ov{position:fixed;inset:0;z-index:9998;background:rgba(23,20,15,.5);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:18px}
+  .liga-ov.on{display:flex}
+  .liga-box{background:var(--card);border:1px solid var(--linea);border-radius:16px;max-width:440px;width:100%;padding:22px 22px 20px;box-shadow:0 24px 70px rgba(35,29,20,.28)}
+  .liga-box h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:22px;margin:0 0 4px}
+  .liga-box .who{font-size:12.5px;color:var(--muted);margin:0 0 14px}
+  .liga-box .who b{color:var(--text)}
+  .liga-url{width:100%;border:1px solid var(--linea);border-radius:10px;background:var(--arena);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:10px 12px;word-break:break-all;line-height:1.5;margin-bottom:6px;user-select:all}
+  .liga-hint{font-size:11px;color:var(--muted);margin:0 0 14px}
+  .liga-actions{display:flex;gap:9px;flex-wrap:wrap}
+  .liga-actions .btn{flex:1;justify-content:center;text-align:center;min-width:120px}
+  .btn.wa{background:#25D366;color:#0b1f14}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--linea);font-weight:700}
+  .liga-close{position:absolute;top:14px;right:16px}
   .mwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   table.matriz{border-collapse:collapse;width:100%;min-width:640px}
   .matriz th{font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:6px 4px;border-bottom:1px solid var(--lineaf);text-align:center;white-space:nowrap}
@@ -154,6 +167,23 @@
     if(!btn)return; btn.disabled=on; btn.classList.toggle('is-saving',on);
     const lab=labelId&&$(labelId); if(lab)lab.textContent=on?busyText:idleText;
   }
+  // Modal de la liga mágica (reemplaza el prompt del navegador)
+  let ligaActual='';
+  function abrirLiga(url,correo){
+    ligaActual=url;
+    $('ligaUrl').textContent=url;
+    $('ligaWho').innerHTML='Para <b>'+esc(correo||'la persona')+'</b> · válida 90 días';
+    $('ligaOv').classList.add('on');
+  }
+  function cerrarLiga(){$('ligaOv').classList.remove('on')}
+  (function wireLiga(){
+    const ov=$('ligaOv'); if(!ov)return;
+    $('ligaX').onclick=cerrarLiga;
+    ov.addEventListener('click',e=>{if(e.target===ov)cerrarLiga()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')cerrarLiga()});
+    $('ligaCopy').onclick=async()=>{try{await navigator.clipboard.writeText(ligaActual);toast('✓ Copiada')}catch(_){toast('Selecciónala y copia manualmente','err')}};
+    $('ligaWa').onclick=()=>{const msg='Tu acceso a YOD OS (válido 90 días):\n'+ligaActual;window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener')};
+  })();
 
   // Los 8 tableros de YOD OS (mismo orden que la barra lateral). Palomear
   // un tablero = esa persona puede verlo. '*' = ve todos.
@@ -221,8 +251,8 @@
         try{const r2=await post({tipo:'sesion-crear',correo:b.dataset.liga,destino:'https://alexpueblag.github.io/potenciales-yod/'});
           if(!r2.ok){toast('No se pudo crear la liga: '+(r2.error||''),'err');return}
           try{await navigator.clipboard.writeText(r2.liga)}catch(e){}
-          toast('✓ Liga copiada — pégala en WhatsApp');
-          prompt('Liga de 90 días (ya está copiada) — mándala por WhatsApp:',r2.liga);
+          toast('✓ Liga lista y copiada');
+          abrirLiga(r2.liga,b.dataset.liga);
         }catch(e){toast('No se pudo crear la liga: '+e.message,'err')}finally{b.disabled=false;b.textContent=t0}
       });
       cont.querySelectorAll('[data-rev]').forEach(b=>b.onclick=async()=>{
@@ -262,6 +292,19 @@
 })();
 </script>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="ligaOv" class="liga-ov" role="dialog" aria-modal="true">
+  <div class="liga-box" style="position:relative">
+    <button class="btn ghost mini liga-close" id="ligaX" type="button">✕</button>
+    <h3>Liga mágica · 90 días</h3>
+    <p class="who" id="ligaWho"></p>
+    <div class="liga-url" id="ligaUrl"></div>
+    <p class="liga-hint">Ya está copiada al portapapeles. Envíala por WhatsApp o pégala donde quieras.</p>
+    <div class="liga-actions">
+      <button class="btn wa" id="ligaWa" type="button">Enviar por WhatsApp</button>
+      <button class="btn" id="ligaCopy" type="button">Copiar de nuevo</button>
+    </div>
+  </div>
+</div>
 <script src="portero.js?v=779fed3"></script>
 <script src="https://alexpueblag.github.io/yod-portal/os/shell.js"></script>
 </body>
