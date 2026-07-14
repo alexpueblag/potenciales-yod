@@ -199,11 +199,22 @@
             <span class="u-correo">${esc(u.correo)}</span>
             <span class="badge ${u.estado==='activo'?'activo':'revocado'}">${esc(u.estado)}</span>
             ${u.rol==='admin'?'<span class="badge admin">admin</span>':''}
-            <span class="u-acciones">${u.estado==='activo'?`<button class="btn mini" data-liga="${esc(u.correo)}">🔗 Liga directa</button><button class="btn rojo mini" data-rev="${esc(u.correo)}">Revocar</button>`:`<button class="btn mini" data-rea="${esc(u.correo)}" data-nom="${esc(u.nombre)}">Reactivar</button>`}</span>
+            <span class="u-acciones">${u.estado==='activo'?`<button class="btn mini" data-rol="${esc(u.correo)}" data-cur="${esc(u.rol||'vista')}" data-nom="${esc(u.nombre||'')}" data-boards="${esc(u.boards||'*')}">${u.rol==='admin'?'↓ Colaborador':'↑ Dirección'}</button><button class="btn mini" data-liga="${esc(u.correo)}">🔗 Liga directa</button><button class="btn rojo mini" data-rev="${esc(u.correo)}">Revocar</button>`:`<button class="btn mini" data-rea="${esc(u.correo)}" data-nom="${esc(u.nombre)}">Reactivar</button>`}</span>
           </div>
           <div class="u-meta">boards: ${esc(u.boards)} · sesiones vivas: ${u.sesiones_vivas} · visitas registradas: ${u.visitas_n}${u.ts_alta?' · alta: '+esc(String(u.ts_alta).slice(0,10)):''}</div>
           ${u.ultimas&&u.ultimas.length?`<div class="u-visitas">${u.ultimas.map(esc).join('\n')}</div>`:''}
         </div>`).join('')||'<p class="u-meta">Sin usuarios aún.</p>';
+      cont.querySelectorAll('[data-rol]').forEach(b=>b.onclick=async()=>{
+        var nuevo=b.dataset.cur==='admin'?'vista':'admin';
+        var aviso=nuevo==='admin'?'darle DIRECCIÓN a '+b.dataset.rol+' (verá TODOS los tableros)':'volver COLABORADOR a '+b.dataset.rol+' (solo verá los tableros que le palomees)';
+        if(!confirm('¿Seguro? '+aviso))return;
+        b.disabled=true;const tp=b.textContent;b.textContent='…';
+        try{
+          const r=await post({tipo:'acceso-alta',correo:b.dataset.rol,rol:nuevo,nombre:b.dataset.nom,boards:b.dataset.boards});
+          if(r.ok){toast('✓ Rol actualizado → '+(nuevo==='admin'?'Dirección':'Colaborador'));cargar();}
+          else{b.disabled=false;b.textContent=tp;toast('No se pudo: '+(r.error||''),'err');}
+        }catch(e){b.disabled=false;b.textContent=tp;toast('No se pudo cambiar el rol: '+e.message,'err');}
+      });
       cont.querySelectorAll('[data-liga]').forEach(b=>b.onclick=async()=>{
         b.disabled=true;const t0=b.textContent;b.textContent='…';
         try{const r2=await post({tipo:'sesion-crear',correo:b.dataset.liga,destino:'https://alexpueblag.github.io/potenciales-yod/'});
