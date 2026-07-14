@@ -102,7 +102,8 @@
   </section>
 
   <section class="card">
-    <h2>🎛️ Quién entra a qué — palomea por board</h2>
+    <h2>🎛️ Quién ve qué tablero — palomea por persona</h2>
+    <p style="font-size:12px;color:var(--muted);margin:-2px 0 12px">Cada columna es un tablero de YOD OS. Palomea los que esa persona puede ver. <b>Todo</b> = ve los 8. Se guarda solo al palomear.</p>
     <div class="mwrap"><table class="matriz" id="matriz"><tbody><tr><td class="u">Cargando…</td></tr></tbody></table></div>
     <div class="msg" id="mMsg"></div>
   </section>
@@ -117,7 +118,7 @@
     <div class="leyenda">
       <b>12jul·09:14·MA●</b> — día · hora · board · entrada &nbsp;|&nbsp; Boards: <b>PT</b> portal · <b>MP</b> mapa · <b>MA</b> macrolotes · <b>MX</b> mixto · <b>UN</b> unifamiliar · <b>RE</b> residencial · <b>PA</b> patrimonial · <b>TA</b>/<b>TM</b>/<b>TC</b> tracks · <b>AC</b> accesos · <b>MR</b>/<b>MT</b>/<b>MD</b>/<b>ME</b>/<b>MC</b> Miramar (inicio/trámites/dirección/evidencia/cuentas)<br>
       <b>◉</b> abrió un caso · <b>✎</b> guardó · <b>⚑</b> cambió estado · <b>☎</b> WhatsApp · <b>⤓</b> exportó · <b>∅</b> caso nuevo · <b>↦</b> la visita continúa en la celda siguiente<br>
-      <b>(28m ×7)</b> — al cerrar: minutos de la visita × eventos totales &nbsp;|&nbsp; renglón lleno (60 visitas) → renglón nuevo "correo <b>·cont2</b>"<br><b>Permisos</b>: el campo <b>boards</b> de cada usuario acepta <b>*</b> (todo) o códigos separados por coma — <b>AL</b> Alquimia · <b>RM</b> Miramar · más los de arriba. Ej.: un inversionista de Alysa = "TA".
+      <b>(28m ×7)</b> — al cerrar: minutos de la visita × eventos totales &nbsp;|&nbsp; renglón lleno (60 visitas) → renglón nuevo "correo <b>·cont2</b>"<br><b>Permisos por tablero</b>: el campo <b>boards</b> de cada usuario acepta <b>*</b> (ve todos) o los códigos de la matriz de arriba separados por coma — <b>PT</b> Potenciales · <b>CO</b> Codesarrollos · <b>RM</b> Miramar · <b>TA</b> Operación · <b>FL</b> Flujo · <b>IN</b> Interiores · <b>IV</b> Inversionistas · <b>MK</b> Métricas. Ej.: alguien que solo ve Flujo y Miramar = "FL,RM". <br><span style="color:var(--muted)">Nota: hoy filtran de verdad <b>Flujo, Interiores, Miramar y Operación</b>; los otros 4 abren para cualquier sesión válida hasta que su backend mande su código (te dejo esa línea aparte).</span>
     </div>
   </section>
 </main>
@@ -153,7 +154,9 @@
     const lab=labelId&&$(labelId); if(lab)lab.textContent=on?busyText:idleText;
   }
 
-  const CODES=[['*','Todo'],['PT','Portal'],['MA','Macro'],['MX','Mixto'],['UN','Unifam'],['RE','Resid'],['PA','Patrim'],['MP','Mapa'],['TA','T·Alysa'],['TM','T·María'],['TC','T·Codes'],['AL','Alquimia'],['RM','Miramar'],['AC','Accesos']];
+  // Los 8 tableros de YOD OS (mismo orden que la barra lateral). Palomear
+  // un tablero = esa persona puede verlo. '*' = ve todos.
+  const CODES=[['*','Todo'],['PT','Potenciales'],['CO','Codesarrollos'],['RM','Miramar'],['TA','Operación'],['FL','Flujo'],['IN','Interiores'],['IV','Inversion.'],['MK','Métricas']];
   function boardsDe(u){const b=String(u.boards||'*').trim();return b===''?'*':b}
   function tieneCode(b,c){if(b==='*')return true;return b.toUpperCase().split(/[,|; ]+/).indexOf(c)>-1}
   function renderMatriz(usuarios){
