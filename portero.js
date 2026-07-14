@@ -116,46 +116,21 @@
         localStorage.setItem(LSC, v); sessionStorage.removeItem('pyod_rol'); location.reload();
       };
     };
-    // Botón Google mediante OAuth token client. Evita el retorno GSI
-    // /gsi/transform, que puede quedarse en blanco antes de ejecutar callback.
+    // Google Identity Services usa /gsi/transform incluso con initTokenClient.
+    // En algunos navegadores esa ventana no devuelve el callback y queda en ciclo.
+    // Mientras se registra la URL de retorno OAuth en Google Cloud, no abrimos esa
+    // ruta: el acceso seguro por liga mágica permanece disponible y funcional.
     if (GCID && GCID !== 'PENDIENTE') {
-      const arma = () => {
-        try {
-          const cont = document.getElementById('pgGoogle');
-          const cliente = google.accounts.oauth2.initTokenClient({
-            client_id: GCID,
-            scope: 'openid email profile',
-            callback: async resp => {
-              if (!resp || resp.error || !resp.access_token) { $('pgMsg').textContent = 'Google no terminó el acceso — vuelve a intentarlo'; return; }
-              $('pgMsg').textContent = 'Verificando con Google…';
-              try {
-                const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', access_token: resp.access_token, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
-                if (r.ok && r.autorizado && r.token) {
-                  const v = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(r.token) + '&cb=' + Date.now(), { cache: 'no-store' }).then(x => x.json());
-                  if (!v || !v.ok) { $('pgMsg').textContent = 'Google confirmó tu cuenta, pero la sesión no se activó (' + ((v && v.error) || 'red') + '). Reintenta.'; return; }
-                  $('pgMsg').textContent = '✓ Dentro — cargando…';
-                  if (/\/aurum-board\//.test(location.pathname)) {
-                    window.__PYOD_BOOT = r.token; localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol');
-                    dv.remove(); window.dispatchEvent(new CustomEvent('pyod-authenticated', { detail: { token: r.token } }));
-                  } else {
-                    localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol'); location.reload();
-                  }
-                }
-                else if (r.ok && !r.autorizado) { $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:'; const ws = $('pgWs'); ws.style.display = 'block'; ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank'); }
-                else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
-              } catch (e) { $('pgMsg').textContent = 'Sin conexión — reintenta'; }
-            },
-            error_callback: () => { $('pgMsg').textContent = 'Google cerró o bloqueó la ventana — vuelve a intentarlo'; }
-          });
-          const b = document.createElement('button');
-          b.type = 'button'; b.textContent = 'G  Continuar con Google';
-          b.style.cssText = 'width:280px;max-width:100%;padding:10px 14px;border:1px solid #747775;border-radius:4px;background:#fff;color:#1f1f1f;font:600 14px Arial,sans-serif;cursor:pointer';
-          b.onclick = () => { $('pgMsg').textContent = 'Abriendo Google…'; cliente.requestAccessToken({ prompt: 'select_account' }); };
-          cont.replaceChildren(b);
-        } catch (e) { $('pgMsg').textContent = 'No se pudo preparar Google — usa la liga por correo'; }
+      const cont = document.getElementById('pgGoogle');
+      const aviso = document.createElement('button');
+      aviso.type = 'button';
+      aviso.textContent = 'Google en ajuste · entrar por correo';
+      aviso.style.cssText = 'width:280px;max-width:100%;padding:10px 14px;border:1px solid #747775;border-radius:4px;background:#fff;color:#1f1f1f;font:600 14px Arial,sans-serif;cursor:pointer';
+      aviso.onclick = () => {
+        $('pgCorreo').focus();
+        $('pgMsg').textContent = 'Escribe tu correo y te enviaremos una liga segura para entrar.';
       };
-      if (window.google && google.accounts && google.accounts.oauth2) arma();
-      else { const sc = document.createElement('script'); sc.src = 'https://accounts.google.com/gsi/client'; sc.async = true; sc.onload = arma; document.head.appendChild(sc); }
+      cont.replaceChildren(aviso);
     }
   }
   function engancharGates() {
