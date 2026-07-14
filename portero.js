@@ -60,28 +60,46 @@
   /* 3) gate por correo (liga mágica) */
   function overlayCorreo() {
     if (document.getElementById('porteroGate')) return;
+    // Sistema de diseño YOD OS: asegurar fuentes Instrument (se ignora si el board ya las tiene)
+    if (!document.getElementById('pyod-os-fonts')) {
+      const fl = document.createElement('link'); fl.id = 'pyod-os-fonts'; fl.rel = 'stylesheet';
+      fl.href = 'https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap';
+      document.head.appendChild(fl);
+    }
     const dv = document.createElement('div'); dv.id = 'porteroGate';
     dv.innerHTML = `
     <style>
-      #porteroGate{position:fixed;inset:0;z-index:900;background:#0a0a0cf2;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'Manrope',-apple-system,sans-serif}
-      .pg-box{width:min(370px,94vw);text-align:center;background:#131317;border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:24px 20px;color:#f4f1ea}
-      .pg-box h2{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:26px;margin:0 0 4px}
-      .pg-box p{color:#8a8780;font-size:12px;margin:0 0 16px;line-height:1.5}
-      .pg-box input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:11px;padding:12px;color:#f4f1ea;font:inherit;font-size:14px;text-align:center}
-      .pg-box input:focus{outline:2px solid #c9a96e66;border-color:#c9a96e}
-      .pg-btn{width:100%;margin-top:9px;background:#c9a96e;color:#0a0a0c;border:0;border-radius:11px;padding:12px;font:inherit;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
-      .pg-btn.ws{background:#25D366;display:none}
-      .pg-msg{font-size:12px;font-weight:700;min-height:18px;margin-top:10px;color:#e0c590}
-      .pg-alt{margin-top:12px;font-size:10.5px;color:#8a8780;background:none;border:0;text-decoration:underline;cursor:pointer;font-family:inherit}
+      /* Gate del Portero · sistema de diseño YOD OS (editorial claro/oscuro) */
+      #porteroGate{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:20px;
+        font-family:'Instrument Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;
+        background:radial-gradient(720px 400px at 78% 6%,rgba(176,124,46,.14),transparent 60%),#14110cf7}
+      #porteroGate *{box-sizing:border-box}
+      .pg-box{width:min(388px,94vw);text-align:left;background:#F6F3ED;border:1px solid #E7E1D6;border-radius:18px;padding:32px 30px;color:#2C2718;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+      .pg-eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#9A7B3F;font-weight:600;margin-bottom:13px}
+      .pg-box h2{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:31px;line-height:1.04;margin:0 0 9px;color:#2C2718}
+      .pg-box p{color:#57503F;font-size:13px;margin:0 0 18px;line-height:1.55}
+      .pg-box p b{color:#2C2718;font-weight:600}
+      .pg-box input{width:100%;background:#fff;border:1px solid #E7E1D6;border-radius:10px;padding:12px 13px;color:#2C2718;font:inherit;font-size:14px;text-align:left}
+      .pg-box input::placeholder{color:#A79E8C}
+      .pg-box input:focus{outline:2px solid rgba(176,124,46,.4);border-color:#B07C2E}
+      .pg-btn{width:100%;margin-top:10px;background:#17140F;color:#F6F3ED;border:0;border-radius:10px;padding:13px;font:inherit;font-weight:600;font-size:13.5px;cursor:pointer;transition:filter .15s}
+      .pg-btn:hover{filter:brightness(1.4)}
+      .pg-btn.ws{background:#25D366;color:#08361c;display:none}
+      #pgGoogle{margin-top:10px;display:flex;justify-content:center}
+      .pg-msg{font-size:12.5px;font-weight:600;min-height:18px;margin-top:12px;color:#9A7B3F;line-height:1.4}
+      .pg-sep{height:1px;background:#E7E1D6;margin:17px 0 3px}
+      .pg-alt{font-size:11.5px;color:#9A7B3F;background:none;border:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-family:inherit;padding:0}
     </style>
     <div class="pg-box">
-      <h2>Boards YOD</h2>
+      <div class="pg-eyebrow">Sistema interno · YOD OS</div>
+      <h2>Acceso a los boards</h2>
       <p>Escribe tu correo: si tienes acceso te mando una <b>liga mágica</b> (sin contraseñas) que te abre todo por 90 días.</p>
       <input type="email" id="pgCorreo" placeholder="tucorreo@…" autocomplete="email">
       <button class="pg-btn" id="pgEnviar">Enviarme la liga</button>
       <button class="pg-btn ws" id="pgWs">Pedir acceso por WhatsApp</button>
-      <div id="pgGoogle" style="margin-top:10px;display:flex;justify-content:center"></div>
+      <div id="pgGoogle"></div>
       <div class="pg-msg" id="pgMsg"></div>
+      <div class="pg-sep"></div>
       <button class="pg-alt" id="pgClave">Tengo una clave del equipo</button>
     </div>`;
     document.body.appendChild(dv);
