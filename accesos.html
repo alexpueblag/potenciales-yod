@@ -43,6 +43,16 @@
   .leyenda{font-size:11px;color:var(--suave);line-height:1.9}
   .leyenda b{color:var(--goldc);font-size:13px}
   .msg{font-size:11.5px;font-weight:700;color:var(--goldc);min-height:16px;margin-top:8px}
+  .msg.ok{color:var(--green)} .msg.err{color:var(--red)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .btn.is-saving{opacity:1}
+  .btn .sp{display:none;width:11px;height:11px;border:2px solid rgba(0,0,0,.25);border-top-color:currentColor;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .btn.is-saving .sp{display:inline-block;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(1turn)}}
+  #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--paper);
+    padding:11px 18px;border-radius:11px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;box-shadow:0 12px 30px rgba(35,29,20,.25);max-width:88%}
+  #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  #toast.err{background:var(--red);color:#fff}
   .mwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   table.matriz{border-collapse:collapse;width:100%;min-width:640px}
   .matriz th{font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:6px 4px;border-bottom:1px solid var(--lineaf);text-align:center;white-space:nowrap}
@@ -77,7 +87,7 @@
       <input id="aNombre" placeholder="Nombre">
       <input id="aBoards" placeholder="boards: * o RM,TA,TM…" value="*">
       <select id="aRol"><option value="vista">vista</option><option value="admin">admin</option></select>
-      <button class="btn" id="aBtn">Dar acceso</button>
+      <button class="btn" id="aBtn"><span class="sp"></span><span id="aBtnT">Dar acceso</span></button>
     </div>
     <div class="msg" id="aMsg"></div>
   </section>
@@ -119,7 +129,29 @@
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const k=()=>localStorage.getItem(LSC)||'';
-  const post=b=>fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({k:k(),request_id:(crypto.randomUUID?.()||Date.now()+'')},b))}).then(r=>r.json());
+  // POST robusto: con timeout y detección de respuestas que NO son JSON
+  // (páginas de error de Apps Script, HTML de login, etc.) para que NUNCA
+  // se quede colgado en silencio.
+  async function post(b){
+    const ctrl=new AbortController();
+    const to=setTimeout(()=>ctrl.abort(),20000);
+    try{
+      const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify(Object.assign({k:k(),request_id:(crypto.randomUUID?.()||Date.now()+'')},b)),signal:ctrl.signal});
+      const txt=await res.text();
+      let j; try{j=JSON.parse(txt)}catch(_){
+        // respuesta no-JSON: casi siempre sesión caducada o permiso
+        throw new Error(res.status>=400?('servidor '+res.status):(/sign in|accounts\.google/i.test(txt)?'sesión de Google caducada — recarga y vuelve a entrar':'respuesta inesperada del servidor'));
+      }
+      return j;
+    }finally{clearTimeout(to)}
+  }
+  let toastT;
+  function toast(msg,kind){const t=$('toast');if(!t)return;t.textContent=msg;t.className='on'+(kind==='err'?' err':'');clearTimeout(toastT);toastT=setTimeout(()=>t.className='',kind==='err'?4200:2400)}
+  function setBusy(btn,on,labelId,busyText,idleText){
+    if(!btn)return; btn.disabled=on; btn.classList.toggle('is-saving',on);
+    const lab=labelId&&$(labelId); if(lab)lab.textContent=on?busyText:idleText;
+  }
 
   const CODES=[['*','Todo'],['PT','Portal'],['MA','Macro'],['MX','Mixto'],['UN','Unifam'],['RE','Resid'],['PA','Patrim'],['MP','Mapa'],['TA','T·Alysa'],['TM','T·María'],['TC','T·Codes'],['AL','Alquimia'],['RM','Miramar'],['AC','Accesos']];
   function boardsDe(u){const b=String(u.boards||'*').trim();return b===''?'*':b}
@@ -133,20 +165,27 @@
           CODES.map(c=>{const es=c[0]==='*'?todo:tieneCode(b,c[0]);
             return '<td class="'+(c[0]==='*'?'todo':'')+'"><input type="checkbox" data-code="'+c[0]+'" '+(es?'checked':'')+(rev||(todo&&c[0]!=='*')?' disabled':'')+'></td>'}).join('')+'</tr>'}).join('')+'</tbody>';
     tb.querySelectorAll('input[type=checkbox]').forEach(ch=>ch.onchange=async()=>{
-      const tr=ch.closest('tr'),correo=tr.dataset.correo;
+      const tr=ch.closest('tr'),correo=tr.dataset.correo,mMsg=$('mMsg'),was=!ch.checked;
       let boards;
       if(ch.dataset.code==='*'){boards=ch.checked?'*':CODES.slice(1).map(c=>c[0]).join(',')}
       else{const activos=[...tr.querySelectorAll('input[type=checkbox]')].filter(x=>x.dataset.code!=='*'&&x.checked).map(x=>x.dataset.code);boards=activos.length?activos.join(','):'MP'}
-      $('mMsg').textContent='Guardando '+correo+'…';
-      const r=await post({tipo:'acceso-alta',correo,boards});
-      if(r.ok){$('mMsg').textContent='✓ '+correo+' → '+r.boards;cargar()}
-      else{$('mMsg').textContent='No se pudo: '+(r.error||'');cargar()}
+      ch.disabled=true;mMsg.className='msg';mMsg.textContent='Guardando '+correo+'…';
+      try{
+        const r=await post({tipo:'acceso-alta',correo,boards});
+        if(r.ok){mMsg.className='msg ok';mMsg.textContent='✓ '+correo+' → '+r.boards;toast('✓ Permisos guardados');cargar()}
+        else{const det=r.error==='admin'?'necesitas sesión de administrador':(r.error||'error');mMsg.className='msg err';mMsg.textContent='No se pudo: '+det;toast('No se pudo: '+det,'err');ch.checked=was;ch.disabled=false}
+      }catch(e){
+        // revierte el check para no mentir sobre lo guardado
+        ch.checked=was;ch.disabled=false;
+        mMsg.className='msg err';mMsg.textContent='No se pudo guardar: '+e.message;toast('No se pudo guardar — reintenta','err');
+      }
     });
   }
   async function cargar(){
     const cont=$('lista');
     try{
-      const r=await fetch(ENDPOINT+'?recurso=accesos-lista&k='+encodeURIComponent(k())).then(x=>x.json());
+      const raw=await fetch(ENDPOINT+'?recurso=accesos-lista&k='+encodeURIComponent(k())).then(x=>x.text());
+      let r; try{r=JSON.parse(raw)}catch(_){throw new Error(/sign in|accounts\.google/i.test(raw)?'sesión de Google caducada':'respuesta inesperada')}
       if(!r.ok){cont.innerHTML='<p class="u-meta">'+(r.error==='admin'?'Necesitas sesión de administrador (o la clave maestra) para ver esto.':'Error: '+esc(r.error))+'</p>';$('matriz').innerHTML='<tbody><tr><td class="u">Solo administrador.</td></tr></tbody>';return}
       $('uCnt').textContent='· '+r.usuarios.length;
       renderMatriz(r.usuarios);
@@ -162,22 +201,52 @@
           <div class="u-meta">boards: ${esc(u.boards)} · sesiones vivas: ${u.sesiones_vivas} · visitas registradas: ${u.visitas_n}${u.ts_alta?' · alta: '+esc(String(u.ts_alta).slice(0,10)):''}</div>
           ${u.ultimas&&u.ultimas.length?`<div class="u-visitas">${u.ultimas.map(esc).join('\n')}</div>`:''}
         </div>`).join('')||'<p class="u-meta">Sin usuarios aún.</p>';
-      cont.querySelectorAll('[data-liga]').forEach(b=>b.onclick=async()=>{const r2=await post({tipo:'sesion-crear',correo:b.dataset.liga,destino:'https://alexpueblag.github.io/potenciales-yod/'});if(!r2.ok){alert('No se pudo: '+(r2.error||''));return}try{await navigator.clipboard.writeText(r2.liga)}catch(e){}prompt('Liga de 90 días (ya está copiada) — mándala por WhatsApp:',r2.liga)});
-      cont.querySelectorAll('[data-rev]').forEach(b=>b.onclick=async()=>{if(!confirm('¿Revocar acceso y matar sesiones de '+b.dataset.rev+'?'))return;await post({tipo:'acceso-revocar',correo:b.dataset.rev});cargar()});
-      cont.querySelectorAll('[data-rea]').forEach(b=>b.onclick=async()=>{await post({tipo:'acceso-alta',correo:b.dataset.rea,nombre:b.dataset.nom});cargar()});
-    }catch(e){cont.innerHTML='<p class="u-meta">Sin conexión.</p>'}
+      cont.querySelectorAll('[data-liga]').forEach(b=>b.onclick=async()=>{
+        b.disabled=true;const t0=b.textContent;b.textContent='…';
+        try{const r2=await post({tipo:'sesion-crear',correo:b.dataset.liga,destino:'https://alexpueblag.github.io/potenciales-yod/'});
+          if(!r2.ok){toast('No se pudo crear la liga: '+(r2.error||''),'err');return}
+          try{await navigator.clipboard.writeText(r2.liga)}catch(e){}
+          toast('✓ Liga copiada — pégala en WhatsApp');
+          prompt('Liga de 90 días (ya está copiada) — mándala por WhatsApp:',r2.liga);
+        }catch(e){toast('No se pudo crear la liga: '+e.message,'err')}finally{b.disabled=false;b.textContent=t0}
+      });
+      cont.querySelectorAll('[data-rev]').forEach(b=>b.onclick=async()=>{
+        if(!confirm('¿Revocar acceso y matar sesiones de '+b.dataset.rev+'?'))return;
+        b.disabled=true;try{const r=await post({tipo:'acceso-revocar',correo:b.dataset.rev});if(r.ok){toast('Acceso revocado')}else{toast('No se pudo revocar: '+(r.error||''),'err')}cargar()}catch(e){b.disabled=false;toast('No se pudo revocar: '+e.message,'err')}
+      });
+      cont.querySelectorAll('[data-rea]').forEach(b=>b.onclick=async()=>{
+        b.disabled=true;try{const r=await post({tipo:'acceso-alta',correo:b.dataset.rea,nombre:b.dataset.nom});if(r.ok){toast('✓ Acceso reactivado')}else{toast('No se pudo reactivar: '+(r.error||''),'err')}cargar()}catch(e){b.disabled=false;toast('No se pudo reactivar: '+e.message,'err')}
+      });
+    }catch(e){cont.innerHTML='<p class="u-meta">No se pudo cargar la lista ('+esc(e.message||'sin conexión')+'). Recarga con Ctrl/⌘+Shift+R o vuelve a entrar con tu Google.</p>'}
   }
   $('aBtn').onclick=async()=>{
     const correo=$('aCorreo').value.trim(),nombre=$('aNombre').value.trim();
-    if(!correo||correo.indexOf('@')<1){$('aMsg').textContent='Correo inválido';return}
-    $('aBtn').disabled=true;$('aMsg').textContent='Guardando…';
-    const r=await post({tipo:'acceso-alta',correo,nombre,rol:$('aRol').value,boards:($('aBoards').value.trim()||'*')});
-    $('aMsg').textContent=r.ok?'✓ '+correo+' ya puede pedir su liga mágica en cualquier board':'No se pudo: '+(r.error||'');
-    $('aBtn').disabled=false;if(r.ok){$('aCorreo').value='';$('aNombre').value='';cargar()}
+    const msg=$('aMsg');
+    if(!correo||correo.indexOf('@')<1){msg.className='msg err';msg.textContent='Correo inválido — escribe algo como nombre@correo.com';$('aCorreo').focus();return}
+    setBusy($('aBtn'),true,'aBtnT','Guardando…','Dar acceso');
+    msg.className='msg';msg.textContent='Guardando '+correo+'…';
+    try{
+      const r=await post({tipo:'acceso-alta',correo,nombre,rol:$('aRol').value,boards:($('aBoards').value.trim()||'*')});
+      if(r.ok){
+        msg.className='msg ok';msg.textContent='✓ '+correo+' ya puede pedir su liga mágica en cualquier board';
+        toast('✓ Acceso guardado');
+        $('aCorreo').value='';$('aNombre').value='';cargar();
+      }else{
+        const det=r.error==='admin'?'necesitas sesión de administrador (entra con tu Google o la clave maestra)':(r.error||'error desconocido');
+        msg.className='msg err';msg.textContent='No se pudo guardar: '+det;
+        toast('No se pudo: '+det,'err');
+      }
+    }catch(e){
+      msg.className='msg err';msg.textContent='No se pudo guardar: '+e.message+'. Revisa tu conexión/sesión y vuelve a intentar.';
+      toast('No se pudo guardar — reintenta','err');
+    }finally{
+      setBusy($('aBtn'),false,'aBtnT','Guardando…','Dar acceso');
+    }
   };
   cargar();
 })();
 </script>
+<div id="toast" role="status" aria-live="polite"></div>
 <script src="portero.js?v=779fed3"></script>
 <script src="https://alexpueblag.github.io/yod-portal/os/shell.js"></script>
 </body>
