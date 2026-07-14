@@ -130,7 +130,12 @@
               $('pgMsg').textContent = 'Verificando con Google…';
               try {
                 const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', access_token: resp.access_token, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
-                if (r.ok && r.autorizado && r.token) { localStorage.setItem(LSC, r.token); $('pgMsg').textContent = '✓ Dentro — cargando…'; location.reload(); }
+                if (r.ok && r.autorizado && r.token) {
+                  const v = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(r.token) + '&cb=' + Date.now(), { cache: 'no-store' }).then(x => x.json());
+                  if (!v || !v.ok) { $('pgMsg').textContent = 'Google confirmó tu cuenta, pero la sesión no se activó (' + ((v && v.error) || 'red') + '). Reintenta.'; return; }
+                  localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol');
+                  $('pgMsg').textContent = '✓ Dentro — cargando…'; location.reload();
+                }
                 else if (r.ok && !r.autorizado) { $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:'; const ws = $('pgWs'); ws.style.display = 'block'; ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank'); }
                 else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
               } catch (e) { $('pgMsg').textContent = 'Sin conexión — reintenta'; }
