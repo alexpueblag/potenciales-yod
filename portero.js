@@ -51,7 +51,7 @@
     const body = JSON.stringify({ k, tipo: 'bitacora', eventos: txt, nueva, request_id: (crypto.randomUUID?.() || Date.now() + '' + Math.random()) });
     nueva = 0;
     if (fin && navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'text/plain;charset=utf-8' }));
-    else fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }).catch(() => {});
+    else fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body, credentials: 'omit' }).catch(() => {});
   }
   setTimeout(() => flush(false), 5000);
   setInterval(() => { if (buf.length) flush(false); }, 45000);
@@ -109,7 +109,7 @@
       if (!correo || correo.indexOf('@') < 1) { $('pgMsg').textContent = 'Escribe un correo válido'; return; }
       $('pgEnviar').disabled = true; $('pgMsg').textContent = 'Verificando…';
       try {
-        const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-solicitar', correo, destino: location.href.split('#')[0], request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
+        const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', body: JSON.stringify({ tipo: 'acceso-solicitar', correo, destino: location.href.split('#')[0], request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
         if (r.ok && r.autorizado) { $('pgMsg').textContent = '📬 Liga enviada: revisa tu correo y ábrela en este dispositivo.'; }
         else if (r.ok && !r.autorizado) {
           $('pgMsg').textContent = 'Ese correo aún no tiene acceso — pídelo por WhatsApp:';
@@ -141,7 +141,7 @@
           google.accounts.id.initialize({ client_id: GCID, callback: async resp => {
             $('pgMsg').textContent = 'Verificando con Google…';
             try {
-              const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', credential: resp.credential, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
+              const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', body: JSON.stringify({ tipo: 'acceso-google', credential: resp.credential, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
               if (r.ok && r.autorizado && r.token) { localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol'); $('pgMsg').textContent = '✓ Dentro — cargando…'; location.reload(); }
               else if (r.ok && !r.autorizado) { $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:'; const ws = $('pgWs'); ws.style.display = 'block'; ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank'); }
               else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
@@ -186,7 +186,7 @@
       const cache = JSON.parse(sessionStorage.getItem('pyod_rol') || 'null');
       if (cache && cache.f === k.slice(0, 14)) rol = cache.rol;
       else {
-        const r = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(k)).then(x => x.json());
+        const r = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(k), { credentials: 'omit' }).then(x => x.json());
         if (r && r.ok) { rol = r.rol || 'vista'; sessionStorage.setItem('pyod_rol', JSON.stringify({ f: k.slice(0, 14), rol })); }
         else if (r && r.ok === false && r.error === 'liga') {
           localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol');
