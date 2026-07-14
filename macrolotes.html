@@ -6,13 +6,13 @@
 <meta name="robots" content="noindex,nofollow">
 <title>PPP Macro Lotes · Potenciales · YoDesarrollo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   /* ===== Fintech Editorial (oscuro) · tokens por ROL, convención de los boards YoD ===== */
-  :root{--bg:#0a0a0c;--card:#131317;--surface:rgba(255,255,255,.045);--text:#f4f1ea;--muted:#8a8780;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
-    --gold:#c9a96e;--goldc:#e0c590;--blue:#8ab8ff;--teal:#7fd4e8;--pink:#ff8aa1;--orange:#D9A45B;--purple:#a9a4f5;--green:#8FBF8B;--red:#E0605A;--dark:#0a0a0c}
+  :root{--bg:#17140F;--card:#131317;--surface:rgba(255,255,255,.045);--text:#F1EDE3;--muted:#8A8272;--suave:#b6b3aa;--linea:rgba(255,255,255,.09);--lineaf:rgba(255,255,255,.16);--box:rgba(255,255,255,.05);
+    --gold:#B98B3C;--goldc:#D8AE5E;--blue:#8ab8ff;--teal:#7fd4e8;--pink:#ff8aa1;--orange:#D9A45B;--purple:#a9a4f5;--green:#8FBF8B;--red:#E0605A;--dark:#17140F}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  body{font-family:'Manrope',-apple-system,sans-serif;color:var(--text);margin:0;-webkit-font-smoothing:antialiased;
+  body{font-family:'Instrument Sans','Manrope',-apple-system,sans-serif;color:var(--text);margin:0;-webkit-font-smoothing:antialiased;
     background:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px) 0 0/60px 60px,var(--bg)}
   .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
   a{color:var(--goldc)}
@@ -24,12 +24,12 @@
   .gate-box h1{font-size:30px;margin:0 0 4px}
   .gate-box p{color:var(--muted);font-size:12px;margin:0 0 22px}
   .gate-box input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:12px;padding:13px 14px;color:var(--text);font:inherit;font-size:15px;text-align:center;letter-spacing:.06em}
-  .gate-box input:focus{outline:2px solid #c9a96e66;border-color:var(--gold)}
-  .gate-box button{width:100%;margin-top:10px;background:var(--gold);color:#0a0a0c;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .gate-box input:focus{outline:2px solid #B98B3C66;border-color:var(--gold)}
+  .gate-box button{width:100%;margin-top:10px;background:var(--gold);color:#17140F;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
   .gate-err{color:var(--red);font-size:12px;min-height:18px;margin-top:10px;font-weight:700}
   .gate-local{margin-top:16px;font-size:11px;color:var(--muted);text-decoration:underline;cursor:pointer;background:none;border:0;font-family:inherit}
   /* ===== Header pegajoso (HUD) ===== */
-  .sticky-header{position:sticky;top:0;z-index:100;background:rgba(10,10,12,.94);backdrop-filter:blur(15px);padding:10px 16px 12px;border-bottom:1px solid #c9a96e59;box-shadow:0 4px 24px #0006}
+  .sticky-header{position:sticky;top:0;z-index:100;background:rgba(10,10,12,.94);backdrop-filter:blur(15px);padding:10px 16px 12px;border-bottom:1px solid #B98B3C59;box-shadow:0 4px 24px #0006}
   .header-inner,.container{max-width:940px;margin:0 auto}.container{padding:16px 16px 80px}
   .brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
   .brandrow img{height:20px;filter:brightness(0) invert(.92)}
@@ -40,14 +40,14 @@
   .c-green{color:var(--green)}.c-pink{color:var(--pink)}.c-blue{color:var(--blue)}.c-orange{color:var(--orange)}.c-red{color:var(--red)}.c-purple{color:var(--purple)}.c-gold{color:var(--goldc)}
   .urban-hud{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;row-gap:9px;margin:9px 0 7px;padding:8px 0;border-top:1px solid #ffffff14;border-bottom:1px solid #ffffff14}
   .urban-item{min-width:0;text-align:center}
-  .urban-item span{display:block;color:#8a8780;font-size:9px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .urban-item span{display:block;color:#8A8272;font-size:9px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .urban-item b{display:block;color:#fff;font-size:13px;margin-top:2px;white-space:nowrap}
   .urban-item:nth-child(1) b{color:var(--purple)}.urban-item:nth-child(2) b{color:var(--purple)}.urban-item:nth-child(3) b{color:var(--goldc)}.urban-item:nth-child(4) b{color:var(--green)}.urban-item:nth-child(5) b{color:var(--teal)}.urban-item:nth-child(6) b{color:var(--goldc)}.urban-item:nth-child(7) b{color:var(--green)}.urban-item:nth-child(8) b{color:var(--orange)}.urban-item:nth-child(9) b{color:var(--green)}.urban-item:nth-child(10) b{color:var(--blue)}
   .split-bar{height:16px;background:#ffffff14;border-radius:8px;overflow:hidden;display:flex;margin-top:7px;box-shadow:inset 0 2px 4px #0006}
-  .split{height:100%;display:flex;justify-content:center;align-items:center;color:#0a0a0c;font-size:9px;font-weight:800;transition:width .25s;overflow:hidden}
+  .split{height:100%;display:flex;justify-content:center;align-items:center;color:#17140F;font-size:9px;font-weight:800;transition:width .25s;overflow:hidden}
   /* ===== Hero del caso ===== */
   .hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#121218,#0c0c0f);border:1px solid var(--linea);border-radius:22px;padding:20px 20px 16px;margin-bottom:14px}
-  .hero::after{content:"";position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,#c9a96e2b,transparent 65%);pointer-events:none}
+  .hero::after{content:"";position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,#B98B3C2b,transparent 65%);pointer-events:none}
   .hero .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
   .hero h1{font-size:clamp(26px,5vw,38px);margin:6px 0 2px;line-height:1.05}
   .hero .hsub{color:var(--muted);font-size:12px;margin:0 0 14px}
@@ -64,10 +64,10 @@
   .viz-card{background:var(--surface);border:1px solid var(--linea);border-radius:16px;padding:12px 12px 8px;min-width:0}
   .viz-card .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
   .viz-svg{margin-top:6px}.viz-svg svg{display:block;width:100%;height:auto}
-  .viz-svg text{font-family:'Manrope',sans-serif}
+  .viz-svg text{font-family:'Instrument Sans','Manrope',sans-serif}
   .mixbar-wrap{margin:4px 0 10px}
   .mixbar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--lineaf)}
-  .mixbar span{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#0a0a0c;white-space:nowrap;overflow:hidden;min-width:0;transition:width .3s}
+  .mixbar span{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#17140F;white-space:nowrap;overflow:hidden;min-width:0;transition:width .3s}
   .mixbar-leyenda{display:flex;gap:12px;flex-wrap:wrap;font-size:9.5px;color:var(--muted);margin-top:5px;font-weight:700}
   .mixbar-leyenda i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
   .gauge{position:relative;height:14px;border-radius:7px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
@@ -77,7 +77,7 @@
   .lentes{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
   .lentes::-webkit-scrollbar{display:none}
   .lchip{flex-shrink:0;border:1px solid var(--lineaf);border-radius:20px;padding:8px 14px;font-size:11px;font-weight:800;color:var(--suave);background:transparent;cursor:pointer;white-space:nowrap;font-family:inherit}
-  .lchip.on{background:var(--gold);color:#0a0a0c;border-color:var(--gold)}
+  .lchip.on{background:var(--gold);color:#17140F;border-color:var(--gold)}
   .lchip .cnt{background:#00000033;border-radius:10px;padding:1px 7px;margin-left:5px;font-size:10px}
   .lchip:not(.on) .cnt{background:#ffffff14;color:var(--goldc)}
   .dimmed{opacity:.28;transition:opacity .25s}
@@ -86,7 +86,7 @@
   .caso-activo{min-width:0;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
   .caso-activo b{display:block;color:var(--text);font-size:13px;text-transform:none;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
   .caso-actions{display:flex;gap:7px;flex-wrap:wrap}
-  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#0a0a0c;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .small-btn{border:0;border-radius:9px;background:var(--gold);color:#17140F;font-size:11px;font-weight:800;padding:8px 11px;cursor:pointer;font-family:inherit;white-space:nowrap}
   .small-btn.secondary{background:rgba(255,255,255,.08);color:var(--suave);border:1px solid var(--linea)}
   .small-btn.danger{background:#e0605a26;color:var(--red)}
   .small-btn:disabled{opacity:.4;cursor:default}
@@ -94,7 +94,7 @@
   .seguimiento.on{display:block}
   .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
   .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
-  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+  .echip.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
   .seg-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
   .seg-row input{flex:1;min-width:170px;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:9px;padding:9px 11px;color:var(--text);font:inherit;font-size:12px}
   .notas-log{font-size:11px;line-height:1.6;color:var(--suave);background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:9px 11px;white-space:pre-wrap;max-height:130px;overflow:auto}
@@ -110,7 +110,7 @@
   .icon-box{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
   .card-title{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .edit-pill{background:rgba(255,255,255,.08);color:var(--muted);font-size:10px;font-weight:800;padding:6px 10px;border-radius:12px}
-  .card.open .edit-pill{background:var(--gold);color:#0a0a0c}
+  .card.open .edit-pill{background:var(--gold);color:#17140F}
   .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .kpi-grid.tres{grid-template-columns:repeat(3,1fr)}
   @media(max-width:700px){.kpi-grid.tres{grid-template-columns:1fr 1fr}}
@@ -125,11 +125,11 @@
   .input-header label{font-size:11px;font-weight:800;color:var(--suave);text-transform:uppercase}
   .val-display{font-size:12px;font-weight:800;color:var(--text);background:rgba(255,255,255,.08);padding:4px 8px;border-radius:6px;min-width:70px;text-align:right;cursor:text;border:1px solid transparent}
   .val-display:hover{border-color:var(--lineaf);background:rgba(255,255,255,.12)}
-  .val-display:focus{outline:2px solid #c9a96e55;background:rgba(255,255,255,.12);border-color:var(--gold)}
+  .val-display:focus{outline:2px solid #B98B3C55;background:rgba(255,255,255,.12);border-color:var(--gold)}
   input[type=range]{appearance:none;-webkit-appearance:none;width:100%;height:24px;background:transparent}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;height:24px;width:24px;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;margin-top:-9px;cursor:grab}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;height:24px;width:24px;border-radius:50%;background:#F1EDE3;box-shadow:0 2px 8px #0008;margin-top:-9px;cursor:grab}
   input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
-  input[type=range]::-moz-range-thumb{height:24px;width:24px;border:0;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 8px #0008;cursor:grab}
+  input[type=range]::-moz-range-thumb{height:24px;width:24px;border:0;border-radius:50%;background:#F1EDE3;box-shadow:0 2px 8px #0008;cursor:grab}
   input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.14)}
   .input-help{font-size:10.5px;line-height:1.4;color:var(--muted);margin-top:6px;padding:8px 10px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.18);border-radius:10px}
   .subheading{font-size:10px;text-transform:uppercase;font-weight:800;color:var(--goldc);letter-spacing:.7px;margin:16px 0 8px;border-bottom:1px solid var(--linea);padding-bottom:6px}
@@ -140,14 +140,14 @@
   .advanced-content{padding:0 0 12px}
   .help-legend{font-size:10px;color:var(--muted);margin:0 0 10px}.help-legend b{color:var(--suave)}
   /* ===== Tratamiento del terreno / waterfall ===== */
-  .partner-guide{background:#c9a96e14;border:1px solid #c9a96e4d;border-radius:10px;padding:9px 10px;font-size:10.5px;line-height:1.45;color:#d9c9a8;margin-bottom:12px}
+  .partner-guide{background:#B98B3C14;border:1px solid #B98B3C4d;border-radius:10px;padding:9px 10px;font-size:10.5px;line-height:1.45;color:#d9c9a8;margin-bottom:12px}
   .partner-guide b{color:var(--goldc)}
   .land-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0 12px}
   .land-mode{border:1px solid var(--lineaf);border-radius:10px;background:rgba(255,255,255,.03);text-align:left;padding:9px;cursor:pointer;color:var(--suave);font-family:inherit}
   .land-mode b{display:block;font-size:11px;color:var(--text)}
   .land-mode span{display:block;margin-top:3px;font-size:9px;line-height:1.3;color:var(--muted)}
-  .land-mode.active{border-color:var(--gold);background:#c9a96e1c;box-shadow:0 0 0 1px #c9a96e55}
-  .land-deal-summary{background:#c9a96e10;border:1px solid #c9a96e40;border-radius:10px;padding:10px;font-size:11px;line-height:1.5;color:#d8d4ca;margin:10px 0}
+  .land-mode.active{border-color:var(--gold);background:#B98B3C1c;box-shadow:0 0 0 1px #B98B3C55}
+  .land-deal-summary{background:#B98B3C10;border:1px solid #B98B3C40;border-radius:10px;padding:10px;font-size:11px;line-height:1.5;color:#d8d4ca;margin:10px 0}
   .land-deal-summary b{color:var(--goldc)}
   .waterfall-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0}
   .waterfall-step{border-radius:8px;padding:7px 6px;background:rgba(255,255,255,.04);color:var(--muted);font-size:9px;line-height:1.25}
@@ -155,10 +155,10 @@
   .waterfall-step:nth-child(1){border-top:3px solid var(--red)}.waterfall-step:nth-child(2){border-top:3px solid var(--blue)}.waterfall-step:nth-child(3){border-top:3px solid var(--gold)}.waterfall-step:nth-child(4){border-top:3px solid var(--orange)}
   /* ===== Ayudas (tooltips de factores) ===== */
   .label-help{display:inline-flex;align-items:center;gap:5px;min-width:0}
-  .factor-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;padding:0;border:1px solid #c9a96e66;border-radius:50%;background:transparent;color:var(--goldc);font-size:11px;font-weight:900;cursor:help;font-family:inherit}
+  .factor-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;padding:0;border:1px solid #B98B3C66;border-radius:50%;background:transparent;color:var(--goldc);font-size:11px;font-weight:900;cursor:help;font-family:inherit}
   .factor-tooltip{display:none;position:absolute;z-index:200;left:-5px;top:23px;width:min(310px,70vw);padding:10px;border-radius:10px;background:#1c1c22;border:1px solid var(--lineaf);color:#f2ede2;box-shadow:0 8px 22px #000a;font:10.5px/1.42 'Manrope',sans-serif;text-transform:none;letter-spacing:0;text-align:left}
   .factor-tooltip b{color:#fff}
-  .factor-tooltip .help-type{display:inline-block;margin:0 0 5px;padding:2px 5px;border-radius:5px;background:#c9a96e26;color:var(--goldc);font-size:9px;font-weight:800;text-transform:uppercase}
+  .factor-tooltip .help-type{display:inline-block;margin:0 0 5px;padding:2px 5px;border-radius:5px;background:#B98B3C26;color:var(--goldc);font-size:9px;font-weight:800;text-transform:uppercase}
   .factor-tooltip p{margin:4px 0}.factor-tooltip a{color:var(--goldc);text-decoration:underline}
   .factor-help:hover .factor-tooltip,.factor-help:focus .factor-tooltip,.factor-help.open .factor-tooltip{display:block}
   .kpi-box[data-kpi-help]{cursor:help}
@@ -171,9 +171,9 @@
   .formula-row{display:grid;grid-template-columns:132px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linea)}
   .formula-row b{color:var(--text)}
   .formula-row code{font-size:10px;color:var(--muted);white-space:normal}
-  .formula-btn{border:0;background:#c9a96e22;color:var(--goldc);border-radius:8px;font-size:10px;font-weight:800;padding:5px;cursor:pointer;font-family:inherit}
+  .formula-btn{border:0;background:#B98B3C22;color:var(--goldc);border-radius:8px;font-size:10px;font-weight:800;padding:5px;cursor:pointer;font-family:inherit}
   .formula-detail{background:rgba(255,255,255,.03);border:1px solid var(--linea);border-radius:10px;padding:10px;font-size:11px;line-height:1.45;color:var(--suave);margin-top:9px}
-  .chip{border:0;background:#c9a96e22;color:var(--goldc);border-radius:12px;padding:4px 7px;margin:5px 4px 0 0;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
+  .chip{border:0;background:#B98B3C22;color:var(--goldc);border-radius:12px;padding:4px 7px;margin:5px 4px 0 0;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
   .flow-table{width:100%;border-collapse:collapse;font-size:11px;color:var(--suave)}
   .flow-table th,.flow-table td{padding:7px 5px;border-bottom:1px solid var(--linea);text-align:right}
   .flow-table th:first-child,.flow-table td:first-child{text-align:left}
@@ -204,7 +204,7 @@
   .fld{margin-bottom:11px}
   .fld label{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}
   .fld input,.fld textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--lineaf);border-radius:10px;padding:11px 12px;color:var(--text);font:inherit;font-size:13px}
-  .fld input:focus,.fld textarea:focus{outline:2px solid #c9a96e55;border-color:var(--gold)}
+  .fld input:focus,.fld textarea:focus{outline:2px solid #B98B3C55;border-color:var(--gold)}
   .fld textarea{min-height:56px;resize:vertical;font-size:12px}
   .fld .hint{font-size:10px;color:var(--muted);margin-top:4px}
   .sheet-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
@@ -215,7 +215,7 @@
   .caso-item .ci-m{font-size:10px;color:var(--muted);margin-top:2px}
   .caso-item .ci-kpi{text-align:right;font-size:11px;font-weight:800;color:var(--goldc);white-space:nowrap}
   .caso-item .ci-kpi span{display:block;font-size:9px;color:var(--muted);font-weight:700}
-  .badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:9px;padding:2px 7px;background:#c9a96e26;color:var(--goldc);margin-left:6px;vertical-align:1px}
+  .badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:9px;padding:2px 7px;background:#B98B3C26;color:var(--goldc);margin-left:6px;vertical-align:1px}
   #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1d1d22;border:1px solid var(--gold);color:var(--text);font-size:12px;font-weight:700;border-radius:12px;padding:11px 18px;z-index:600;transition:transform .3s;max-width:88vw;text-align:center;box-shadow:0 10px 30px #000a}
   #toast.on{transform:translateX(-50%) translateY(0)}
   .clave-banner{display:none;background:#d9a45b1a;border:1px solid #d9a45b55;color:#e8c896;border-radius:12px;padding:10px 12px;font-size:11.5px;margin-bottom:12px;line-height:1.5}
@@ -239,23 +239,23 @@
 <style>
   /* ===== Extras del módulo Macro Lotes ===== */
   .areas-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--lineaf);margin:10px 0 5px}
-  .areas-bar span{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#0a0a0c;overflow:hidden;white-space:nowrap;min-width:0;transition:width .3s}
+  .areas-bar span{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#17140F;overflow:hidden;white-space:nowrap;min-width:0;transition:width .3s}
   .gate-agua{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:12px;padding:4px 10px;margin-left:6px;vertical-align:middle}
   .gate-agua.g0{border:1px solid var(--red);color:#f4b8b3;background:#e0605a1f}
   .gate-agua.g1{border:1px solid var(--orange);color:#e8c896;background:#d9a45b1f}
   .gate-agua.g2{border:1px solid var(--green);color:#b5dcb1;background:#8fbf8b1f}
   .esc-chips{display:flex;gap:7px;margin:10px 0 2px;flex-wrap:wrap}
   .esc-chip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:14px;padding:7px 13px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
-  .esc-chip.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+  .esc-chip.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
   .esc-chip.p.on{background:var(--red);border-color:var(--red);color:#fff}
-  .esc-chip.o.on{background:var(--green);border-color:var(--green);color:#0a0a0c}
+  .esc-chip.o.on{background:var(--green);border-color:var(--green);color:#17140F}
   .breadcrumb{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:6px}
   .breadcrumb a{color:var(--goldc);text-decoration:none}
   /* ===== Barra de suelo (Age of Empires) ===== */
   .suelo-bar{height:17px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;display:flex;margin:7px 0 2px;box-shadow:inset 0 2px 4px #0006}
-  .suelo-chunk{height:100%;display:flex;align-items:center;justify-content:center;color:#0a0a0c;font-size:8.5px;font-weight:800;white-space:nowrap;overflow:hidden;transition:width .2s ease-out;min-width:0}
+  .suelo-chunk{height:100%;display:flex;align-items:center;justify-content:center;color:#17140F;font-size:8.5px;font-weight:800;white-space:nowrap;overflow:hidden;transition:width .2s ease-out;min-width:0}
   .suelo-chunk.ces{color:#c9c5ba}
-  .suelo-chunk.libre{color:#8a8780;background:repeating-linear-gradient(45deg,#1d1d22,#1d1d22 5px,#26262c 5px,#26262c 10px)!important}
+  .suelo-chunk.libre{color:#8A8272;background:repeating-linear-gradient(45deg,#1d1d22,#1d1d22 5px,#26262c 5px,#26262c 10px)!important}
   /* ===== Rango P/B/O dentro de un KPI ===== */
   .rango{position:relative;height:6px;margin-top:3px;background:rgba(255,255,255,.1);border-radius:3px}
   .rango i{position:absolute;top:0;width:6px;height:6px;border-radius:50%;transform:translateX(-50%)}
@@ -271,7 +271,7 @@
   .estrategia-row{display:flex;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:wrap}
   .estrategia-row .et{font-size:10px;font-weight:800;color:var(--suave);text-transform:uppercase;min-width:70px}
   .estr-btn{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:12px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
-  .estr-btn.on{background:var(--goldc);border-color:var(--goldc);color:#0a0a0c}
+  .estr-btn.on{background:var(--goldc);border-color:var(--goldc);color:#17140F}
   @media(max-width:700px){.graf-row2{grid-template-columns:1fr}}
   /* KPIs del metro (HUD) */
   .mkpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:2px}
@@ -319,7 +319,7 @@
   <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · PPP Macro Lotes</span></div>
   <div class="suelo-bar" id="sueloBar" title="El suelo repartiéndose en vivo"></div>
   <div class="urban-hud" style="margin:4px 0 5px;padding:6px 0"><div class="urban-item"><span>Naves</span><b id="hudNaves" class="c-gold">0</b></div><div class="urban-item"><span>Macro</span><b id="hudMacro" class="c-blue">0</b></div><div class="urban-item"><span>Comercial</span><b id="hudCom" style="color:var(--teal)">0</b></div><div class="urban-item"><span>Viviendas</span><b id="hudVivs" class="c-green">0</b></div><div class="urban-item"><span>Habitantes</span><b id="hudHab">—</b></div><div class="urban-item"><span>Empleos</span><b id="hudEmp" class="c-green">0</b></div><div class="urban-item"><span>Empleo:PEA</span><b id="hudRatio">—</b></div><div class="urban-item"><span>Vehículos</span><b id="hudVeh" class="c-orange">0</b></div><div class="urban-item"><span>OMS verde</span><b id="hudOms" class="c-green">—</b></div><div class="urban-item"><span>Agua/día</span><b id="hudAguaDia" class="c-blue">0 m³</b></div></div>
-  <div class="hud-row" style="margin-top:5px;border:0;font-size:10px;color:#8a8780"><div class="hud-item">Ventas <span id="hudIngresos" class="hud-val c-green">$0 M</span></div><div class="hud-item">Utilidad <span id="hudUtilidad" class="hud-val c-gold">$0 M</span> · <span id="hudMargen">0%</span></div><div class="hud-item">TIR Dev <span id="hudTir" class="hud-val c-blue">—</span></div><div class="hud-item">Pico deuda <span id="hudDeuda" class="hud-val c-purple">$0 M</span></div><div class="hud-item">Dueño <span id="lblCajaDueno" class="hud-val c-blue">$0 M</span> / Dev <span id="lblCajaDes" class="hud-val c-orange">$0 M</span></div><div class="hud-item">Agua <span id="hudGate" class="hud-val">—</span></div></div>
+  <div class="hud-row" style="margin-top:5px;border:0;font-size:10px;color:#8A8272"><div class="hud-item">Ventas <span id="hudIngresos" class="hud-val c-green">$0 M</span></div><div class="hud-item">Utilidad <span id="hudUtilidad" class="hud-val c-gold">$0 M</span> · <span id="hudMargen">0%</span></div><div class="hud-item">TIR Dev <span id="hudTir" class="hud-val c-blue">—</span></div><div class="hud-item">Pico deuda <span id="hudDeuda" class="hud-val c-purple">$0 M</span></div><div class="hud-item">Dueño <span id="lblCajaDueno" class="hud-val c-blue">$0 M</span> / Dev <span id="lblCajaDes" class="hud-val c-orange">$0 M</span></div><div class="hud-item">Agua <span id="hudGate" class="hud-val">—</span></div></div>
 </div></div>
 
 <main class="container">
@@ -441,7 +441,7 @@
         <div class="input-group"><div class="input-header"><label>Señalética y nomenclatura ($)</label><div class="val-display" data-input="inPuSenaletica">$400,000</div></div><input type="range" id="inPuSenaletica" min="0" max="3000000" step="50000" value="400000" data-color="var(--muted)" data-format="money"></div>
         <div class="micro-readout" id="readUrb">Calculando urbanización…</div></div></article>
 
-    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#c9a96e1f;color:var(--gold)">🏗️</div><div class="card-title">Construcción de Naves + Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dCostos"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#B98B3C1f;color:var(--gold)">🏗️</div><div class="card-title">Construcción de Naves + Blandos</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Construcción de Naves</span><span class="kpi-val c-red" id="lblConstNaves">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Blandos e Indirectos</span><span class="kpi-val" id="lblBlandos">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Costo Total del Proyecto</span><span class="kpi-val c-red" id="lblCostoTotal">$0 M</span></div><div class="kpi-box"><span class="kpi-lbl">Spread del Metro (utilidad/m²)</span><span class="kpi-val c-gold" id="lblSpreadM2">$0 /m²</span></div></div>
       <div class="drawer" id="dCostos"><div class="subheading">Construcción</div>
         <div class="input-group"><div class="input-header"><label>Costo de construcción de nave ($/m²)</label><div class="val-display" data-input="inCostoNave">$7,800</div></div><input type="range" id="inCostoNave" min="4000" max="16000" step="100" value="7800" data-color="var(--red)" data-format="money"></div>
@@ -784,7 +784,7 @@
     txt('hudIngresos',fmtM(r.ingresos));txt('hudDeuda',fmtM(r.peak));txt('hudUtilidad',fmtM(r.utilidadFinal));txt('hudMargen',pct(r.margenFinal*100,1));txt('hudTir',r.devIrr===null?'—':pct(r.devIrr*100,1));
     const gInfo=[['⚠ en veda','var(--red)'],['en trámite','var(--orange)'],['resuelta','var(--green)']][r.p.gateAgua];const hg=$('hudGate');hg.textContent=gInfo[0];hg.style.color=gInfo[1];
     // barra de suelo (Age of Empires): el terreno repartiéndose en vivo
-    const sb=$('sueloBar');if(sb){const libre=Math.max(0,1-r.mixTotal)*r.vendiblePct;const chunks=[['cesiones',r.sumaCesiones,'#3a3a40','ces'],['naves',r.p.mixNaves*r.vendiblePct,'#c9a96e',''],['macro',r.p.mixMacro*r.vendiblePct,'#8ab8ff',''],['comercial',r.p.mixCom*r.vendiblePct,'#7fd4e8',''],['vivienda',r.p.mixViv*r.vendiblePct,'#8FBF8B',''],['LIBRE',libre,'#1d1d22','libre']].filter(c=>c[1]>0.001);
+    const sb=$('sueloBar');if(sb){const libre=Math.max(0,1-r.mixTotal)*r.vendiblePct;const chunks=[['cesiones',r.sumaCesiones,'#3a3a40','ces'],['naves',r.p.mixNaves*r.vendiblePct,'#B98B3C',''],['macro',r.p.mixMacro*r.vendiblePct,'#8ab8ff',''],['comercial',r.p.mixCom*r.vendiblePct,'#7fd4e8',''],['vivienda',r.p.mixViv*r.vendiblePct,'#8FBF8B',''],['LIBRE',libre,'#1d1d22','libre']].filter(c=>c[1]>0.001);
       sb.innerHTML=chunks.map(c=>`<span class="suelo-chunk ${c[3]}" style="width:${c[1]*100}%;background:${c[2]}" title="${c[0]}: ${pct(c[1]*100,0)} del terreno · ${fmtHa(r.superficie*c[1])}">${c[1]>.08?c[0]+' '+pct(c[1]*100,0):''}</span>`).join('')}
     // contadores demográficos del polo
     txt('hudNaves',fmtN(r.nNaves));txt('hudMacro',fmtN(r.nMacro));txt('hudCom',fmtN(r.nCom));txt('hudVivs',fmtN(r.nViv));
@@ -855,8 +855,8 @@
   }
   function renderLandDeal(r){const pctA=r.p.aporteTierra*100,mode=pctA===0?'venta':pctA===100?'aporte':'mixto';const text=mode==='venta'?`<b>Venta de terreno.</b> El proyecto paga <b>${fmtM(r.tierraPago)}</b> al dueño al cierre (a ${fmtMoney(r.p.valorTierraM2)}/m²); el dueño no participa en la utilidad (pon su % en 0).`:mode==='aporte'?`<b>Aportación.</b> El dueño no cobra al cierre; recibe <b>${pct(r.p.pctDueno*100,0)}</b> de la utilidad neta = <b>${fmtM(r.duenoUtilidad)}</b>.`:`<b>Acuerdo mixto.</b> Cobra <b>${fmtM(r.tierraPago)}</b> al cierre por la porción vendida y ${pct(r.p.pctDueno*100,0)} de utilidad por la aportada.`;$('landDealSummary').innerHTML=`${text}<br><b>Resultado total del dueño: ${fmtM(r.ownerTotal)}</b> = ${fmtMoney(r.valorTerrenoM2)} por m² de su terreno (contra ${fmtMoney(r.p.valorTierraM2)}/m² de mercado en bruto).`;document.querySelectorAll('[data-land-mode]').forEach(b=>{b.classList.toggle('active',(mode==='venta'&&b.dataset.landMode==='0')||(mode==='aporte'&&b.dataset.landMode==='100')||(mode==='mixto'&&b.dataset.landMode==='50'));b.onclick=()=>{setControl('inAporteTierra',Number(b.dataset.landMode));if(b.dataset.landMode==='0')setControl('inPctDueno',0);calculate()}})}
   /* ================== INFOGRAFÍA ================== */
-  function dibujaAreas(r){const bar=$('vizAreas'),ley=$('vizAreasLey');if(!bar)return;const defs=[['vialidades',r.p.pctVial,'#D9A45B'],['banquetas',r.p.pctBanq,'#b98d4e'],['verdes/donación',r.p.pctVerdes,'#8FBF8B'],['equipamiento',r.p.pctEquip,'#a9a4f5'],['retención',r.p.pctRet,'#8ab8ff'],['derecho de vía',r.p.pctDDV,'#E0605A'],['VENDIBLE',r.vendiblePct,'#c9a96e']];bar.innerHTML=defs.map(d=>`<span style="width:${Math.max(0,d[1]*100)}%;background:${d[2]}" title="${d[0]}: ${pct(d[1]*100,0)}">${d[1]>.09?pct(d[1]*100,0):''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} ${pct(d[1]*100,0)}</span>`).join('')}
-  function dibujaMezcla(r){const bar=$('vizMezcla'),ley=$('vizMezclaLey');if(!bar)return;const defs=[['Naves',r.p.mixNaves,'#c9a96e',`${fmtN(r.nNaves)} naves · ${fmtN(r.m2NavesConst)} m²`],['Macro',r.p.mixMacro,'#8ab8ff',`${fmtN(r.nMacro)} lotes · ${fmtN(r.m2MacroVend)} m²`],['Comercial',r.p.mixCom,'#7fd4e8',`${fmtN(r.nCom)} lotes · ${fmtN(r.m2ComVend)} m²`],['Vivienda',r.p.mixViv,'#8FBF8B',`${fmtN(r.nViv)} lotes · ${fmtN(r.m2VivVend)} m²`]].filter(d=>d[1]>0);const tot=Math.max(.0001,defs.reduce((a,d)=>a+d[1],0));bar.innerHTML=defs.map(d=>`<span style="width:${d[1]/tot*100}%;background:${d[2]}" title="${d[0]}: ${d[3]}">${d[1]/tot>.14?d[0]:''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} · ${d[3]}</span>`).join('')}
+  function dibujaAreas(r){const bar=$('vizAreas'),ley=$('vizAreasLey');if(!bar)return;const defs=[['vialidades',r.p.pctVial,'#D9A45B'],['banquetas',r.p.pctBanq,'#b98d4e'],['verdes/donación',r.p.pctVerdes,'#8FBF8B'],['equipamiento',r.p.pctEquip,'#a9a4f5'],['retención',r.p.pctRet,'#8ab8ff'],['derecho de vía',r.p.pctDDV,'#E0605A'],['VENDIBLE',r.vendiblePct,'#B98B3C']];bar.innerHTML=defs.map(d=>`<span style="width:${Math.max(0,d[1]*100)}%;background:${d[2]}" title="${d[0]}: ${pct(d[1]*100,0)}">${d[1]>.09?pct(d[1]*100,0):''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} ${pct(d[1]*100,0)}</span>`).join('')}
+  function dibujaMezcla(r){const bar=$('vizMezcla'),ley=$('vizMezclaLey');if(!bar)return;const defs=[['Naves',r.p.mixNaves,'#B98B3C',`${fmtN(r.nNaves)} naves · ${fmtN(r.m2NavesConst)} m²`],['Macro',r.p.mixMacro,'#8ab8ff',`${fmtN(r.nMacro)} lotes · ${fmtN(r.m2MacroVend)} m²`],['Comercial',r.p.mixCom,'#7fd4e8',`${fmtN(r.nCom)} lotes · ${fmtN(r.m2ComVend)} m²`],['Vivienda',r.p.mixViv,'#8FBF8B',`${fmtN(r.nViv)} lotes · ${fmtN(r.m2VivVend)} m²`]].filter(d=>d[1]>0);const tot=Math.max(.0001,defs.reduce((a,d)=>a+d[1],0));bar.innerHTML=defs.map(d=>`<span style="width:${d[1]/tot*100}%;background:${d[2]}" title="${d[0]}: ${d[3]}">${d[1]/tot>.14?d[0]:''}</span>`).join('');ley.innerHTML=defs.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} · ${d[3]}</span>`).join('')}
   function dibujaPlan(r){
     const el=$('vizPlan');if(!el)return;const p=r.p;
     // Plano HORIZONTAL: carretera a la izquierda, el fondo corre hacia la derecha.
@@ -877,7 +877,7 @@
     segs.push({t:'calle'});
     if(p.mixCom>0)segs.push({t:'prod',w:wOf(r.terrCom/r.superficie),c:'#7fd4e8',f:'#7fd4e814',lbl:`${fmtN(r.nCom)} comerciales`,grid:Math.max(2,Math.round(r.nCom/2))});
     segs.push({t:'calle'});
-    for(let i=0;i<navesSub;i++){segs.push({t:'prod',w:wOf(r.terrNaves/r.superficie)/navesSub,c:'#c9a96e',f:'#c9a96e14',lbl:i===Math.floor(navesSub/2)?`${fmtN(r.nNaves)} naves PyME (NOWUS)`:'',grid:8});if(i<navesSub-1)segs.push({t:'calle'})}
+    for(let i=0;i<navesSub;i++){segs.push({t:'prod',w:wOf(r.terrNaves/r.superficie)/navesSub,c:'#B98B3C',f:'#B98B3C14',lbl:i===Math.floor(navesSub/2)?`${fmtN(r.nNaves)} naves PyME (NOWUS)`:'',grid:8});if(i<navesSub-1)segs.push({t:'calle'})}
     if(p.mixViv>0){segs.push({t:'calle'});segs.push({t:'prod',w:wOf(r.terrViv/r.superficie),c:'#8FBF8B',f:'#8fbf8b14',lbl:`${fmtN(r.nViv)} lotes vivienda`,grid:10})}
     segs.push({t:'calle'});
     if(p.mixMacro>0)segs.push({t:'prod',w:wOf(r.terrMacro/r.superficie),c:'#8ab8ff',f:'#8ab8ff12',lbl:`${fmtN(r.nMacro)} macro-lotes`,grid:Math.max(2,Math.round(r.nMacro/3))});
@@ -888,7 +888,7 @@
     let x=x0;const vendZonas=[];
     segs.forEach(seg=>{
       const w=seg.t==='calle'?wCalle:seg.w||0;if(w<=0)return;
-      if(seg.t==='calle'){s+=`<rect x="${x}" y="${y0}" width="${w}" height="${lotH}" fill="#000" stroke="#8a8780" stroke-width="${Math.min(1,w*.2)}"/>`;if(w>7)s+=`<line x1="${x+w/2}" y1="${y0+4}" x2="${x+w/2}" y2="${yFin-4}" stroke="#f4f1ea33" stroke-width="1" stroke-dasharray="6 5"/>`}
+      if(seg.t==='calle'){s+=`<rect x="${x}" y="${y0}" width="${w}" height="${lotH}" fill="#000" stroke="#8A8272" stroke-width="${Math.min(1,w*.2)}"/>`;if(w>7)s+=`<line x1="${x+w/2}" y1="${y0+4}" x2="${x+w/2}" y2="${yFin-4}" stroke="#F1EDE333" stroke-width="1" stroke-dasharray="6 5"/>`}
       else{s+=`<rect x="${x}" y="${y0}" width="${w}" height="${lotH}" fill="${seg.f}" stroke="${seg.c}" stroke-width="1.1"${seg.dash?' stroke-dasharray="4 3"':''}/>`;
         if(seg.grid&&w>7){const rows=seg.grid;for(let i=1;i<rows;i++)s+=`<line x1="${x}" y1="${y0+i*lotH/rows}" x2="${x+w}" y2="${y0+i*lotH/rows}" stroke="${seg.c}2e" stroke-width="1"/>`}
         if(seg.lbl&&w>=64)s+=`<text x="${x+w/2}" y="${y0+lotH/2+3}" font-size="8.5" font-weight="800" fill="${seg.c}" text-anchor="middle">${seg.lbl}</text>`;
@@ -903,15 +903,15 @@
       s+=`<text x="${x0+lotW/2}" y="${y0-6}" font-size="8.5" font-weight="800" fill="#E0605A" text-anchor="middle">⚠ vendible condicionado al agua (${p.gateAgua===0?'veda sin resolver':'en trámite'})</text>`;
     }
     // contorno, carretera (izquierda, vertical) y cotas
-    s+=`<rect x="${x0}" y="${y0}" width="${lotW}" height="${lotH}" fill="none" stroke="#f4f1ea" stroke-width="1.5"/>`;
-    s+=`<line x1="${x0-9}" y1="${y0-8}" x2="${x0-9}" y2="${yFin+8}" stroke="#f4f1ea" stroke-width="2"/><text x="${x0-15}" y="${(y0+yFin)/2}" font-size="8.5" fill="#cf7a74" text-anchor="middle" transform="rotate(-90 ${x0-15} ${(y0+yFin)/2})">Carr. Hermosillo–Kino · frente ${fmtN(p.frente)} m</text>`;
-    s+=`<text x="${x0+lotW/2}" y="${yFin+14}" font-size="8" fill="#8a8780" text-anchor="middle">fondo ${fmtN(p.fondo)} m →</text>`;
-    const esc100=100*escala;if(esc100>8)s+=`<line x1="${x0+lotW-esc100}" y1="${yFin+22}" x2="${x0+lotW}" y2="${yFin+22}" stroke="#8a8780" stroke-width="2"/><text x="${x0+lotW-esc100/2}" y="${yFin+31}" font-size="7.5" fill="#8a8780" text-anchor="middle">100 m</text>`;
+    s+=`<rect x="${x0}" y="${y0}" width="${lotW}" height="${lotH}" fill="none" stroke="#F1EDE3" stroke-width="1.5"/>`;
+    s+=`<line x1="${x0-9}" y1="${y0-8}" x2="${x0-9}" y2="${yFin+8}" stroke="#F1EDE3" stroke-width="2"/><text x="${x0-15}" y="${(y0+yFin)/2}" font-size="8.5" fill="#cf7a74" text-anchor="middle" transform="rotate(-90 ${x0-15} ${(y0+yFin)/2})">Carr. Hermosillo–Kino · frente ${fmtN(p.frente)} m</text>`;
+    s+=`<text x="${x0+lotW/2}" y="${yFin+14}" font-size="8" fill="#8A8272" text-anchor="middle">fondo ${fmtN(p.fondo)} m →</text>`;
+    const esc100=100*escala;if(esc100>8)s+=`<line x1="${x0+lotW-esc100}" y1="${yFin+22}" x2="${x0+lotW}" y2="${yFin+22}" stroke="#8A8272" stroke-width="2"/><text x="${x0+lotW-esc100/2}" y="${yFin+31}" font-size="7.5" fill="#8A8272" text-anchor="middle">100 m</text>`;
     // leyenda a la derecha: el reparto del suelo en ha
     const lx=x0+lotW+30;let ly=mT+6;
-    const fila=(c,nom,dato,bold)=>{s+=`<rect x="${lx}" y="${ly-7}" width="9" height="9" rx="2" fill="${c}"/><text x="${lx+14}" y="${ly+1}" font-size="9"${bold?' font-weight="800"':''} fill="${bold?'#f4f1ea':'#b6b3aa'}">${nom}</text><text x="${lx+14}" y="${ly+12}" font-size="8.5" fill="#8a8780">${dato}</text>`;ly+=26};
-    s+=`<text x="${lx}" y="${ly}" font-size="8.5" font-weight="800" fill="#8a8780" letter-spacing="2">EL REPARTO DEL SUELO</text>`;ly+=18;
-    if(p.mixNaves>0)fila('#c9a96e','Naves PyME',`${fmtHa(r.terrNaves)} · ${fmtN(r.nNaves)} naves · ${fmtM(r.ingNaves)}`,1);
+    const fila=(c,nom,dato,bold)=>{s+=`<rect x="${lx}" y="${ly-7}" width="9" height="9" rx="2" fill="${c}"/><text x="${lx+14}" y="${ly+1}" font-size="9"${bold?' font-weight="800"':''} fill="${bold?'#F1EDE3':'#b6b3aa'}">${nom}</text><text x="${lx+14}" y="${ly+12}" font-size="8.5" fill="#8A8272">${dato}</text>`;ly+=26};
+    s+=`<text x="${lx}" y="${ly}" font-size="8.5" font-weight="800" fill="#8A8272" letter-spacing="2">EL REPARTO DEL SUELO</text>`;ly+=18;
+    if(p.mixNaves>0)fila('#B98B3C','Naves PyME',`${fmtHa(r.terrNaves)} · ${fmtN(r.nNaves)} naves · ${fmtM(r.ingNaves)}`,1);
     if(p.mixMacro>0)fila('#8ab8ff','Macro-lotes',`${fmtHa(r.terrMacro)} · ${fmtN(r.nMacro)} lotes · ${fmtM(r.ingMacro)}`,1);
     if(p.mixCom>0)fila('#7fd4e8','Comercial',`${fmtHa(r.terrCom)} · ${fmtN(r.nCom)} lotes · ${fmtM(r.ingCom)}`,1);
     if(p.mixViv>0)fila('#8FBF8B','Lotes vivienda',`${fmtHa(r.terrViv)} · ${fmtN(r.nViv)} lotes · ${fmtM(r.ingViv)}`,1);
@@ -920,8 +920,8 @@
     fila('#a9a4f5','Equipamiento',fmtHa(r.m2Equip));
     fila('#8ab8ff','Retención pluvial',fmtHa(r.m2Ret));
     fila('#E0605A','Derecho de vía',fmtHa(r.m2DDV));
-    ly+=2;s+=`<line x1="${lx}" y1="${ly-12}" x2="${W-10}" y2="${ly-12}" stroke="#ffffff22"/><text x="${lx}" y="${ly}" font-size="9.5" font-weight="800" fill="#e0c590">${fmtHa(r.superficie)} → ${fmtHa(r.vendible)} vendibles (${pct(r.vendiblePct*100,0)})</text>`;ly+=13;
-    s+=`<text x="${lx}" y="${ly}" font-size="8.5" fill="#8a8780">~${fmtN(r.empleos)} empleos · agua ${r.aguaDia.toFixed(0)} m³/día · ${fmtN(r.demandaKva)} kVA</text>`;
+    ly+=2;s+=`<line x1="${lx}" y1="${ly-12}" x2="${W-10}" y2="${ly-12}" stroke="#ffffff22"/><text x="${lx}" y="${ly}" font-size="9.5" font-weight="800" fill="#D8AE5E">${fmtHa(r.superficie)} → ${fmtHa(r.vendible)} vendibles (${pct(r.vendiblePct*100,0)})</text>`;ly+=13;
+    s+=`<text x="${lx}" y="${ly}" font-size="8.5" fill="#8A8272">~${fmtN(r.empleos)} empleos · agua ${r.aguaDia.toFixed(0)} m³/día · ${fmtN(r.demandaKva)} kVA</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plano proporcional del terreno (horizontal)">${s}</svg>`;
   }
   function dibujaCurva(r){
@@ -937,16 +937,16 @@
     else s+=`<text x="${(W)/2}" y="${mT+26}" font-size="9" font-weight="800" fill="#8FBF8B" text-anchor="middle">sin deuda: los enganches fondean la obra</text>`;
     for(let e=1;e<=r.p.etapas;e++){const xe=X(Math.min((e-1)*r.p.mesesUrbEtapa,n-1));s+=`<line x1="${xe}" y1="${mT}" x2="${xe}" y2="${H-mB}" stroke="#e0605a33" stroke-width="1"/>`;if(e<=3)s+=`<text x="${xe+2}" y="${H-mB-4}" font-size="7" fill="#cf7a74">E${e}</text>`}
     s+=`<line x1="${mL}" y1="${H-mB}" x2="${W-mR}" y2="${H-mB}" stroke="#ffffff22" stroke-width="1"/>`;
-    for(let m=12;m<=n;m+=12)s+=`<text x="${X(m-1)}" y="${H-mB+11}" font-size="7.5" fill="#8a8780" text-anchor="middle">${m}</text>`;
+    for(let m=12;m<=n;m+=12)s+=`<text x="${X(m-1)}" y="${H-mB+11}" font-size="7.5" fill="#8A8272" text-anchor="middle">${m}</text>`;
     // inventarios vaciándose (la carrera): una línea por producto en la banda superior
-    const prods=[[r.nNaves,r.p.absNaves,'#c9a96e'],[r.nMacro,r.p.absMacro,'#8ab8ff'],[r.nCom,r.p.absCom,'#7fd4e8'],[r.nViv,r.p.absViv,'#8FBF8B']].filter(x=>x[0]>0);
+    const prods=[[r.nNaves,r.p.absNaves,'#B98B3C'],[r.nMacro,r.p.absMacro,'#8ab8ff'],[r.nCom,r.p.absCom,'#7fd4e8'],[r.nViv,r.p.absViv,'#8FBF8B']].filter(x=>x[0]>0);
     prods.forEach(([nu,abs,col])=>{const mIni=r.p.inicioVentas-1,mFin=Math.min(mIni+nu/abs,n-1);
       s+=`<line x1="${X(mIni)}" y1="${mT+2}" x2="${X(mFin)}" y2="${mT+30}" stroke="${col}" stroke-width="1.6" opacity=".85"/><circle cx="${X(mFin)}" cy="${mT+30}" r="2.2" fill="${col}"/>`});
-    s+=`<text x="${W-mR}" y="${mT+8}" font-size="8" font-weight="800" fill="#e0c590" text-anchor="end">inventario ↓ · cola: ${r.colaProducto} · mes ${r.colaMes}</text>`;
+    s+=`<text x="${W-mR}" y="${mT+8}" font-size="8" font-weight="800" fill="#D8AE5E" text-anchor="end">inventario ↓ · cola: ${r.colaProducto} · mes ${r.colaMes}</text>`;
     // punto de equilibrio: mes en que lo cobrado cubre el costo del proyecto
     let acum=0,beMes=null;for(let i=0;i<n;i++){acum+=r.flows[i].rev;if(acum>=r.costoProyecto){beMes=i+1;break}}
     if(beMes){const xb=X(beMes-1);s+=`<line x1="${xb}" y1="${mT}" x2="${xb}" y2="${H-mB}" stroke="#8FBF8B88" stroke-width="1.2" stroke-dasharray="5 3"/><text x="${xb+3}" y="${mT+44}" font-size="8" font-weight="800" fill="#a9d3a5">tablas · mes ${beMes}</text>`}
-    s+=`<text x="${mL}" y="${H-4}" font-size="8.5" fill="#8a8780">meses · barras verdes = cobros · ${r.debt<1?'deuda liquidada al cierre':'⚠ deuda viva al cierre'}</text>`;
+    s+=`<text x="${mL}" y="${H-4}" font-size="8.5" fill="#8A8272">meses · barras verdes = cobros · ${r.debt<1?'deuda liquidada al cierre':'⚠ deuda viva al cierre'}</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Carrera del tiempo: inventario vs deuda">${s}</svg>`;
   }
   function dibujaEmbudo(r){
@@ -959,19 +959,19 @@
     let yStub=y0;ces.forEach(c=>{const h=seg(c[1]);if(h<=0)return;
       s+=`<polygon points="${xL+wB},${yAcc} ${xM},${yStub} ${xM},${yStub+h} ${xL+wB},${yAcc+h}" fill="${c[2]}22"/><rect x="${xL}" y="${yAcc}" width="${wB}" height="${h}" fill="${c[2]}"/>`;
       if(h>10)s+=`<text x="${xL+wB+6}" y="${yAcc+h/2+3}" font-size="7.5" fill="${c[2]}">${c[0]} ${pct(c[1]*100,0)}</text>`;yAcc+=h;yStub+=h});
-    s+=`<rect x="${xM}" y="${y0}" width="${wB}" height="${cesTotH}" fill="#3a3a40"/><text x="${xM+wB+7}" y="${y0+cesTotH/2}" font-size="9" font-weight="800" fill="#8a8780">se cede: ${fmtHa(r.superficie*r.sumaCesiones)} (${pct(r.sumaCesiones*100,0)})</text><text x="${xM+wB+7}" y="${y0+cesTotH/2+11}" font-size="7.5" fill="#66625a">hectáreas que nunca llegan a la columna del dinero</text>`;
+    s+=`<rect x="${xM}" y="${y0}" width="${wB}" height="${cesTotH}" fill="#3a3a40"/><text x="${xM+wB+7}" y="${y0+cesTotH/2}" font-size="9" font-weight="800" fill="#8A8272">se cede: ${fmtHa(r.superficie*r.sumaCesiones)} (${pct(r.sumaCesiones*100,0)})</text><text x="${xM+wB+7}" y="${y0+cesTotH/2+11}" font-size="7.5" fill="#66625a">hectáreas que nunca llegan a la columna del dinero</text>`;
     // cinta vendible → barra media inferior
     const hVend=seg(r.vendiblePct),yVendL=yAcc,yVendM=y0+cesTotH+8;
-    s+=`<polygon points="${xL+wB},${yVendL} ${xM},${yVendM} ${xM},${yVendM+hVend} ${xL+wB},${yVendL+hVend}" fill="#c9a96e2a"/><rect x="${xL}" y="${yVendL}" width="${wB}" height="${hVend}" fill="#c9a96e"/><rect x="${xM}" y="${yVendM}" width="${wB}" height="${hVend}" fill="#c9a96e"/>`;
-    s+=`<text x="${xM+wB+7}" y="${yVendM+hVend/2+3}" font-size="9" font-weight="800" fill="#e0c590">VENDIBLE ${fmtHa(r.vendible)} · ${pct(r.vendiblePct*100,0)}</text>`;
+    s+=`<polygon points="${xL+wB},${yVendL} ${xM},${yVendM} ${xM},${yVendM+hVend} ${xL+wB},${yVendL+hVend}" fill="#B98B3C2a"/><rect x="${xL}" y="${yVendL}" width="${wB}" height="${hVend}" fill="#B98B3C"/><rect x="${xM}" y="${yVendM}" width="${wB}" height="${hVend}" fill="#B98B3C"/>`;
+    s+=`<text x="${xM+wB+7}" y="${yVendM+hVend/2+3}" font-size="9" font-weight="800" fill="#D8AE5E">VENDIBLE ${fmtHa(r.vendible)} · ${pct(r.vendiblePct*100,0)}</text>`;
     // productos: del vendible a PESOS (ancho derecho ∝ ingreso)
-    const prods=[['naves',r.p.mixNaves*r.vendiblePct,r.ingNaves,'#c9a96e',fmtN(r.nNaves)+' naves'],['macro',r.p.mixMacro*r.vendiblePct,r.ingMacro,'#8ab8ff',fmtN(r.nMacro)+' macro'],['comercial',r.p.mixCom*r.vendiblePct,r.ingCom,'#7fd4e8',fmtN(r.nCom)+' com'],['vivienda',r.p.mixViv*r.vendiblePct,r.ingViv,'#8FBF8B',fmtN(r.nViv)+' viv']].filter(x=>x[1]>0.001&&x[2]>0);
+    const prods=[['naves',r.p.mixNaves*r.vendiblePct,r.ingNaves,'#B98B3C',fmtN(r.nNaves)+' naves'],['macro',r.p.mixMacro*r.vendiblePct,r.ingMacro,'#8ab8ff',fmtN(r.nMacro)+' macro'],['comercial',r.p.mixCom*r.vendiblePct,r.ingCom,'#7fd4e8',fmtN(r.nCom)+' com'],['vivienda',r.p.mixViv*r.vendiblePct,r.ingViv,'#8FBF8B',fmtN(r.nViv)+' viv']].filter(x=>x[1]>0.001&&x[2]>0);
     let yPm=yVendM,yPr=y0+10;const totIng=Math.max(1,r.ingresos);
     prods.forEach(pr=>{const hM=hVend*(pr[1]/Math.max(.0001,r.vendiblePct)),hR=Math.max(6,(pr[2]/totIng)*hBar*.9);
       s+=`<polygon points="${xM+wB},${yPm} ${xR},${yPr} ${xR},${yPr+hR} ${xM+wB},${yPm+hM}" fill="${pr[3]}26"/><rect x="${xR}" y="${yPr}" width="${wB}" height="${hR}" fill="${pr[3]}"/>`;
       s+=`<text x="${xR+wB+6}" y="${yPr+hR/2+3}" font-size="8" font-weight="800" fill="${pr[3]}">${pr[4]} → ${fmtM(pr[2])}</text>`;yPm+=hM;yPr+=hR+7});
     s+=`<text x="${xL}" y="${y0-8}" font-size="9" font-weight="800" fill="#b6b3aa">${fmtHa(r.superficie)} brutas</text><text x="${xR}" y="${y0-8}" font-size="9" font-weight="800" fill="#8FBF8B">${fmtM(r.ingresos)} de ingreso</text>`;
-    s+=`<text x="${xL}" y="${H-6}" font-size="8.5" fill="#8a8780">la tierra entra en hectáreas y sale en pesos — las cesiones son ha que no llegan al dinero</text>`;
+    s+=`<text x="${xL}" y="${H-6}" font-size="8.5" fill="#8A8272">la tierra entra en hectáreas y sale en pesos — las cesiones son ha que no llegan al dinero</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Embudo del suelo">${s}</svg>`;
   }
   function dibujaCascada(r){
@@ -979,17 +979,17 @@
     const pasos=[['Ingresos',r.ingresos,'#8FBF8B'],['Urbaniz.',-r.urbanizacion,'#E0605A'],['Naves',-r.construccion,'#E0605A'],['Blandos',-r.blandos,'#E0605A']];
     if(r.tierraPago>0)pasos.push(['Tierra',-r.tierraPago,'#E0605A']);
     pasos.push(['Financ.',-(r.interest+r.feeDebt),'#cf7a74']);
-    pasos.push(['UTILIDAD',null,'#c9a96e']);
+    pasos.push(['UTILIDAD',null,'#B98B3C']);
     const maxV=Math.max(r.ingresos,1),esc=(H-mT-mB)/maxV,xw=(W-16)/pasos.length,y00=H-mB;
     let run=0,s='',xx=8;
     pasos.forEach((pa,i)=>{
       if(pa[1]===null){const v=r.utilidadFinal,h=Math.abs(v)*esc,yy=v>=0?y00-run*esc:y00-(run+v)*esc- (v>=0?0:0);
         const yTop=v>=0?y00-run*esc:y00-(run)*esc;   // run ya es utilidad
         const hh=Math.max(2,Math.abs(v)*esc),yb=v>=0?y00-v*esc:y00;
-        s+=`<rect x="${xx}" y="${v>=0?yb:y00}" width="${xw-8}" height="${hh}" fill="${v>=0?'#c9a96e':'#E0605A'}"/>`;
-        s+=`<text x="${xx+(xw-8)/2}" y="${(v>=0?yb:y00+hh)+(v>=0?-5:11)}" font-size="11" font-weight="800" fill="${v>=0?'#e0c590':'#E0605A'}" text-anchor="middle">${fmtM(v)}</text>`;
+        s+=`<rect x="${xx}" y="${v>=0?yb:y00}" width="${xw-8}" height="${hh}" fill="${v>=0?'#B98B3C':'#E0605A'}"/>`;
+        s+=`<text x="${xx+(xw-8)/2}" y="${(v>=0?yb:y00+hh)+(v>=0?-5:11)}" font-size="11" font-weight="800" fill="${v>=0?'#D8AE5E':'#E0605A'}" text-anchor="middle">${fmtM(v)}</text>`;
         // partición dueño / dev sobre la utilidad
-        if(v>0){const hD=r.duenoUtilidad*esc;s+=`<rect x="${xx}" y="${yb}" width="${xw-8}" height="${Math.min(hD,hh)}" fill="#8ab8ff" opacity=".85"/><text x="${xx+(xw-8)/2}" y="${yb+Math.min(hD,hh)/2+3}" font-size="9" font-weight="800" fill="#0a0a0c" text-anchor="middle">dueño</text>`}
+        if(v>0){const hD=r.duenoUtilidad*esc;s+=`<rect x="${xx}" y="${yb}" width="${xw-8}" height="${Math.min(hD,hh)}" fill="#8ab8ff" opacity=".85"/><text x="${xx+(xw-8)/2}" y="${yb+Math.min(hD,hh)/2+3}" font-size="9" font-weight="800" fill="#17140F" text-anchor="middle">dueño</text>`}
       }else{
         const v=pa[1],h=Math.max(1.5,Math.abs(v)*esc),yTopPrev=y00-run*esc;run+=v;const yTopNew=y00-run*esc;
         const yy=v>=0?yTopNew:yTopPrev;
@@ -997,9 +997,9 @@
         if(i<pasos.length-1)s+=`<line x1="${xx+xw-8}" y1="${yTopNew}" x2="${xx+xw}" y2="${yTopNew}" stroke="#ffffff30" stroke-width="1"/>`;
         s+=`<text x="${xx+(xw-8)/2}" y="${yy-4}" font-size="9.5" font-weight="700" fill="${pa[2]}" text-anchor="middle">${v<0?'−':''}${fmtM(Math.abs(v))}</text>`;
       }
-      s+=`<text x="${xx+(xw-8)/2}" y="${H-mB+11}" font-size="9.5" fill="#8a8780" text-anchor="middle">${pa[0]}</text>`;xx+=xw});
+      s+=`<text x="${xx+(xw-8)/2}" y="${H-mB+11}" font-size="9.5" fill="#8A8272" text-anchor="middle">${pa[0]}</text>`;xx+=xw});
     s+=`<line x1="6" y1="${y00}" x2="${W-6}" y2="${y00}" stroke="#ffffff26" stroke-width="1"/>`;
-    s+=`<text x="8" y="${H-6}" font-size="9.5" fill="#8a8780">cada peso de ingreso y la mordida que se lo come · azul = la parte del dueño (${pct(r.p.pctDueno*100,0)})</text>`;
+    s+=`<text x="8" y="${H-6}" font-size="9.5" fill="#8A8272">cada peso de ingreso y la mordida que se lo come · azul = la parte del dueño (${pct(r.p.pctDueno*100,0)})</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cascada de ingresos a reparto">${s}</svg>`;
   }
   function dibujaCorrida(r){
@@ -1023,14 +1023,14 @@
     s+=`<path d="${dD} L${X(n-1)} ${y0s} L${X(0)} ${y0s} Z" fill="#a9a4f520"/><path d="${dD}" fill="none" stroke="#a9a4f5" stroke-width="1.9"/>`;
     // acumulado neto: la J del proyecto en oro
     let dN='';r.flows.forEach((f,i)=>{dN+=(i?' L':'M')+X(i).toFixed(1)+' '+YS(netSerie[i]).toFixed(1)});
-    s+=`<path d="${dN}" fill="none" stroke="#e0c590" stroke-width="2.1"/>`;
+    s+=`<path d="${dN}" fill="none" stroke="#D8AE5E" stroke-width="2.1"/>`;
     if(r.peak>1){const xp=X(r.peakMonth-1),yp=YS(r.peak),der=xp>W*.6;
       s+=`<circle cx="${xp}" cy="${yp}" r="3.4" fill="#a9a4f5"/><text x="${der?xp-6:xp+6}" y="${Math.max(yp-7,t1+10)}" font-size="9.5" font-weight="800" fill="#cbc7ff" text-anchor="${der?'end':'start'}">crédito pico ${fmtM(r.peak)} · mes ${r.peakMonth} · pagado ${fmtM(r.debtRepayments)}</text>`}
     else s+=`<text x="${mL+4}" y="${t1+11}" font-size="9.5" font-weight="800" fill="#8FBF8B">sin crédito dispuesto: los enganches fondean la obra</text>`;
     let beMes=null;for(let i=0;i<n;i++){if(netSerie[i]>=0&&(i===0||netSerie[i-1]<0)){beMes=i+1;break}}
     if(beMes&&netSerie[0]<0){const xb=X(beMes-1);s+=`<line x1="${xb}" y1="${t1}" x2="${xb}" y2="${b2}" stroke="#8FBF8B66" stroke-width="1.2" stroke-dasharray="5 3"/><text x="${xb+4}" y="${b1-6}" font-size="9" font-weight="800" fill="#a9d3a5">tablas · mes ${beMes}</text>`}
     const yFin=YS(netSerie[n-1]);
-    s+=`<text x="${X(n-1)-4}" y="${Math.max(yFin-8,t1+10)}" font-size="10" font-weight="800" fill="#e0c590" text-anchor="end">acumulado ${fmtM(netSerie[n-1])} = la utilidad</text>`;
+    s+=`<text x="${X(n-1)-4}" y="${Math.max(yFin-8,t1+10)}" font-size="10" font-weight="800" fill="#D8AE5E" text-anchor="end">acumulado ${fmtM(netSerie[n-1])} = la utilidad</text>`;
     /* ===== BANDA 2 · el mes a mes ===== */
     const maxUp=Math.max(...r.flows.map(f=>f.rev),1);
     const urb=r.urbSerie||[],con=r.constSerie||[];
@@ -1041,16 +1041,16 @@
       const hR=f.rev*escF;if(hR>.4)s+=`<rect x="${x}" y="${y0f-hR}" width="${bw}" height="${hR}" fill="#8FBF8B" opacity=".8"/>`;
       let y=y0f;const seg=(v,col)=>{const h=v*escF;if(h>.3){s+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="${col}" opacity=".85"/>`;y+=h}};
       seg(cats[i].t,'#a9a4f5');seg(cats[i].u,'#E0605A');seg(cats[i].c,'#D9A45B');seg(cats[i].b,'#cf7a74');});
-    s+=`<line x1="${mL}" y1="${y0f}" x2="${W-mR}" y2="${y0f}" stroke="#f4f1ea55" stroke-width="1"/>`;
+    s+=`<line x1="${mL}" y1="${y0f}" x2="${W-mR}" y2="${y0f}" stroke="#F1EDE355" stroke-width="1"/>`;
     s+=`<text x="${mL+2}" y="${y0f-5}" font-size="8.5" fill="#8FBF8B">↑ cobra</text><text x="${mL+2}" y="${y0f+11}" font-size="8.5" fill="#cf7a74">↓ gasta</text>`;
     // marcas de etapas de obra en la banda 2
     for(let e=1;e<=r.p.etapas;e++){const xe=X(Math.min((e-1)*r.p.mesesUrbEtapa,n-1));s+=`<line x1="${xe}" y1="${t2}" x2="${xe}" y2="${b2}" stroke="#e0605a33" stroke-width="1"/>`;if(e<=4)s+=`<text x="${xe+2}" y="${t2+9}" font-size="8" fill="#cf7a74">E${e}</text>`}
     // eje de tiempo compartido
-    for(let m=12;m<=n;m+=12){s+=`<text x="${X(m-1)}" y="${b2+12}" font-size="8.5" fill="#8a8780" text-anchor="middle">${m}</text>`;s+=`<line x1="${X(m-1)}" y1="${b1+4}" x2="${X(m-1)}" y2="${t2-4}" stroke="#ffffff10" stroke-width="1"/>`}
+    for(let m=12;m<=n;m+=12){s+=`<text x="${X(m-1)}" y="${b2+12}" font-size="8.5" fill="#8A8272" text-anchor="middle">${m}</text>`;s+=`<line x1="${X(m-1)}" y1="${b1+4}" x2="${X(m-1)}" y2="${t2-4}" stroke="#ffffff10" stroke-width="1"/>`}
     // títulos de banda y leyenda
-    s+=`<text x="${mL}" y="${t1-8}" font-size="8.5" font-weight="800" fill="#8a8780" letter-spacing="1.5">LOS SALDOS · <tspan fill="#a9a4f5">crédito vivo</tspan> y <tspan fill="#e0c590">acumulado del proyecto</tspan></text>`;
-    s+=`<text x="${mL}" y="${t2-8}" font-size="8.5" font-weight="800" fill="#8a8780" letter-spacing="1.5">EL MES A MES · <tspan fill="#8FBF8B">cobros</tspan> vs gasto: <tspan fill="#a9a4f5">tierra</tspan> · <tspan fill="#E0605A">urbanización</tspan> · <tspan fill="#D9A45B">naves</tspan> · <tspan fill="#cf7a74">blandos</tspan></text>`;
-    s+=`<text x="${mL}" y="${H-6}" font-size="9" fill="#8a8780">mismo eje de meses en las dos bandas · el oro cruza el cero en "tablas" y termina en la utilidad</text>`;
+    s+=`<text x="${mL}" y="${t1-8}" font-size="8.5" font-weight="800" fill="#8A8272" letter-spacing="1.5">LOS SALDOS · <tspan fill="#a9a4f5">crédito vivo</tspan> y <tspan fill="#D8AE5E">acumulado del proyecto</tspan></text>`;
+    s+=`<text x="${mL}" y="${t2-8}" font-size="8.5" font-weight="800" fill="#8A8272" letter-spacing="1.5">EL MES A MES · <tspan fill="#8FBF8B">cobros</tspan> vs gasto: <tspan fill="#a9a4f5">tierra</tspan> · <tspan fill="#E0605A">urbanización</tspan> · <tspan fill="#D9A45B">naves</tspan> · <tspan fill="#cf7a74">blandos</tspan></text>`;
+    s+=`<text x="${mL}" y="${H-6}" font-size="9" fill="#8A8272">mismo eje de meses en las dos bandas · el oro cruza el cero en "tablas" y termina en la utilidad</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Corrida: saldos arriba, mes a mes abajo">${s}</svg>`;
   }
   function dibujaTornado(r){
@@ -1063,12 +1063,12 @@
       ['Precio de lotes ±15%',.15*((r.ingMacro+r.ingCom+r.ingViv)/(1+r.p.varPrecios))*(1-B)]
     ].map(v=>[v[0],Math.abs(v[1])]).sort((a,b)=>b[1]-a[1]);
     const maxD=Math.max(...vars.map(v=>v[1]),1),esc=(W/2-150)/maxD;
-    let s=`<line x1="${cx}" y1="${y0-12}" x2="${cx}" y2="${y0+vars.length*(bh+gap)}" stroke="#ffffff30" stroke-width="1"/><text x="${cx}" y="${y0-16}" font-size="8.5" fill="#e0c590" text-anchor="middle" font-weight="800">utilidad base ${fmtM(r.utilidadPre)}</text>`;
+    let s=`<line x1="${cx}" y1="${y0-12}" x2="${cx}" y2="${y0+vars.length*(bh+gap)}" stroke="#ffffff30" stroke-width="1"/><text x="${cx}" y="${y0-16}" font-size="8.5" fill="#D8AE5E" text-anchor="middle" font-weight="800">utilidad base ${fmtM(r.utilidadPre)}</text>`;
     vars.forEach((v,i)=>{const y=y0+i*(bh+gap),w=v[1]*esc,cruzaCero=r.utilidadPre-v[1]<0;
       s+=`<rect x="${cx-w}" y="${y}" width="${w}" height="${bh}" fill="#E0605A" opacity=".8" ${cruzaCero?'stroke="#E0605A" stroke-width="2"':''}/><rect x="${cx}" y="${y}" width="${w}" height="${bh}" fill="#8FBF8B" opacity=".8"/>`;
       s+=`<text x="${cx-w-6}" y="${y+bh/2+3}" font-size="8" fill="#cf7a74" text-anchor="end">−${fmtM(v[1])}${cruzaCero?' ⚠ PÉRDIDA':''}</text><text x="${cx+w+6}" y="${y+bh/2+3}" font-size="8" fill="#a9d3a5">+${fmtM(v[1])}</text>`;
       s+=`<text x="12" y="${y+bh/2+3}" font-size="8.5" font-weight="700" fill="#b6b3aa">${v[0]}</text>`});
-    s+=`<text x="12" y="${H-6}" font-size="8.5" fill="#8a8780">las barras largas son donde vale la pena invertir la validación (comparables y presupuesto), no en negociar puntos de tasa</text>`;
+    s+=`<text x="12" y="${H-6}" font-size="8.5" fill="#8A8272">las barras largas son donde vale la pena invertir la validación (comparables y presupuesto), no en negociar puntos de tasa</text>`;
     el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tornado de sensibilidad">${s}</svg>`;
   }
   function dibujaLectura(r){
