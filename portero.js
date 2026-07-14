@@ -120,7 +120,16 @@
     if (GCID && GCID !== 'PENDIENTE') {
       const arma = () => {
         try {
-          google.accounts.id.initialize({ client_id: GCID, callback: async resp => {
+          google.accounts.id.initialize({
+            client_id: GCID,
+            // El flujo FedCM del botón puede dejar abierta una pestaña vacía
+            // /gsi/transform en algunos perfiles de Chrome. El popup clásico
+            // conserva el callback en la página que abrió el acceso.
+            ux_mode: 'popup',
+            use_fedcm_for_button: false,
+            use_fedcm_for_prompt: false,
+            auto_select: false,
+            callback: async resp => {
             $('pgMsg').textContent = 'Verificando con Google…';
             try {
               const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', credential: resp.credential, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
