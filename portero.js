@@ -12,11 +12,6 @@
   const SIN_GATE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.singate !== undefined);
   const MODO_SUAVE = !!(document.currentScript && document.currentScript.dataset && document.currentScript.dataset.gate === 'suave');
   const EN_MIRAMAR = /real-miramar-board/.test(location.pathname);
-  const oauthHash = new URLSearchParams(location.hash.replace(/^#/, ''));
-  const oauthAccessToken = oauthHash.get('access_token');
-  const oauthError = oauthHash.get('error');
-  const oauthState = oauthHash.get('state');
-  if (oauthAccessToken || oauthError) history.replaceState(null, '', location.pathname + location.search);
   const CODIGO = EN_MIRAMAR
     ? ({ index: 'MR', tramites: 'MT', direccion: 'MD', evidencia: 'ME', cuentas: 'MC' }[pagina] || 'M' + pagina.slice(0, 1).toUpperCase())
     : ({ index: 'PT', mapa: 'MP', macrolotes: 'MA', mixto: 'MX', unifamiliar: 'UN', residencial: 'RE', patrimonial: 'PA', 'track-alysa': 'TA', 'track-maria': 'TM', 'track-codesarrollos': 'TC', accesos: 'AC' }[pagina] || pagina.slice(0, 2).toUpperCase());
@@ -121,67 +116,25 @@
         localStorage.setItem(LSC, v); sessionStorage.removeItem('pyod_rol'); location.reload();
       };
     };
-    const completaGoogle = async accessToken => {
-      const esperado = sessionStorage.getItem('pyod_oauth_state');
-      sessionStorage.removeItem('pyod_oauth_state');
-      if (!esperado || !oauthState || esperado !== oauthState) {
-        $('pgMsg').textContent = 'Google no pudo validar el regreso — inténtalo otra vez.';
-        return;
-      }
-      $('pgEnviar').disabled = true;
-      $('pgMsg').textContent = 'Verificando con Google…';
-      try {
-        const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', access_token: accessToken, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
-        if (r.ok && r.autorizado && r.token) {
-          $('pgMsg').textContent = '✓ Dentro — cargando…';
-          localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol');
-          const destino = sessionStorage.getItem('pyod_oauth_destino');
-          sessionStorage.removeItem('pyod_oauth_destino');
-          if (destino && destino.indexOf(location.origin + '/') === 0 && destino !== location.href.split('#')[0]) {
-            location.replace(destino);
-          } else if (/\/aurum-board\//.test(location.pathname)) {
-            window.__PYOD_BOOT = r.token; dv.remove();
-            window.dispatchEvent(new CustomEvent('pyod-authenticated', { detail: { token: r.token } }));
-          } else location.reload();
-        } else if (r.ok && !r.autorizado) {
-          $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:';
-          const ws = $('pgWs'); ws.style.display = 'block';
-          ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank');
-        } else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
-      } catch (e) { $('pgMsg').textContent = 'Sin conexión — reintenta'; }
-      $('pgEnviar').disabled = false;
-    };
-
-    // OAuth por redirección directa. Google vuelve al board y nunca utiliza
-    // accounts.google.com/gsi/transform, que era el origen del ciclo.
+    // botón "Continuar con Google" (GSI · id_token — sin redirect_uri, sin ciclo de transform)
     if (GCID && GCID !== 'PENDIENTE') {
-      const cont = document.getElementById('pgGoogle');
-      const b = document.createElement('button');
-      b.type = 'button'; b.textContent = 'G  Continuar con Google';
-      b.style.cssText = 'width:280px;max-width:100%;padding:10px 14px;border:1px solid #747775;border-radius:4px;background:#fff;color:#1f1f1f;font:600 14px Arial,sans-serif;cursor:pointer';
-      b.onclick = () => {
-        const state = crypto.randomUUID?.() || Date.now() + '' + Math.random();
-        sessionStorage.setItem('pyod_oauth_state', state);
-        sessionStorage.setItem('pyod_oauth_destino', location.href.split('#')[0]);
-        const p = new URLSearchParams({
-          client_id: GCID,
-          redirect_uri: 'https://alexpueblag.github.io/aurum-board/',
-          response_type: 'token',
-          scope: 'openid email profile',
-          include_granted_scopes: 'true',
-          prompt: 'select_account',
-          state
-        });
-        location.assign('https://accounts.google.com/o/oauth2/v2/auth?' + p);
+      const arma = () => {
+        try {
+          google.accounts.id.initialize({ client_id: GCID, callback: async resp => {
+            $('pgMsg').textContent = 'Verificando con Google…';
+            try {
+              const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ tipo: 'acceso-google', credential: resp.credential, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
+              if (r.ok && r.autorizado && r.token) { localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol'); $('pgMsg').textContent = '✓ Dentro — cargando…'; location.reload(); }
+              else if (r.ok && !r.autorizado) { $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:'; const ws = $('pgWs'); ws.style.display = 'block'; ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank'); }
+              else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
+            } catch (e) { $('pgMsg').textContent = 'Sin conexión — reintenta'; }
+          } });
+          google.accounts.id.renderButton(document.getElementById('pgGoogle'), { theme: 'outline', size: 'large', text: 'continue_with', locale: 'es', width: 280 });
+        } catch (e) {}
       };
-      cont.replaceChildren(b);
+      if (window.google && google.accounts) arma();
+      else { const sc = document.createElement('script'); sc.src = 'https://accounts.google.com/gsi/client'; sc.async = true; sc.onload = arma; document.head.appendChild(sc); }
     }
-    if (oauthError) {
-      sessionStorage.removeItem('pyod_oauth_state');
-      sessionStorage.removeItem('pyod_oauth_destino');
-      $('pgMsg').textContent = 'Google canceló el acceso — puedes intentarlo otra vez.';
-    }
-    else if (oauthAccessToken) completaGoogle(oauthAccessToken);
   }
   function engancharGates() {
     // modo suave (boards con gate propio): nunca tapar; solo ofrecer la liga dentro de su gate
