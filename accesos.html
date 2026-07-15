@@ -73,7 +73,11 @@
   .matriz td{padding:7px 4px;border-bottom:1px solid var(--linea);text-align:center}
   .matriz td.u{font-size:11.5px;font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .matriz td.u small{display:block;font-weight:400;color:var(--muted);font-size:9.5px}
-  .matriz input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer}
+  .matriz input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold);cursor:pointer}
+  /* Táctil (enjambre UX): en móvil el área de toque de cada casilla llega a 44px sin agrandar el dibujo */
+  @media(pointer:coarse){.matriz input[type=checkbox]{width:22px;height:22px}.matriz td{padding:11px 8px}}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  @media(max-width:680px){input,select,textarea{font-size:16px}}
   .matriz tr.rev td{opacity:.38}
   .matriz td.todo{border-right:1px solid var(--lineaf)}
   .matriz th.todo{border-right:1px solid var(--lineaf)}
@@ -202,7 +206,12 @@
       const tr=ch.closest('tr'),correo=tr.dataset.correo,mMsg=$('mMsg'),was=!ch.checked;
       let boards;
       if(ch.dataset.code==='*'){boards=ch.checked?'*':CODES.slice(1).map(c=>c[0]).join(',')}
-      else{const activos=[...tr.querySelectorAll('input[type=checkbox]')].filter(x=>x.dataset.code!=='*'&&x.checked).map(x=>x.dataset.code);boards=activos.length?activos.join(','):'MP'}
+      else{
+        const activos=[...tr.querySelectorAll('input[type=checkbox]')].filter(x=>x.dataset.code!=='*'&&x.checked).map(x=>x.dataset.code);
+        // Nunca dejar a alguien "sin tableros" con un código fantasma: si quedó vacío, se avisa y se revierte.
+        if(!activos.length){ch.checked=was;toast('Debe tener al menos un tablero. Para quitarle todo el acceso, usa Revocar.','err');return}
+        boards=activos.join(',')
+      }
       ch.disabled=true;mMsg.className='msg';mMsg.textContent='Guardando '+correo+'…';
       try{
         const r=await post({tipo:'acceso-alta',correo,boards});
