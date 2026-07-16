@@ -12,6 +12,7 @@ BD: Google Sheet **"YOD - POTENCIALES"** · 1 hoja por tipo de desarrollo · **1
 - `doPost` (text/plain JSON, sin preflight): `tipo=guardar | estado | archivar`, siempre con `k` (clave) y `request_id` (idempotencia 6 h).
 - Upsert **por `caso_id`** (no por credenciales — corrige el punto débil de CroKiss). La `palabra` es única entre casos vivos; repetirla en otro caso → error `palabra_ocupada`.
 - Columnas leídas por encabezado, auto-sanadas: agregar columnas en el Sheet nunca rompe. Las variables del motor son columnas `in*` editables directo en Sheets.
+- Versiones del mismo caso (comparador, estreno en PATRIMONIAL): `doPost tipo=guardar` acepta `escenarios` (array `[{id,nombre,esBase,activo,inputs:{in*}}]`, máx 8) → columna `escenarios_json`. Las columnas `in*` siempre guardan la versión ACTIVA; casos sin `escenarios_json` cargan como versión única.
 - El correo (MailApp) manda la palabra + enlace `?open=CASO_ID`; ese enlace **nunca** devuelve la clave del board.
 - La clave del board vive en la hoja `CONFIG` (servidor); el HTML público no contiene ningún secreto.
 
