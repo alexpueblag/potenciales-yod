@@ -255,6 +255,37 @@
   .graf-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start}
   .graf-row3 .viz-card{height:100%}
   @media(max-width:860px){.graf-row3{grid-template-columns:1fr}}
+  /* ===== Versiones del caso + comparador ===== */
+  .esc-bar{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;padding:9px 12px;background:var(--card);border:1px solid var(--linea);border-radius:14px;flex-wrap:wrap}
+  .esc-lbl{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+  .esc-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-width:0}
+  .esc-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:20px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .esc-chip .star{color:var(--goldc);font-style:normal}
+  .esc-chip.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+  .esc-chip.on .star{color:#fff}
+  .esc-chip .mini{border:0;background:transparent;color:inherit;opacity:.75;cursor:pointer;font-size:12px;padding:0 1px;font-family:inherit;line-height:1}
+  .esc-chip .mini:hover{opacity:1}
+  .esc-chip .mini i{font-size:12px}
+  .esc-add{border:1px dashed var(--lineaf);background:transparent;color:var(--goldc);border-radius:20px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+  .esc-add:hover{border-color:var(--gold)}
+  .comparador{background:var(--card);border:1px solid var(--linea);border-radius:20px;padding:16px;margin-bottom:16px;box-shadow:0 4px 16px #00000040}
+  .comparador .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  .comp-marginal{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+  .marg-card{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:11px 13px;min-width:0}
+  .marg-card .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .marg-card .big{font-family:'Instrument Serif',Georgia,serif;font-size:26px;line-height:1.1;margin:3px 0 2px}
+  .marg-card .sub2{font-size:10.5px;color:var(--muted);line-height:1.45}
+  .comp-scroll{overflow-x:auto;margin-top:12px;border:1px solid var(--linea);border-radius:10px}
+  .comp-table{width:100%;border-collapse:collapse;font-size:11px;color:var(--suave);min-width:460px}
+  .comp-table th,.comp-table td{padding:7px 10px;border-bottom:1px solid var(--linea);text-align:right;white-space:nowrap}
+  .comp-table tr:last-child td{border-bottom:0}
+  .comp-table th:first-child,.comp-table td:first-child{text-align:left;font-weight:700;color:var(--muted)}
+  .comp-table th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--lineaf)}
+  .comp-table th.base::after{content:" ★";color:var(--goldc)}
+  .comp-table th.act{color:var(--goldc)}
+  .comp-table td.win{color:var(--green);font-weight:800}
+  .comp-lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14px;line-height:1.55;color:var(--text);margin:12px 2px 2px;max-width:70ch}
+  .comp-lectura b{color:var(--goldc);font-style:normal}
 </style>
 </head>
 <body>
@@ -289,6 +320,11 @@
     </div>
   </div>
 
+  <div class="esc-bar" id="escBar" title="Versiones del mismo caso: la ★ es la base de comparación">
+    <span class="esc-lbl"><i class="ti ti-versions"></i> Versiones</span>
+    <div class="esc-chips" id="escChips"></div>
+  </div>
+
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
     <div class="estado-chips" id="estadoChips"></div>
@@ -315,6 +351,14 @@
       <div class="viz-card"><span class="k">Recuperación · lo invertido vs lo cobrado</span><div id="vizRecup" class="viz-svg"></div></div>
       <div class="viz-card"><span class="k">¿Cuándo vender? · la curva patrimonial</span><div id="vizCurvaPat" class="viz-svg"></div></div>
     </div>
+  </section>
+
+  <section class="comparador" id="compSection" style="display:none">
+    <span class="kick">Comparador de versiones · ¿qué rinde cada peso extra?</span>
+    <div class="comp-marginal" id="compMarginal"></div>
+    <div class="comp-scroll"><table class="comp-table" id="compTable"></table></div>
+    <p class="comp-lectura" id="compLectura"></p>
+    <p class="note">La versión ★ es la base de comparación (ej. "como está hoy"). El <b>retorno marginal</b> = ΔNOI ÷ Δinversión: lo que rinde cada peso adicional de esa versión contra la base. Duplica la versión activa con "+ Nueva versión" y mueve solo lo que cambia.</p>
   </section>
 
   <div class="reference-strip"><b>El árbol patrimonial YOD:</b> Anara Horizontes 2022 (9 cuartos, el origen) → Real del Arco 2026 (16 deptos, 9.6% neto — prellenado de este board) → PLANTILLA → Depas Luis Puebla. Ábrelos en "Mis casos". La curva RETENER/VENDER usa la misma regla del board Unifamiliar: retener mientras el patrimonio crezca más que tu alternativa.</div>
@@ -394,7 +438,7 @@
   let cfgBoard={}, casosCache=[], modoLocal=!cloudOn;
 
   const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
-  const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>Math.abs(n||0)>=1e6?'$'+((n||0)/1e6).toFixed(2)+' M':'$'+Math.round(n||0).toLocaleString('en-US'); const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%';
+  const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>Math.abs(n||0)>=1e6?'$'+((n||0)/1e6).toFixed(2)+' M':'$'+Math.round(n||0).toLocaleString('en-US'); const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%'; const sM=n=>(n<0?'−':'+')+fmtM(Math.abs(n||0));
   // Prellenado: Real del Arco 16 deptos (el patrimonial maduro, jun-2026)
   const PRELLENADO={inUnidades:16,inRentaUnidadMes:17625,inM2Construccion:1950,inM2Rentable:1444,inVacanciaPct:5,inOpexPct:13,inSeguroPct:.5,
     inInversionTotal:29760000,inTerrenoAportado:1,inCapRateMercado:8,inPlusvaliaPct:7,
@@ -441,12 +485,15 @@
   function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open');if(btn.classList.contains('open'))positionFactorTip(btn)});btn.addEventListener('mouseenter',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('mouseleave',()=>btn.classList.remove('hov'));btn.addEventListener('focus',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('blur',()=>btn.classList.remove('hov'))})}
 
   /* ================== MOTOR PATRIMONIAL ================== */
-  function calculate(){
-    const p={unidades:Math.max(1,Math.round(get('inUnidades'))),rentaU:get('inRentaUnidadMes'),m2Const:Math.max(1,get('inM2Construccion')),m2Rent:Math.max(1,get('inM2Rentable')),
-      vac:get('inVacanciaPct')/100,opex:get('inOpexPct')/100,seguro:get('inSeguroPct')/100,
-      inversion:Math.max(1,get('inInversionTotal')),terrenoAportado:Math.round(get('inTerrenoAportado')),capMercado:Math.max(.01,get('inCapRateMercado')/100),plus:get('inPlusvaliaPct')/100,
-      credito:get('inCreditoPct')/100,tasa:get('inTasaCredito')/100,plazo:Math.max(1,Math.round(get('inPlazoCredito'))),
-      horizonte:Math.max(1,Math.round(get('inHorizonte'))),tasaAlt:get('inTasaAlternativa')/100};
+  // Motor puro: recibe un objeto {inXxx:valor} y regresa el estado calculado (sin tocar el DOM).
+  // Lo usan calculate() (versión activa, desde los sliders) y el comparador (todas las versiones).
+  function computar(vals){
+    const gv=id=>Number(vals[id])||0;
+    const p={unidades:Math.max(1,Math.round(gv('inUnidades'))),rentaU:gv('inRentaUnidadMes'),m2Const:Math.max(1,gv('inM2Construccion')),m2Rent:Math.max(1,gv('inM2Rentable')),
+      vac:gv('inVacanciaPct')/100,opex:gv('inOpexPct')/100,seguro:gv('inSeguroPct')/100,
+      inversion:Math.max(1,gv('inInversionTotal')),terrenoAportado:Math.round(gv('inTerrenoAportado')),capMercado:Math.max(.01,gv('inCapRateMercado')/100),plus:gv('inPlusvaliaPct')/100,
+      credito:gv('inCreditoPct')/100,tasa:gv('inTasaCredito')/100,plazo:Math.max(1,Math.round(gv('inPlazoCredito'))),
+      horizonte:Math.max(1,Math.round(gv('inHorizonte'))),tasaAlt:gv('inTasaAlternativa')/100};
     // 1) renta → NOI
     const rentaMes=p.unidades*p.rentaU,rentaBrutaAnual=rentaMes*12,vacMonto=rentaBrutaAnual*p.vac,rentaEfectiva=rentaBrutaAnual-vacMonto;
     const opexMonto=rentaEfectiva*p.opex,seguroMonto=p.inversion*p.seguro;
@@ -473,10 +520,121 @@
     const aniosRetener=anioCorte===null?p.horizonte:anioCorte-1;
     const last=rows[rows.length-1]||{valor:valorCap,acum:0,patrim:patrim0,saldo:0};
     const roiPat=p.inversion?(last.patrim-patrim0)/p.inversion:0;
-    state={p,rentaMes,rentaBrutaAnual,vacMonto,rentaEfectiva,opexMonto,seguroMonto,noi,rentaM2,
+    return {p,rentaMes,rentaBrutaAnual,vacMonto,rentaEfectiva,opexMonto,seguroMonto,noi,rentaM2,
       yieldOnCost,valorCap,valorCreado,recupAnios,montoCredito,equity,mensCredito,servicioAnual,flujoConCredito,coc,dscr,
-      rows,patrim0,aniosRetener,anioCorte,patrimH:last.patrim,valorH:last.valor,acumH:last.acum,roiPat};
-    render();guardarDraft();return state}
+      rows,patrim0,aniosRetener,anioCorte,patrimH:last.patrim,valorH:last.valor,acumH:last.acum,roiPat}}
+  function calculate(){
+    state=computar(inputValues());
+    escSyncActivo();
+    render();renderEscenarios();renderComparador();guardarDraft();return state}
+
+  /* ================== VERSIONES DEL CASO (comparador) ================== */
+  // Un caso puede tener hasta 8 versiones del mismo inmueble (ej. "Hoy" vs "Coliving 8 puertas").
+  // La versión ★ (esBase) es la referencia: el comparador mide el retorno MARGINAL de las demás contra ella.
+  let escenarios=[],escActivo='';
+  const MAX_ESC=8;
+  const escId=()=>'e'+Math.random().toString(36).slice(2,8);
+  function escGet(id){return escenarios.find(e=>e.id===id)}
+  function escBaseObj(){return escenarios.find(e=>e.esBase)||escenarios[0]}
+  function escInicial(nombre){escenarios=[{id:escId(),nombre:nombre||'Base',esBase:true,inputs:inputValues()}];escActivo=escenarios[0].id}
+  function escSyncActivo(){const e=escGet(escActivo);if(e)e.inputs=inputValues()}
+  function escAplicar(e){Object.entries(e.inputs||{}).forEach(([k,v])=>setControl(k,v))}
+  function escCambiar(id){if(id===escActivo)return;const e=escGet(id);if(!e)return;escSyncActivo();escActivo=id;escAplicar(e);calculate();toast('Versión activa: «'+e.nombre+'»',1800)}
+  function escNueva(){
+    if(escenarios.length>=MAX_ESC){toast('Máximo '+MAX_ESC+' versiones por caso');return}
+    const sug=escenarios.length===1?'Remodelado / proyecto':'Versión '+(escenarios.length+1);
+    const nombre=prompt('Nombre de la nueva versión (copia de la activa):',sug);if(nombre===null)return;
+    escSyncActivo();
+    const e={id:escId(),nombre:(nombre.trim()||sug).slice(0,40),esBase:false,inputs:inputValues()};
+    escenarios.push(e);escActivo=e.id;calculate();
+    toast('Versión «'+e.nombre+'» creada: mueve solo los supuestos que cambian')}
+  function escRenombrar(id){const e=escGet(id);if(!e)return;const nombre=prompt('Nuevo nombre de la versión:',e.nombre);if(nombre===null)return;e.nombre=(nombre.trim()||e.nombre).slice(0,40);calculate()}
+  function escMarcarBase(id){if(!escGet(id))return;escenarios.forEach(e=>e.esBase=e.id===id);calculate()}
+  function escBorrar(id){
+    const e=escGet(id);if(!e)return;
+    if(escenarios.length<=1){toast('Es la única versión del caso');return}
+    if(!confirm('¿Borrar la versión "'+e.nombre+'" de este caso?'))return;
+    escenarios=escenarios.filter(x=>x.id!==id);
+    if(e.esBase)escenarios[0].esBase=true;
+    if(escActivo===id){const b=escBaseObj();escActivo=b.id;escAplicar(b)}
+    calculate()}
+  function escParaGuardar(){escSyncActivo();return escenarios.map(e=>({id:e.id,nombre:e.nombre,esBase:!!e.esBase,activo:e.id===escActivo,inputs:e.inputs}))}
+  function escDesdeJson(raw){
+    try{const arr=JSON.parse(raw||'null');
+      if(!Array.isArray(arr)||!arr.length)return false;
+      const limpio=arr.filter(e=>e&&typeof e==='object'&&e.inputs&&typeof e.inputs==='object')
+        .slice(0,MAX_ESC).map(e=>({id:String(e.id||escId()),nombre:String(e.nombre||'Versión').slice(0,40),esBase:!!e.esBase,activo:!!e.activo,inputs:e.inputs}));
+      if(!limpio.length)return false;
+      if(!limpio.some(e=>e.esBase))limpio[0].esBase=true;
+      escenarios=limpio.map(e=>({id:e.id,nombre:e.nombre,esBase:e.esBase,inputs:e.inputs}));
+      const act=limpio.find(e=>e.activo)||limpio.find(e=>e.esBase)||limpio[0];
+      escActivo=act.id;escAplicar(escGet(act.id));
+      return true}catch(err){return false}}
+  function renderEscenarios(){
+    const cont=$('escChips');if(!cont)return;
+    cont.innerHTML=escenarios.map(e=>{
+      const on=e.id===escActivo;
+      const acciones=on?`<button class="mini" data-esc-ren="${e.id}" title="Renombrar"><i class="ti ti-pencil"></i></button>${e.esBase?'':`<button class="mini" data-esc-base="${e.id}" title="Hacerla base de comparación (★)">☆</button>`}${escenarios.length>1?`<button class="mini" data-esc-del="${e.id}" title="Borrar versión"><i class="ti ti-x"></i></button>`:''}`:'';
+      return `<span class="esc-chip${on?' on':''}" data-esc="${e.id}" role="button" tabindex="0">${e.esBase?'<i class="star" title="Base de comparación">★</i>':''}${esc(e.nombre)}${acciones}</span>`
+    }).join('')+`<button class="esc-add" id="escAdd" title="Duplicar la versión activa"><i class="ti ti-plus"></i>Nueva versión</button>`;
+    cont.querySelectorAll('[data-esc]').forEach(ch=>{ch.onclick=ev=>{if(ev.target.closest('.mini'))return;escCambiar(ch.dataset.esc)};ch.onkeydown=ev=>{if(ev.key==='Enter'&&!ev.target.closest('.mini'))escCambiar(ch.dataset.esc)}});
+    cont.querySelectorAll('[data-esc-ren]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escRenombrar(b.dataset.escRen)});
+    cont.querySelectorAll('[data-esc-base]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escMarcarBase(b.dataset.escBase)});
+    cont.querySelectorAll('[data-esc-del]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escBorrar(b.dataset.escDel)});
+    const add=$('escAdd');if(add)add.onclick=escNueva}
+  function renderComparador(){
+    const secc=$('compSection');if(!secc)return;
+    if(escenarios.length<2){secc.style.display='none';return}
+    secc.style.display='';
+    const res=escenarios.map(e=>({e,r:e.id===escActivo&&state?state:computar(e.inputs)}));
+    const base=res.find(x=>x.e.esBase)||res[0];
+    const otras=res.filter(x=>x!==base);
+    // Tarjetas de retorno marginal (cada versión no-base vs la base ★)
+    $('compMarginal').innerHTML=otras.map(x=>{
+      const dInv=x.r.p.inversion-base.r.p.inversion,dNoi=x.r.noi-base.r.noi;
+      const marg=dInv>0?dNoi/dInv:null,alt=x.r.p.tasaAlt;
+      let big,color,sub;
+      if(marg!==null){
+        const ok=marg>=alt;color=ok?'var(--green)':'var(--red)';big=pct(marg*100,1);
+        sub=`ΔNOI ${sM(dNoi)}/año ÷ Δinversión ${fmtM(dInv)} — lo que rinde cada peso EXTRA vs «${esc(base.e.nombre)}» · tu alternativa: ${pct(alt*100,0)}`}
+      else if(Math.abs(dInv)<1){color='var(--goldc)';big=sM(dNoi);sub=`misma inversión que «${esc(base.e.nombre)}»: el NOI cambia ${sM(dNoi)}/año`}
+      else{color='var(--goldc)';big=sM(dNoi);sub=`invierte ${fmtM(-dInv)} MENOS que «${esc(base.e.nombre)}» y el NOI cambia ${sM(dNoi)}/año`}
+      return `<div class="marg-card"><span class="k">Retorno marginal · ${esc(x.e.nombre)}</span><div class="big" style="color:${color}">${big}</div><div class="sub2">${sub}</div></div>`
+    }).join('');
+    // Tabla métricas × versiones (mejor valor por renglón en verde)
+    const filas=[
+      ['Unidades / puertas',x=>fmtN(x.r.p.unidades),null],
+      ['Renta bruta / mes',x=>fmtMoney(x.r.rentaMes),x=>x.r.rentaMes],
+      ['Inversión total',x=>fmtM(x.r.p.inversion),null],
+      ['NOI / año',x=>fmtM(x.r.noi),x=>x.r.noi],
+      ['Yield on cost',x=>pct(x.r.yieldOnCost*100,1),x=>x.r.yieldOnCost],
+      ['Valor a cap de mercado',x=>fmtM(x.r.valorCap),x=>x.r.valorCap],
+      ['Valor creado',x=>fmtM(x.r.valorCreado),x=>x.r.valorCreado],
+      ['Recuperación (solo rentas)',x=>x.r.recupAnios===null?'—':x.r.recupAnios.toFixed(1)+' años',x=>x.r.recupAnios===null?null:-x.r.recupAnios],
+      ['Cash-on-Cash',x=>x.r.coc===null?'—':pct(x.r.coc*100,1),x=>x.r.coc],
+      ['DSCR',x=>x.r.dscr===null?'—':x.r.dscr.toFixed(2),x=>x.r.dscr],
+      ['Patrimonio al horizonte',x=>fmtM(x.r.patrimH),x=>x.r.patrimH],
+      ['ROI patrimonial',x=>pct(x.r.roiPat*100,1),x=>x.r.roiPat],
+      ['Punto dulce',x=>x.r.aniosRetener>=x.r.p.horizonte?'retener '+x.r.p.horizonte+'+ años':x.r.aniosRetener===0?'vender ya':'retener ~'+x.r.aniosRetener+' años',null]
+    ];
+    const head=`<tr><th>Métrica</th>${res.map(x=>`<th class="${x.e.esBase?'base':''}${x.e.id===escActivo?' act':''}">${esc(x.e.nombre)}</th>`).join('')}</tr>`;
+    const cuerpo=filas.map(f=>{
+      let win=-1;
+      if(f[2]){const raws=res.map(x=>f[2](x));let best=-Infinity;
+        raws.forEach((v,i)=>{if(v!==null&&isFinite(v)&&v>best){best=v;win=i}});
+        if(raws.every(v=>v===raws[0]))win=-1}
+      return `<tr><td>${f[0]}</td>${res.map((x,i)=>`<td class="${i===win?'win':''}">${f[1](x)}</td>`).join('')}</tr>`
+    }).join('');
+    $('compTable').innerHTML=`<thead>${head}</thead><tbody>${cuerpo}</tbody>`;
+    // Lectura narrativa: la versión activa (o la primera no-base) contra la base
+    const foco=otras.find(x=>x.e.id===escActivo)||otras[0];
+    const dInv=foco.r.p.inversion-base.r.p.inversion,dNoi=foco.r.noi-base.r.noi;
+    const marg=dInv>0?dNoi/dInv:null;
+    const dValor=foco.r.valorCreado-base.r.valorCreado;
+    if(marg!==null){
+      const veces=foco.r.p.tasaAlt>0&&marg>0?marg/foco.r.p.tasaAlt:null;
+      $('compLectura').innerHTML=`«<b>${esc(foco.e.nombre)}</b>» pide <b>${fmtM(dInv)}</b> más que «${esc(base.e.nombre)}» y ${dNoi>=0?'deja <b>'+fmtM(dNoi)+'</b> extra de NOI al año':'el NOI <b>cae '+sM(dNoi)+'</b> al año'}: cada peso adicional rinde <b>${pct(marg*100,1)}</b>${veces!==null&&isFinite(veces)?' — '+veces.toFixed(1)+'× tu alternativa del '+pct(foco.r.p.tasaAlt*100,0):''}. ${dValor>0?'Además crea <b>'+fmtM(dValor)+'</b> más de valor a cap de mercado.':'A cap de mercado no crea más valor que la base: la decisión vive en el flujo.'}`}
+    else $('compLectura').innerHTML=`«<b>${esc(foco.e.nombre)}</b>» no invierte más que «${esc(base.e.nombre)}»: compara el NOI (Δ ${sM(dNoi)}/año) y el patrimonio al horizonte en la tabla.`}
 
   /* ================== RENDER ================== */
   function render(){
@@ -613,8 +771,9 @@
   function apiGet(params){const q=new URLSearchParams(Object.assign({k:clave,tipo:NUBE.TIPO},params));return fetch(NUBE.ENDPOINT+'?'+q.toString()).then(r=>r.json())}
   function apiPost(body){body=Object.assign({k:clave,tipo_desarrollo:NUBE.TIPO},body);return fetch(NUBE.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(r=>r.json())}
   function nuevoRequestId(){return (crypto.randomUUID?.()||Date.now()+'-'+Math.random())}
-  function guardarDraft(){try{localStorage.setItem(LS.draft,JSON.stringify({inputs:inputValues(),caso}))}catch(e){}}
-  function cargarDraft(){try{const d=JSON.parse(localStorage.getItem(LS.draft)||'null');if(!d)return;if(d.inputs)Object.entries(d.inputs).forEach(([id,v])=>setControl(id,v));if(d.caso)caso=Object.assign(caso,d.caso)}catch(e){}}
+  function guardarDraft(){try{localStorage.setItem(LS.draft,JSON.stringify({inputs:inputValues(),caso,escenarios,escActivo}))}catch(e){}}
+  function cargarDraft(){try{const d=JSON.parse(localStorage.getItem(LS.draft)||'null');if(!d)return;if(d.inputs)Object.entries(d.inputs).forEach(([id,v])=>setControl(id,v));if(d.caso)caso=Object.assign(caso,d.caso);
+    if(Array.isArray(d.escenarios)&&d.escenarios.length){escenarios=d.escenarios;escActivo=d.escActivo&&escGet(d.escActivo)?d.escActivo:escenarios[0].id;const e=escGet(escActivo);if(e)escAplicar(e)}}catch(e){}}
   function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
   function fechaCorta(ts){const d=new Date(ts);return isNaN(d)?'':d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'2-digit'})}
   function pintaCaso(){
@@ -632,7 +791,9 @@
   function aplicarCasoRemoto(obj){
     Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
     caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',version:Number(obj.version||1)};
-    calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado')
+    // Versiones del caso: si la fila trae escenarios_json se restauran; si no (casos viejos), versión única desde las columnas in*.
+    if(!escDesdeJson(obj.escenarios_json))escInicial('Base');
+    calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado'+(escenarios.length>1?' · '+escenarios.length+' versiones':''))
   }
   async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
   async function abrirPorPalabra(palabra){if(!palabra.trim())return;try{const r=await apiGet({recurso:'caso',palabra:palabra.trim()});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'No hay caso con esa palabra':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir')}}
@@ -643,7 +804,7 @@
     if(!palabra){toast('Elige una palabra para volver a tu caso');return}
     if(enviarCorreo&&!correo){toast('Pon un correo para enviarte la palabra');return}
     const btns=[$('gGuardarSolo'),$('gGuardarEnviar')];btns.forEach(b=>b.disabled=true);
-    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
+    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),escenarios:escParaGuardar(),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
     try{
       const r=await apiPost(payload);
       btns.forEach(b=>b.disabled=false);
@@ -686,7 +847,14 @@
     }finally{drenando=false}}
   function whatsApp(){
     const r=state||calculate();
-    const linea=[`*${caso.nombre_caso||'PPP Patrimonial'}* · Potenciales YOD`,`${r.p.unidades} unidades · renta ${fmtMoney(r.rentaMes)}/mes`,`NOI ${fmtM(r.noi)}/año (yield ${pct(r.yieldOnCost*100,1)}) · valor a cap ${fmtM(r.valorCap)}`,`${r.montoCredito>0?'CoC '+pct((r.coc||0)*100,1)+' · DSCR '+(r.dscr||0).toFixed(2):'Contado puro'} · recuperación ${r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'}`,`Punto dulce: retener ~${r.aniosRetener} años · patrimonio a ${r.p.horizonte}a ${fmtM(r.patrimH)}`,caso.caso_id?`Abrir: ${NUBE.SITE}${NUBE.PAGE}?open=${caso.caso_id}`:''].filter(Boolean).join('\n');
+    let marginal='';
+    if(escenarios.length>1){
+      const res=escenarios.map(e=>({e,r:e.id===escActivo?r:computar(e.inputs)}));
+      const b=res.find(x=>x.e.esBase)||res[0];
+      const f=res.find(x=>x.e.id===escActivo&&x!==b)||res.find(x=>x!==b);
+      if(f){const dI=f.r.p.inversion-b.r.p.inversion,dN=f.r.noi-b.r.noi;
+        if(dI>0)marginal=`«${f.e.nombre}» vs «${b.e.nombre}»: el peso extra rinde ${pct(dN/dI*100,1)} (ΔNOI ${sM(dN)} / Δinv ${fmtM(dI)})`}}
+    const linea=[`*${caso.nombre_caso||'PPP Patrimonial'}* · Potenciales YOD`,escenarios.length>1?`Versión activa: «${(escGet(escActivo)||{}).nombre||''}» de ${escenarios.length}`:'',`${r.p.unidades} unidades · renta ${fmtMoney(r.rentaMes)}/mes`,`NOI ${fmtM(r.noi)}/año (yield ${pct(r.yieldOnCost*100,1)}) · valor a cap ${fmtM(r.valorCap)}`,`${r.montoCredito>0?'CoC '+pct((r.coc||0)*100,1)+' · DSCR '+(r.dscr||0).toFixed(2):'Contado puro'} · recuperación ${r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'}`,`Punto dulce: retener ~${r.aniosRetener} años · patrimonio a ${r.p.horizonte}a ${fmtM(r.patrimH)}`,marginal,caso.caso_id?`Abrir: ${NUBE.SITE}${NUBE.PAGE}?open=${caso.caso_id}`:''].filter(Boolean).join('\n');
     const num=String(cfgBoard.whatsapp_num||'').replace(/\D/g,'');
     window.open('https://wa.me/'+(num?num:'')+'?text='+encodeURIComponent(linea),'_blank')
   }
@@ -715,7 +883,7 @@
   $('casosCerrar').onclick=cerrarOverlays;
   $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
   $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
-  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de Real del Arco (16 deptos)')};
+  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};escInicial('Base');calculate();pintaCaso();toast('Caso nuevo: supuestos de Real del Arco (16 deptos)')};
   $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
@@ -725,7 +893,7 @@
   $('gateLocal').onclick=modoSinConexion;
   document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)cerrarOverlays()}));
   window.addEventListener('online',drenarCola);setInterval(drenarCola,25000);
-  cargarDraft();calculate();pintaCaso();
+  cargarDraft();if(!escenarios.length)escInicial('Base');calculate();pintaCaso();
   if(modoLocal){$('gate').classList.add('off');$('modoLocalBanner').classList.add('on')}
   else if(clave){apiGet({recurso:'lista'}).then(r=>{if(r.ok){casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');drenarCola();procesarOpen()}else{reabrirGate()}}).catch(()=>{modoSinConexion();toast('Sin conexión: trabajando en modo local')})}
 })();
