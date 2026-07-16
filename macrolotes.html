@@ -112,7 +112,7 @@
   /* ===== Tarjetas del modelo ===== */
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
   .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 4px 16px #00000040;border:1px solid var(--linea);transition:.25s;cursor:pointer;overflow:hidden}
-  .card:active{transform:scale(.985)}.card.open{box-shadow:0 12px 32px #00000070;border-color:var(--gold)}
+  .card.open{box-shadow:0 12px 32px #00000070;border-color:var(--gold)}.card:active{box-shadow:0 2px 8px #00000055}
   .wide{grid-column:1/-1}
   .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
   .title-wrap{display:flex;gap:10px;align-items:center}
@@ -165,11 +165,11 @@
   /* ===== Ayudas (tooltips de factores) ===== */
   .label-help{display:inline-flex;align-items:center;gap:5px;min-width:0}
   .factor-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;padding:0;border:1px solid #B98B3C66;border-radius:50%;background:transparent;color:var(--goldc);font-size:11px;font-weight:900;cursor:help;font-family:inherit}
-  .factor-tooltip{display:none;position:absolute;z-index:200;left:-5px;top:23px;width:min(310px,70vw);padding:10px;border-radius:10px;background:#ffffff;border:1px solid var(--lineaf);color:var(--text);box-shadow:0 8px 22px #000a;font:10.5px/1.42 'Manrope',sans-serif;text-transform:none;letter-spacing:0;text-align:left}
+  .factor-tooltip{display:none;position:fixed;z-index:200;left:0;top:0;width:min(310px,70vw);padding:10px;border-radius:10px;background:#ffffff;border:1px solid var(--lineaf);color:var(--text);box-shadow:0 8px 22px #000a;font:10.5px/1.42 'Manrope',sans-serif;text-transform:none;letter-spacing:0;text-align:left}
   .factor-tooltip b{color:#fff}
   .factor-tooltip .help-type{display:inline-block;margin:0 0 5px;padding:2px 5px;border-radius:5px;background:#B98B3C26;color:var(--goldc);font-size:9px;font-weight:800;text-transform:uppercase}
   .factor-tooltip p{margin:4px 0}.factor-tooltip a{color:var(--goldc);text-decoration:underline}
-  .factor-help:hover .factor-tooltip,.factor-help:focus .factor-tooltip,.factor-help.open .factor-tooltip{display:block}
+  .factor-help.hov .factor-tooltip,.factor-help.open .factor-tooltip{display:block}
   .kpi-box[data-kpi-help]{cursor:help}
   /* ===== Herramientas avanzadas ===== */
   .advanced-board{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:14px}
@@ -242,7 +242,7 @@
     .caso-bar{align-items:flex-start}.caso-actions{justify-content:flex-end}
     .land-modes{grid-template-columns:1fr}.waterfall-steps{grid-template-columns:1fr 1fr}
     .factor-tooltip{position:fixed;left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:55vh;overflow:auto}
-    .factor-help:hover .factor-tooltip{display:none}.factor-help.open .factor-tooltip{display:block}
+    .factor-help.hov .factor-tooltip{display:none}.factor-help.open .factor-tooltip{display:block}
   }
 </style>
 <style>
@@ -655,7 +655,19 @@
   function setControl(id,value){if(id==='inGateAgua'){gateAgua=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='inEstrNaves'){estrNaves=Number(value)?1:0;return}if(id==='inEstrCom'){estrCom=Number(value)?1:0;return}const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
   function readPills(){document.querySelectorAll('.val-display[data-input]').forEach(p=>{p.contentEditable='true';p.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();p.blur()}});p.addEventListener('blur',()=>{const raw=p.textContent.replace(/[^0-9.\-]/g,''),n=Number(raw);if(Number.isFinite(n))setControl(p.dataset.input,n);calculate()})})}
   function syncPills(){controls.forEach(c=>{const p=document.querySelector(`.val-display[data-input="${c.id}"]`);if(p&&document.activeElement!==p)p.textContent=displayValue(c);updateColor(c)})}
-  function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open')})})}
+    const tipNarrow=()=>window.matchMedia('(max-width:700px)').matches;
+  function positionFactorTip(btn){
+    const tip=btn.querySelector('.factor-tooltip');if(!tip)return;
+    if(tipNarrow()){tip.style.left='';tip.style.top='';return}
+    const r=btn.getBoundingClientRect(),tw=tip.offsetWidth,th=tip.offsetHeight;
+    const left=Math.min(Math.max(12,r.left-5),window.innerWidth-tw-12);
+    let top=r.bottom+6;
+    if(top+th>window.innerHeight-12)top=Math.max(12,r.top-th-6);
+    tip.style.left=left+'px';tip.style.top=top+'px';
+  }
+  window.addEventListener('scroll',()=>{if(tipNarrow())return;document.querySelectorAll('.factor-help.open,.factor-help.hov').forEach(b=>b.classList.remove('open','hov'))},{passive:true});
+  window.addEventListener('resize',()=>{document.querySelectorAll('.factor-help.open,.factor-help.hov').forEach(b=>b.classList.remove('open','hov'))});
+  function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open');if(btn.classList.contains('open'))positionFactorTip(btn)});btn.addEventListener('mouseenter',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('mouseleave',()=>btn.classList.remove('hov'));btn.addEventListener('focus',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('blur',()=>btn.classList.remove('hov'))})}
   function irr(flows){if(!flows.some(x=>x<0)||!flows.some(x=>x>0))return null;let lo=-.999,hi=4;const npv=r=>flows.reduce((s,x,i)=>s+x/Math.pow(1+r,i),0);while(npv(hi)>0&&hi<500)hi*=2;for(let i=0;i<100;i++){const mid=(lo+hi)/2;if(npv(mid)>0)lo=mid;else hi=mid}return Math.pow(1+(lo+hi)/2,12)-1}
 
   /* ================== MOTOR (8 pasos del PPP) ================== */
