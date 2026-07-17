@@ -286,6 +286,19 @@
   .comp-table td.win{color:var(--green);font-weight:800}
   .comp-lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14px;line-height:1.55;color:var(--text);margin:12px 2px 2px;max-width:70ch}
   .comp-lectura b{color:var(--goldc);font-style:normal}
+  /* ===== Profundizar · depa por depa ===== */
+  .prof-toggle{margin:2px 0 10px;padding:9px 11px;border:1px dashed var(--lineaf);border-radius:10px}
+  .prof-toggle label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;color:var(--suave);cursor:pointer}
+  .prof-toggle input[type=checkbox]{accent-color:var(--gold);width:15px;height:15px;cursor:pointer}
+  .prof-panel{margin:0 0 10px;padding:10px 11px;background:var(--surface);border:1px solid var(--linea);border-radius:12px}
+  .prof-table{width:100%;border-collapse:collapse;font-size:11px;color:var(--suave)}
+  .prof-table th{font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:4px 6px;border-bottom:1px solid var(--lineaf)}
+  .prof-table td{padding:4px 6px;border-bottom:1px solid var(--linea)}
+  .prof-table td:first-child{font-weight:800;color:var(--goldc);width:44px}
+  .prof-table select,.prof-table input[type=number]{width:100%;background:rgba(35,29,20,.05);border:1px solid var(--lineaf);border-radius:8px;padding:6px 8px;color:var(--text);font:inherit;font-size:12px}
+  .prof-table select:focus,.prof-table input[type=number]:focus{outline:2px solid #B98B3C55;border-color:var(--gold)}
+  .input-group.derived{opacity:.55}
+  .input-group.derived .val-display{pointer-events:none}
 </style>
 </head>
 <body>
@@ -361,8 +374,6 @@
     <p class="note">La versión ★ es la base de comparación (ej. "como está hoy"). El <b>retorno marginal</b> = ΔNOI ÷ Δinversión: lo que rinde cada peso adicional de esa versión contra la base. Duplica la versión activa con "+ Nueva versión" y mueve solo lo que cambia.</p>
   </section>
 
-  <div class="reference-strip"><b>El árbol patrimonial YOD:</b> Anara Horizontes 2022 (9 cuartos, el origen) → Real del Arco 2026 (16 deptos, 9.6% neto — prellenado de este board) → PLANTILLA → Depas Luis Puebla. Ábrelos en "Mis casos". La curva RETENER/VENDER usa la misma regla del board Unifamiliar: retener mientras el patrimonio crezca más que tu alternativa.</div>
-
   <section class="grid-2">
     <article class="card" data-card="dRenta"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8fbf8b1f;color:var(--green)"><i class="ti ti-key"></i></div><div class="card-title">Unidades &amp; Renta</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Unidades</span><span class="kpi-val c-gold" id="lblUnidades">0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta bruta mensual</span><span class="kpi-val c-green" id="lblRentaMes">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta efectiva anual</span><span class="kpi-val" id="lblRentaAnual">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Renta por m² rentable</span><span class="kpi-val c-blue" id="lblRentaM2">$0</span></div></div>
@@ -371,6 +382,12 @@
         <div class="input-group"><div class="input-header"><label>Renta por unidad ($/mes)</label><div class="val-display" data-input="inRentaUnidadMes">$17,625</div></div><input type="range" id="inRentaUnidadMes" min="2000" max="60000" step="1" value="17625" data-color="var(--green)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>m² construidos</label><div class="val-display" data-input="inM2Construccion">1,950</div></div><input type="range" id="inM2Construccion" min="80" max="8000" step="1" value="1950" data-color="var(--gold)"></div>
         <div class="input-group"><div class="input-header"><label>m² rentables</label><div class="val-display" data-input="inM2Rentable">1,444</div></div><input type="range" id="inM2Rentable" min="50" max="8000" step="1" value="1444" data-color="var(--green)"></div>
+        <div class="prof-toggle"><label><input type="checkbox" id="profOn">Profundizar · depa por depa (m², planta y pasillos)</label></div>
+        <div class="prof-panel" id="profPanel" style="display:none">
+          <table class="prof-table"><thead><tr><th>Depa</th><th>Planta</th><th>m²</th></tr></thead><tbody id="profRows"></tbody></table>
+          <div class="input-group" style="margin-top:10px"><div class="input-header"><label>Pasillos y comunes (m²) · no rentables</label><div class="val-display" data-input="inPasillosM2">0</div></div><input type="range" id="inPasillosM2" min="0" max="600" step="1" value="0" data-color="var(--orange)"></div>
+          <div class="micro-readout" id="profResumen">Suma de depas…</div>
+        </div>
         <div class="input-group"><div class="input-header"><label>Vacancia (%)</label><div class="val-display" data-input="inVacanciaPct">5%</div></div><input type="range" id="inVacanciaPct" min="0" max="25" step=".5" value="5" data-color="var(--orange)" data-format="pct1"></div>
         <div class="input-group"><div class="input-header"><label>Operación OpEx (% de renta) · admón + mant + predial</label><div class="val-display" data-input="inOpexPct">13%</div></div><input type="range" id="inOpexPct" min="0" max="35" step=".5" value="13" data-color="var(--orange)" data-format="pct1"></div>
         <div class="input-group"><div class="input-header"><label>Seguro (% del valor al año)</label><div class="val-display" data-input="inSeguroPct">0.5%</div></div><input type="range" id="inSeguroPct" min="0" max="2" step=".05" value=".5" data-color="var(--orange)" data-format="pct1"></div>
@@ -451,6 +468,7 @@
     inRentaUnidadMes:{t:'Renta por unidad',k:'Comparable por validar',q:'$/mes por puerta.',m:'Todo el ingreso.',d:'Comparables de la zona (Anara $6k 2022 · RdA $17.6k 2026).'},
     inM2Construccion:{t:'m² construidos',k:'Proyecto',q:'Total construido.',m:'Referencia de costo/m².',d:'Proyecto arquitectónico.'},
     inM2Rentable:{t:'m² rentables',k:'Proyecto',q:'m² que generan renta.',m:'Renta por m² (eficiencia).',d:'RdA: 1,444 de 1,950 (74%).'},
+    inPasillosM2:{t:'Pasillos y comunes',k:'Proyecto',q:'m² construidos que NO se rentan: pasillos, escaleras, azotea común.',m:'Suben los m² construidos (costo) sin subir la renta.',d:'Plano; en la plantilla es "área común".'},
     inVacanciaPct:{t:'Vacancia',k:'Riesgo',q:'% del año sin inquilino.',m:'Reduce la renta efectiva.',d:'Rotación real del producto (5-7% plantilla).'},
     inOpexPct:{t:'OpEx',k:'Operación',q:'% de la renta en operar: admón, mantenimiento, predial.',m:'Reduce el NOI.',d:'Plantilla: 11-15%.'},
     inSeguroPct:{t:'Seguro',k:'Operación',q:'% de la INVERSIÓN al año en seguro.',m:'Reduce el NOI.',d:'Póliza de edificio.'},
@@ -524,9 +542,41 @@
       yieldOnCost,valorCap,valorCreado,recupAnios,montoCredito,equity,mensCredito,servicioAnual,flujoConCredito,coc,dscr,
       rows,patrim0,aniosRetener,anioCorte,patrimH:last.patrim,valorH:last.valor,acumH:last.acum,roiPat}}
   function calculate(){
+    profDerivar();
     state=computar(inputValues());
     escSyncActivo();
     render();renderEscenarios();renderComparador();guardarDraft();return state}
+
+  /* ================== PROFUNDIZAR · DEPA POR DEPA ================== */
+  // Detalle opcional por versión (e.prof + e.depas=[{m2,nivel}]): la tabla manda —
+  // m² rentables = suma de depas; m² construidos = depas + pasillos (inPasillosM2).
+  const NIVELES=['PB','PA','RT'];
+  function profDerivar(){
+    const e=escGet(escActivo);if(!e||!e.prof)return;
+    if(!Array.isArray(e.depas))e.depas=[];
+    const n=Math.max(1,Math.round(get('inUnidades')));
+    if(e.depas.length!==n){
+      const molde=e.depas[e.depas.length-1]||{m2:Math.max(8,Math.round(get('inM2Rentable')/n)),nivel:'PB'};
+      while(e.depas.length<n)e.depas.push({m2:molde.m2,nivel:molde.nivel});
+      e.depas.length=n;
+      renderProf()}
+    const suma=e.depas.reduce((s,d)=>s+(Number(d.m2)||0),0);
+    setControl('inM2Rentable',suma);
+    setControl('inM2Construccion',suma+get('inPasillosM2'));
+    const rentaU=get('inRentaUnidadMes');
+    const porNivel=NIVELES.map(nv=>{const ds=e.depas.filter(d=>d.nivel===nv);return ds.length?`${nv}: ${ds.length} · ${fmtN(ds.reduce((s,d)=>s+(Number(d.m2)||0),0))} m² · ${fmtMoney(ds.length*rentaU)}/mes`:null}).filter(Boolean);
+    const res=$('profResumen');if(res)res.innerHTML=`Rentable = suma de depas: <b>${fmtN(suma)} m²</b> · construido = depas + pasillos: <b>${fmtN(suma+get('inPasillosM2'))} m²</b>${porNivel.length?'<br>'+porNivel.join(' &nbsp;·&nbsp; '):''}`}
+  function renderProf(){
+    const e=escGet(escActivo),on=!!(e&&e.prof);
+    const chk=$('profOn');if(chk&&chk.checked!==on)chk.checked=on;
+    const panel=$('profPanel');if(panel)panel.style.display=on?'':'none';
+    ['inM2Rentable','inM2Construccion'].forEach(id=>{const c=$(id);if(!c)return;c.disabled=on;const g=c.closest('.input-group');if(g)g.classList.toggle('derived',on)});
+    if(!on)return;
+    if(!Array.isArray(e.depas))e.depas=[];
+    const tb=$('profRows');if(!tb)return;
+    tb.innerHTML=e.depas.map((d,i)=>`<tr><td>${i+1}</td><td><select data-prof-nivel="${i}">${NIVELES.map(nv=>`<option${d.nivel===nv?' selected':''}>${nv}</option>`).join('')}</select></td><td><input type="number" min="5" max="999" step="1" value="${Number(d.m2)||0}" data-prof-m2="${i}"></td></tr>`).join('');
+    tb.querySelectorAll('[data-prof-m2]').forEach(inp=>inp.addEventListener('input',()=>{const v=Number(inp.value);if(isFinite(v)&&v>0){e.depas[+inp.dataset.profM2].m2=v;calculate()}}));
+    tb.querySelectorAll('[data-prof-nivel]').forEach(sel=>sel.addEventListener('change',()=>{e.depas[+sel.dataset.profNivel].nivel=sel.value;calculate()}))}
 
   /* ================== VERSIONES DEL CASO (comparador) ================== */
   // Un caso puede tener hasta 8 versiones del mismo inmueble (ej. "Hoy" vs "Coliving 8 puertas").
@@ -536,17 +586,19 @@
   const escId=()=>'e'+Math.random().toString(36).slice(2,8);
   function escGet(id){return escenarios.find(e=>e.id===id)}
   function escBaseObj(){return escenarios.find(e=>e.esBase)||escenarios[0]}
-  function escInicial(nombre){escenarios=[{id:escId(),nombre:nombre||'Base',esBase:true,inputs:inputValues()}];escActivo=escenarios[0].id}
+  function escInicial(nombre){escenarios=[{id:escId(),nombre:nombre||'Base',esBase:true,inputs:inputValues()}];escActivo=escenarios[0].id;renderProf()}
   function escSyncActivo(){const e=escGet(escActivo);if(e)e.inputs=inputValues()}
-  function escAplicar(e){Object.entries(e.inputs||{}).forEach(([k,v])=>setControl(k,v))}
+  function escAplicar(e){Object.entries(e.inputs||{}).forEach(([k,v])=>setControl(k,v));renderProf()}
   function escCambiar(id){if(id===escActivo)return;const e=escGet(id);if(!e)return;escSyncActivo();escActivo=id;escAplicar(e);calculate();toast('Versión activa: «'+e.nombre+'»',1800)}
   function escNueva(){
     if(escenarios.length>=MAX_ESC){toast('Máximo '+MAX_ESC+' versiones por caso');return}
     const sug=escenarios.length===1?'Remodelado / proyecto':'Versión '+(escenarios.length+1);
     const nombre=prompt('Nombre de la nueva versión (copia de la activa):',sug);if(nombre===null)return;
     escSyncActivo();
-    const e={id:escId(),nombre:(nombre.trim()||sug).slice(0,40),esBase:false,inputs:inputValues()};
-    escenarios.push(e);escActivo=e.id;calculate();
+    const act=escGet(escActivo);
+    const e={id:escId(),nombre:(nombre.trim()||sug).slice(0,40),esBase:false,inputs:inputValues(),
+      prof:!!(act&&act.prof),depas:act&&act.depas?JSON.parse(JSON.stringify(act.depas)):undefined};
+    escenarios.push(e);escActivo=e.id;renderProf();calculate();
     toast('Versión «'+e.nombre+'» creada: mueve solo los supuestos que cambian')}
   function escRenombrar(id){const e=escGet(id);if(!e)return;const nombre=prompt('Nuevo nombre de la versión:',e.nombre);if(nombre===null)return;e.nombre=(nombre.trim()||e.nombre).slice(0,40);calculate()}
   function escMarcarBase(id){if(!escGet(id))return;escenarios.forEach(e=>e.esBase=e.id===id);calculate()}
@@ -558,15 +610,16 @@
     if(e.esBase)escenarios[0].esBase=true;
     if(escActivo===id){const b=escBaseObj();escActivo=b.id;escAplicar(b)}
     calculate()}
-  function escParaGuardar(){escSyncActivo();return escenarios.map(e=>({id:e.id,nombre:e.nombre,esBase:!!e.esBase,activo:e.id===escActivo,inputs:e.inputs}))}
+  function escParaGuardar(){escSyncActivo();return escenarios.map(e=>Object.assign({id:e.id,nombre:e.nombre,esBase:!!e.esBase,activo:e.id===escActivo,inputs:e.inputs},e.depas&&e.depas.length?{prof:!!e.prof,depas:e.depas}:{}))}
   function escDesdeJson(raw){
     try{const arr=JSON.parse(raw||'null');
       if(!Array.isArray(arr)||!arr.length)return false;
       const limpio=arr.filter(e=>e&&typeof e==='object'&&e.inputs&&typeof e.inputs==='object')
-        .slice(0,MAX_ESC).map(e=>({id:String(e.id||escId()),nombre:String(e.nombre||'Versión').slice(0,40),esBase:!!e.esBase,activo:!!e.activo,inputs:e.inputs}));
+        .slice(0,MAX_ESC).map(e=>({id:String(e.id||escId()),nombre:String(e.nombre||'Versión').slice(0,40),esBase:!!e.esBase,activo:!!e.activo,inputs:e.inputs,
+          prof:!!e.prof,depas:Array.isArray(e.depas)?e.depas.filter(d=>d&&isFinite(Number(d.m2))).map(d=>({m2:Number(d.m2),nivel:NIVELES.includes(d.nivel)?d.nivel:'PB'})):undefined}));
       if(!limpio.length)return false;
       if(!limpio.some(e=>e.esBase))limpio[0].esBase=true;
-      escenarios=limpio.map(e=>({id:e.id,nombre:e.nombre,esBase:e.esBase,inputs:e.inputs}));
+      escenarios=limpio.map(e=>({id:e.id,nombre:e.nombre,esBase:e.esBase,inputs:e.inputs,prof:e.prof,depas:e.depas}));
       const act=limpio.find(e=>e.activo)||limpio.find(e=>e.esBase)||limpio[0];
       escActivo=act.id;escAplicar(escGet(act.id));
       return true}catch(err){return false}}
@@ -884,6 +937,7 @@
   $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
   $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
   $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};escInicial('Base');calculate();pintaCaso();toast('Caso nuevo: supuestos de Real del Arco (16 deptos)')};
+  $('profOn').addEventListener('change',()=>{const e=escGet(escActivo);if(!e)return;e.prof=$('profOn').checked;renderProf();calculate()});
   $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
