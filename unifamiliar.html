@@ -266,7 +266,7 @@
   .esc-bar{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;padding:9px 12px;background:var(--card);border:1px solid var(--linea);border-radius:14px;flex-wrap:wrap}
   .esc-lbl{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
   .esc-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-width:0}
-  .esc-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:20px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .esc-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:20px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;text-transform:none;letter-spacing:0}
   .esc-chip .star{color:var(--goldc);font-style:normal}
   .esc-chip.on{background:var(--gold);color:#fff;border-color:var(--gold)}
   .esc-chip.on .star{color:#fff}
@@ -692,7 +692,7 @@
     $('compMarginal').innerHTML=otras.map(x=>{
       const dInv=x.r.inversion-base.r.inversion,dUtil=x.r.utilidad-base.r.utilidad,dPat=x.r.patrimH-base.r.patrimH;
       const color=dUtil>=0?'var(--green)':'var(--red)';
-      const marg=dInv>0&&dUtil>0?` · el peso extra rinde ${pct(dUtil/dInv*100,1)} en la venta`:'';
+      const marg=dInv>100000&&dUtil>0?` · el peso extra rinde ${pct(dUtil/dInv*100,1)} en la venta`:'';
       return `<div class="marg-card"><span class="k">Δ vs base · ${esc(x.e.nombre)}</span><div class="big" style="color:${color}">${sM(dUtil)}</div><div class="sub2">utilidad de VENDER vs «${esc(base.e.nombre)}» (Δinversión ${sM(dInv)}${marg}) · patrimonio a ${x.r.p.horizonte}a: ${sM(dPat)}</div></div>`
     }).join('');
     // Tabla métricas × versiones
@@ -723,7 +723,7 @@
     // Lectura narrativa: la versión activa (o la primera no-base) contra la base
     const foco=otras.find(x=>x.e.id===escActivo)||otras[0];
     const dInv=foco.r.inversion-base.r.inversion,dUtil=foco.r.utilidad-base.r.utilidad,dPat=foco.r.patrimH-base.r.patrimH;
-    $('compLectura').innerHTML=`«<b>${esc(foco.e.nombre)}</b>» ${Math.abs(dInv)<1?'invierte lo mismo':dInv>0?'invierte <b>'+fmtM(dInv)+'</b> más':'invierte <b>'+fmtM(-dInv)+'</b> menos'} que «${esc(base.e.nombre)}»: la utilidad de VENDER ${dUtil>=0?'sube <b>'+sM(dUtil)+'</b>':'cae <b>'+sM(dUtil)+'</b>'} (${pct(foco.r.roi*100,1)} vs ${pct(base.r.roi*100,1)} de ROI)${dInv>0&&dUtil>0?' — cada peso extra rinde <b>'+pct(dUtil/dInv*100,1)+'</b>':''}. Al horizonte de ${foco.r.p.horizonte} años el patrimonio ${dPat>=0?'gana':'pierde'} <b>${sM(dPat)}</b>.`}
+    $('compLectura').innerHTML=`«<b>${esc(foco.e.nombre)}</b>» ${Math.abs(dInv)<1?'invierte lo mismo':dInv>0?'invierte <b>'+fmtM(dInv)+'</b> más':'invierte <b>'+fmtM(-dInv)+'</b> menos'} que «${esc(base.e.nombre)}»: la utilidad de VENDER ${dUtil>=0?'sube <b>'+sM(dUtil)+'</b>':'cae <b>'+sM(dUtil)+'</b>'} (${pct(foco.r.roi*100,1)} vs ${pct(base.r.roi*100,1)} de ROI)${dInv>100000&&dUtil>0?' — cada peso extra rinde <b>'+pct(dUtil/dInv*100,1)+'</b>':''}. Al horizonte de ${foco.r.p.horizonte} años el patrimonio ${dPat>=0?'gana':'pierde'} <b>${sM(dPat)}</b>.`}
 
   /* ================== RENDER ================== */
   function render(){

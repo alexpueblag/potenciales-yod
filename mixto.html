@@ -244,6 +244,37 @@
     .factor-tooltip{position:fixed;left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:55vh;overflow:auto}
     .factor-help.hov .factor-tooltip{display:none}.factor-help.open .factor-tooltip{display:block}
   }
+  /* ===== Versiones del caso + comparador (patrón del board Patrimonial) ===== */
+  .esc-bar{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;padding:9px 12px;background:var(--card);border:1px solid var(--linea);border-radius:14px;flex-wrap:wrap}
+  .esc-lbl{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+  .esc-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-width:0}
+  .esc-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:20px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;text-transform:none;letter-spacing:0}
+  .esc-chip .star{color:var(--goldc);font-style:normal}
+  .esc-chip.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+  .esc-chip.on .star{color:#fff}
+  .esc-chip .mini{border:0;background:transparent;color:inherit;opacity:.75;cursor:pointer;font-size:12px;padding:0 1px;font-family:inherit;line-height:1}
+  .esc-chip .mini:hover{opacity:1}
+  .esc-chip .mini i{font-size:12px}
+  .esc-add{border:1px dashed var(--lineaf);background:transparent;color:var(--goldc);border-radius:20px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+  .esc-add:hover{border-color:var(--gold)}
+  .comparador{background:var(--card);border:1px solid var(--linea);border-radius:20px;padding:16px;margin-bottom:16px;box-shadow:0 4px 16px #00000040}
+  .comparador .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  .comp-marginal{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+  .marg-card{background:var(--surface);border:1px solid var(--linea);border-radius:14px;padding:11px 13px;min-width:0}
+  .marg-card .k{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .marg-card .big{font-family:'Instrument Serif',Georgia,serif;font-size:26px;line-height:1.1;margin:3px 0 2px}
+  .marg-card .sub2{font-size:10.5px;color:var(--muted);line-height:1.45}
+  .comp-scroll{overflow-x:auto;margin-top:12px;border:1px solid var(--linea);border-radius:10px}
+  .comp-table{width:100%;border-collapse:collapse;font-size:11px;color:var(--suave);min-width:460px}
+  .comp-table th,.comp-table td{padding:7px 10px;border-bottom:1px solid var(--linea);text-align:right;white-space:nowrap}
+  .comp-table tr:last-child td{border-bottom:0}
+  .comp-table th:first-child,.comp-table td:first-child{text-align:left;font-weight:700;color:var(--muted)}
+  .comp-table th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--lineaf)}
+  .comp-table th.base::after{content:" \2605";color:var(--goldc)}
+  .comp-table th.act{color:var(--goldc)}
+  .comp-table td.win{color:var(--green);font-weight:800}
+  .comp-lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:14px;line-height:1.55;color:var(--text);margin:12px 2px 2px;max-width:70ch}
+  .comp-lectura b{color:var(--goldc);font-style:normal}
 </style>
 </head>
 <body>
@@ -281,6 +312,11 @@
     </div>
   </div>
 
+
+  <div class="esc-bar" id="escBar" title="Versiones del mismo caso: la ★ es la base de comparación">
+    <span class="esc-lbl"><i class="ti ti-versions"></i> Versiones</span>
+    <div class="esc-chips" id="escChips"></div>
+  </div>
   <section class="seguimiento" id="segPanel">
     <div class="subheading" style="margin-top:0">Seguimiento del caso</div>
     <div class="estado-chips" id="estadoChips"></div>
@@ -306,6 +342,14 @@
   </section>
 
   <div class="reference-strip"><b>Caso de referencia preliminar · Hermosillo.</b> Los valores iniciales son orden de magnitud, no avalúo ni presupuesto: producto 60 / 90 / 120 m², lista $58,000/m² como meta premium por validar (un comparable vigente anuncia desde 56 m² y $2.22 M) y obra $24k/$17.5k por m². Antes de decidir, carga avalúo, tres cotizaciones y term sheet. <a href="https://invien.mx/proyectos/santa-monica/" target="_blank" rel="noopener">Comparable</a> · <a href="https://serviciosacs.com/servicios/construccion/" target="_blank" rel="noopener">Referencia de construcción</a></div>
+
+  <section class="comparador" id="compSection" style="display:none">
+    <span class="kick">Comparador de versiones · ¿qué cambia entre escenarios?</span>
+    <div class="comp-marginal" id="compMarginal"></div>
+    <div class="comp-scroll"><table class="comp-table" id="compTable"></table></div>
+    <p class="comp-lectura" id="compLectura"></p>
+    <p class="note">La versión ★ es la base de comparación. Duplica la versión activa con "+ Nueva versión" y mueve solo lo que cambia (ej. precio de preventa, costo de obra, % de aporte del dueño).</p>
+  </section>
 
   <section class="grid-2">
     <article class="card" data-card="dArq"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)"><i class="ti ti-building-skyscraper"></i></div><div class="card-title">Arquitectura (COS/CUS)</div></div><div class="edit-pill">AJUSTAR</div></div>
@@ -462,7 +506,7 @@
   let cfgBoard={}, casosCache=[], modoLocal=!cloudOn;
 
   const $=id=>document.getElementById(id); const controls=[...document.querySelectorAll('input[type=range]')]; let state=null;
-  const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>'$'+((n||0)/1e6).toFixed(1)+' M'; const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const fmtK=n=>'$'+((n||0)/1000).toFixed(1)+'k'; const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%';
+  const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>'$'+((n||0)/1e6).toFixed(1)+' M'; const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const fmtK=n=>'$'+((n||0)/1000).toFixed(1)+'k'; const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%'; const sM=n=>(n<0?'−':'+')+fmtM(Math.abs(n||0));
   // Prellenado oficial del caso de referencia (JSON torre-ruisenor v3 · 2026-07-09)
   const PRELLENADO={inTerreno:2500,inCOS:70,inCUS:6,inCom:250,inEfiViv:90,inM2Depto:93,inMixLoft:35,inM2Loft:60,inMix2Rec:20,inM22Rec:90,inMix3Rec:45,inM23Rec:120,inEfiCom:85,inDeptosPiso:12,inLocalesPB:5,inHabDepto:3.5,inAltPB:4.5,inAltViv:3.5,inAltMax:60,inCobSotano:100,inAltSotano:3.2,inAreaVerdePct:20,inM2Cajon:35,inM2ComCajon:40,inPreViv:58000,inDescPrev:4,inPreCom:60000,inEng:30,inObra:40,inPreventa:75,inMesesPreventa:18,inMesesEntrega:18,inPrecioCajon:320000,inCostRas:24000,inCostSot:17500,inInd:7,inImp:5,inCierreTierra:3,inLegal:2,inComision:5,inInicioObra:12,inMesesObra:36,inPIK:12,inTierraUSD:500,inTC:18.5,inVel:80,inAporteTierra:100,inEquity:10000000,inMaxDeuda:305000000,inLTC:60,inMinPreventaObra:15,inFeeDeuda:1.5,inPref:20,inResidualDueno:50,inTirObjetivo:25};
   const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),PRELLENADO);
@@ -568,9 +612,9 @@
   function parkingPerUnit(m){return m<=65?1:m<=120?1.5:m<=250?2.5:3.5}
   function irr(flows){if(!flows.some(x=>x<0)||!flows.some(x=>x>0))return null;let lo=-.999,hi=4;const npv=r=>flows.reduce((s,x,i)=>s+x/Math.pow(1+r,i),0);while(npv(hi)>0&&hi<500)hi*=2;for(let i=0;i<100;i++){const mid=(lo+hi)/2;if(npv(mid)>0)lo=mid;else hi=mid}return Math.pow(1+(lo+hi)/2,12)-1}
   function constructionCurve(months){const raw=Array.from({length:Math.max(1,months)},(_,i)=>Math.sin(Math.PI*(i+.5)/Math.max(1,months))),total=raw.reduce((a,b)=>a+b,0);return raw.map(v=>v/total)}
-  function calculate(){
-    clampRelations();
-    const p={terrain:get('inTerreno'),cos:get('inCOS')/100,cus:get('inCUS'),comReq:get('inCom'),efiViv:get('inEfiViv')/100,m2Depto:get('inM2Depto'),mixLoft:get('inMixLoft')/100,m2Loft:get('inM2Loft'),mix2Rec:get('inMix2Rec')/100,m22Rec:get('inM22Rec'),mix3Rec:get('inMix3Rec')/100,m23Rec:get('inM23Rec'),efiCom:get('inEfiCom')/100,deptosPiso:Math.max(1,Math.round(get('inDeptosPiso'))),localesPB:Math.round(get('inLocalesPB')),habDepto:get('inHabDepto'),altPB:get('inAltPB'),altViv:get('inAltViv'),altMax:get('inAltMax'),cobSotano:get('inCobSotano')/100,altSotano:get('inAltSotano'),areaVerdePct:get('inAreaVerdePct')/100,nucleoNivel:get('inNucleoNivel'),amenM2Depto:get('inAmenidadesM2Depto'),dotAguaHab:get('inDotAguaHab'),dotAguaCom:get('inDotAguaCom'),drenajePct:get('inDrenajePct')/100,diasReserva:get('inDiasReserva'),kwDepa:get('inKwDepa'),wm2Local:get('inWm2Local'),wm2Comun:get('inWm2Comun'),factorDemanda:get('inFactorDemanda')/100,deptosVisita:Math.max(2,get('inDeptosVisita')),deptosElevador:Math.max(30,get('inDeptosElevador')),gasLDepto:get('inGasLDepto'),basuraM2Depto:get('inBasuraM2Depto'),pavPermeablePct:get('inPavPermeablePct')/100,lluviaMm:get('inLluviaMm'),cuotaM2:get('inCuotaM2'),m2Cajon:get('inM2Cajon'),m2ComCajon:get('inM2ComCajon'),preViv:get('inPreViv'),desc:get('inDescPrev')/100,preCom:get('inPreCom'),eng:get('inEng')/100,obra:get('inObra')/100,velPreventa:get('inVel')/100,conversionPreventa:get('inPreventa')/100,preMonths:Math.round(get('inMesesPreventa')),delivery:Math.round(get('inMesesEntrega')),precioCajon:get('inPrecioCajon'),costRas:get('inCostRas'),costSot:get('inCostSot'),ind:get('inInd')/100,imp:get('inImp')/100,cierre:get('inCierreTierra')/100,legal:get('inLegal')/100,comision:get('inComision')/100,buildStartMonth:Math.max(1,Math.round(get('inInicioObra'))),monthsBuild:Math.round(get('inMesesObra')),pik:get('inPIK')/100,landUsd:get('inTierraUSD'),tc:get('inTC'),equity:get('inEquity'),maxDebt:get('inMaxDeuda'),ltc:get('inLTC')/100,minPreventaObra:get('inMinPreventaObra')/100,feeDebt:get('inFeeDeuda')/100,ownerLand:get('inAporteTierra')/100,pref:get('inPref')/100,residualOwner:get('inResidualDueno')/100,tirTarget:get('inTirObjetivo')/100};
+  function computar(vals){
+    const gv=id=>Number(vals[id])||0;
+    const p={terrain:gv('inTerreno'),cos:gv('inCOS')/100,cus:gv('inCUS'),comReq:gv('inCom'),efiViv:gv('inEfiViv')/100,m2Depto:gv('inM2Depto'),mixLoft:gv('inMixLoft')/100,m2Loft:gv('inM2Loft'),mix2Rec:gv('inMix2Rec')/100,m22Rec:gv('inM22Rec'),mix3Rec:gv('inMix3Rec')/100,m23Rec:gv('inM23Rec'),efiCom:gv('inEfiCom')/100,deptosPiso:Math.max(1,Math.round(gv('inDeptosPiso'))),localesPB:Math.round(gv('inLocalesPB')),habDepto:gv('inHabDepto'),altPB:gv('inAltPB'),altViv:gv('inAltViv'),altMax:gv('inAltMax'),cobSotano:gv('inCobSotano')/100,altSotano:gv('inAltSotano'),areaVerdePct:gv('inAreaVerdePct')/100,nucleoNivel:gv('inNucleoNivel'),amenM2Depto:gv('inAmenidadesM2Depto'),dotAguaHab:gv('inDotAguaHab'),dotAguaCom:gv('inDotAguaCom'),drenajePct:gv('inDrenajePct')/100,diasReserva:gv('inDiasReserva'),kwDepa:gv('inKwDepa'),wm2Local:gv('inWm2Local'),wm2Comun:gv('inWm2Comun'),factorDemanda:gv('inFactorDemanda')/100,deptosVisita:Math.max(2,gv('inDeptosVisita')),deptosElevador:Math.max(30,gv('inDeptosElevador')),gasLDepto:gv('inGasLDepto'),basuraM2Depto:gv('inBasuraM2Depto'),pavPermeablePct:gv('inPavPermeablePct')/100,lluviaMm:gv('inLluviaMm'),cuotaM2:gv('inCuotaM2'),m2Cajon:gv('inM2Cajon'),m2ComCajon:gv('inM2ComCajon'),preViv:gv('inPreViv'),desc:gv('inDescPrev')/100,preCom:gv('inPreCom'),eng:gv('inEng')/100,obra:gv('inObra')/100,velPreventa:gv('inVel')/100,conversionPreventa:gv('inPreventa')/100,preMonths:Math.round(gv('inMesesPreventa')),delivery:Math.round(gv('inMesesEntrega')),precioCajon:gv('inPrecioCajon'),costRas:gv('inCostRas'),costSot:gv('inCostSot'),ind:gv('inInd')/100,imp:gv('inImp')/100,cierre:gv('inCierreTierra')/100,legal:gv('inLegal')/100,comision:gv('inComision')/100,buildStartMonth:Math.max(1,Math.round(gv('inInicioObra'))),monthsBuild:Math.round(gv('inMesesObra')),pik:gv('inPIK')/100,landUsd:gv('inTierraUSD'),tc:gv('inTC'),equity:gv('inEquity'),maxDebt:gv('inMaxDeuda'),ltc:gv('inLTC')/100,minPreventaObra:gv('inMinPreventaObra')/100,feeDebt:gv('inFeeDeuda')/100,ownerLand:gv('inAporteTierra')/100,pref:gv('inPref')/100,residualOwner:gv('inResidualDueno')/100,tirTarget:gv('inTirObjetivo')/100};
     const footprint=p.terrain*p.cos,areaLibre=p.terrain-footprint,greenRequested=p.terrain*p.areaVerdePct,greenArea=Math.min(areaLibre,greenRequested),greenExcess=Math.max(0,greenRequested-areaLibre),com=Math.min(p.comReq,footprint),gross=p.terrain*p.cus,resGross=Math.max(0,gross-com),resSell=resGross*p.efiViv,comSell=com*p.efiCom;
     const mixTotal=p.mixLoft+p.mix2Rec+p.mix3Rec,mixValid=Math.abs(mixTotal-1)<.001,mixLoftShare=mixTotal?p.mixLoft/mixTotal:0,mix2Share=mixTotal?p.mix2Rec/mixTotal:0,mix3Share=mixTotal?p.mix3Rec/mixTotal:0,mixWeightedM2=mixTotal?(p.mixLoft*p.m2Loft+p.mix2Rec*p.m22Rec+p.mix3Rec*p.m23Rec)/mixTotal:0,unitM2Effective=mixValid?mixWeightedM2:p.m2Depto,units=Math.floor(resSell/unitM2Effective),mixLoftUnits=Math.round(units*mixLoftShare),mix2Units=Math.round(units*mix2Share),mix3Units=Math.max(0,units-mixLoftUnits-mix2Units),fullLevels=Math.floor(units/p.deptosPiso),lastFloorUnits=units%p.deptosPiso,levels=units?Math.ceil(units/p.deptosPiso):0,totalFloors=levels+(com>0?1:0),habitantes=Math.round(units*p.habDepto),m2PorLocal=p.localesPB?comSell/p.localesPB:0,height=(com>0?p.altPB:0)+levels*p.altViv,floorPlate=p.efiViv?(p.deptosPiso*unitM2Effective)/p.efiViv:0,lastFloorPlate=p.efiViv?(lastFloorUnits*unitM2Effective)/p.efiViv:0,footprintMargin=footprint-floorPlate,unallocatedResSell=Math.max(0,resSell-units*unitM2Effective);
     const residentialSpaces=mixValid?mixLoftUnits*parkingPerUnit(p.m2Loft)+mix2Units*parkingPerUnit(p.m22Rec)+mix3Units*parkingPerUnit(p.m23Rec):units*parkingPerUnit(p.m2Depto),spacesVenta=Math.ceil(residentialSpaces+(comSell?comSell/p.m2ComCajon:0)),spacesVisitas=units?Math.ceil(units/p.deptosVisita):0,spaces=spacesVenta+spacesVisitas,parkingArea=spaces*p.m2Cajon,basementPlate=Math.max(1,p.terrain*p.cobSotano),basements=spaces?Math.ceil(parkingArea/basementPlate):0,basementArea=basements*basementPlate,buildingVolume=com*p.altPB+resGross*p.altViv,parkingVolume=basementArea*p.altSotano,totalVolume=buildingVolume+parkingVolume;
@@ -595,7 +639,114 @@
     const revTotal=rev.reduce((a,b)=>a+b,0),costTotal=cost.reduce((a,b)=>a+b,0),cashSourceTotal=revTotal+equityUsed+debtDraws+fundingGap,cashUsesTotal=costTotal+cashInterest+debtRepayments+cash,cashReconciliation=cashSourceTotal-cashUsesTotal,distributable=debt<1&&fundingGap<1?cash:0,ownerSaleProceeds=landCash,ownerCapital=land*p.ownerLand,devCapital=equityUsed,capital=ownerCapital+devCapital,ownerPrefTarget=ownerCapital*p.pref*totalMonths/12,devPrefTarget=flows.reduce((sum,x,i)=>sum+x.equity*p.pref*Math.max(0,totalMonths-i-1)/12,0),prefTarget=ownerPrefTarget+devPrefTarget,effectiveOwnerResidual=ownerCapital>0?p.residualOwner:0;
     let pool=distributable,returnCapital=Math.min(pool,capital);pool-=returnCapital;const prefPaid=Math.min(pool,prefTarget);pool-=prefPaid,ownerCapitalReturn=capital?returnCapital*ownerCapital/capital:0,devCapitalReturn=capital?returnCapital*devCapital/capital:0,ownerPrefPaid=prefTarget?prefPaid*ownerPrefTarget/prefTarget:0,devPrefPaid=prefTarget?prefPaid*devPrefTarget/prefTarget:0,ownerResidual=pool*effectiveOwnerResidual,devResidual=pool-ownerResidual,ownerDist=ownerCapitalReturn+ownerPrefPaid+ownerResidual,devDist=devCapitalReturn+devPrefPaid+devResidual,ownerTotalProceeds=ownerSaleProceeds+ownerDist;
     devFlows[devFlows.length-1]+=devDist;const ownerFlows=Array(totalMonths).fill(0);if(ownerCapital>0){ownerFlows[0]=-ownerCapital;ownerFlows[ownerFlows.length-1]+=ownerDist}const devIrr=irr(devFlows),ownerIrr=ownerCapital?irr(ownerFlows):null,ownerMoic=ownerCapital?ownerDist/ownerCapital:null,profit=sales-projectCost-interest-feeDebt,margin=sales?profit/sales:0,marginBeforeFinance=sales?(sales-projectCost)/sales:0,residentialRevenueFactor=preventaEfectiva*(1-p.desc)+(1-preventaEfectiva),breakevenPreViv=resSell&&residentialRevenueFactor?Math.max(0,(projectCost+interest+feeDebt-comRev-parkingRev)/(resSell*residentialRevenueFactor)):0,preventaAtBuild=preventaEfectiva*Math.min(1,Math.max(0,p.buildStartMonth-1)/p.preMonths),preventaMinMonth=preventaEfectiva?Math.ceil(p.minPreventaObra/preventaEfectiva*p.preMonths):Infinity;
-    state={p,footprint,areaLibre,greenRequested,greenArea,greenExcess,com,gross,resGross,resSell,comSell,units,mixTotal,mixValid,mixWeightedM2,unitM2Effective,mixLoftUnits,mix2Units,mix3Units,levels,fullLevels,lastFloorUnits,totalFloors,habitantes,m2PorLocal,height,floorPlate,lastFloorPlate,footprintMargin,unallocatedResSell,residentialSpaces,spaces,parkingArea,basementPlate,basements,basementArea,buildingVolume,parkingVolume,totalVolume,priceCushion:breakevenPreViv?p.preViv/breakevenPreViv-1:null,circVertical,amenidades,noVendResid,pasillosHoriz,circDeficit,comunM2,m2Loft,m2Dos,m2Tres,vendTotal,aguaViv,aguaCom,aguaTotal,drenajeDia,cisternaM3,cargaViv,cargaCom,cargaComun,cargaTotalKw,demandaKva,spacesVenta,spacesVisitas,elevadores,gasL,basuraM2,densidadViv,densidadHab,permeable,permeablePct,pluvialM3,cuotaProm,cuotaLoft,cuotaDos,cuotaTres,preventaEfectiva,preventaAtBuild,preventaMinMonth,preventaCovenantPass:preventaAtBuild>=p.minPreventaObra,presaleSellable,presaleUnits,presaleUnitsPerMonth,presaleRev,postRev,comRev,parkingRev,sales,land,landCash,closing,hard,indirect,cont,legal,commission,projectCost,cashCost,debtCap,peakLtc:projectCost?peak/projectCost:0,debtHeadroom:Math.max(0,debtCap-peak),interest,cashInterest,feeDebt,peak,peakMonth,debt,cash,fundingGap,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,distributable,ownerSaleProceeds,ownerCapital,devCapital,equityUsed,ownerPrefTarget,devPrefTarget,prefTarget,effectiveOwnerResidual,ownerCapitalReturn,devCapitalReturn,ownerPrefPaid,devPrefPaid,ownerResidual,devResidual,ownerDist,ownerTotalProceeds,ownerGain:ownerDist-ownerCapital,ownerIrr,ownerMoic,devDist,devGain:devDist-devCapital,devIrr,devMoic:devCapital?devDist/devCapital:null,profit,margin,marginBeforeFinance,breakevenPreViv,flows,totalMonths,buildStart,buildFinish};render();guardarDraft();return state}
+    return {p,footprint,areaLibre,greenRequested,greenArea,greenExcess,com,gross,resGross,resSell,comSell,units,mixTotal,mixValid,mixWeightedM2,unitM2Effective,mixLoftUnits,mix2Units,mix3Units,levels,fullLevels,lastFloorUnits,totalFloors,habitantes,m2PorLocal,height,floorPlate,lastFloorPlate,footprintMargin,unallocatedResSell,residentialSpaces,spaces,parkingArea,basementPlate,basements,basementArea,buildingVolume,parkingVolume,totalVolume,priceCushion:breakevenPreViv?p.preViv/breakevenPreViv-1:null,circVertical,amenidades,noVendResid,pasillosHoriz,circDeficit,comunM2,m2Loft,m2Dos,m2Tres,vendTotal,aguaViv,aguaCom,aguaTotal,drenajeDia,cisternaM3,cargaViv,cargaCom,cargaComun,cargaTotalKw,demandaKva,spacesVenta,spacesVisitas,elevadores,gasL,basuraM2,densidadViv,densidadHab,permeable,permeablePct,pluvialM3,cuotaProm,cuotaLoft,cuotaDos,cuotaTres,preventaEfectiva,preventaAtBuild,preventaMinMonth,preventaCovenantPass:preventaAtBuild>=p.minPreventaObra,presaleSellable,presaleUnits,presaleUnitsPerMonth,presaleRev,postRev,comRev,parkingRev,sales,land,landCash,closing,hard,indirect,cont,legal,commission,projectCost,cashCost,debtCap,peakLtc:projectCost?peak/projectCost:0,debtHeadroom:Math.max(0,debtCap-peak),interest,cashInterest,feeDebt,peak,peakMonth,debt,cash,fundingGap,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,distributable,ownerSaleProceeds,ownerCapital,devCapital,equityUsed,ownerPrefTarget,devPrefTarget,prefTarget,effectiveOwnerResidual,ownerCapitalReturn,devCapitalReturn,ownerPrefPaid,devPrefPaid,ownerResidual,devResidual,ownerDist,ownerTotalProceeds,ownerGain:ownerDist-ownerCapital,ownerIrr,ownerMoic,devDist,devGain:devDist-devCapital,devIrr,devMoic:devCapital?devDist/devCapital:null,profit,margin,marginBeforeFinance,breakevenPreViv,flows,totalMonths,buildStart,buildFinish}}
+  function calculate(){
+    clampRelations();
+    state=computar(inputValues());
+    escSyncActivo();
+    render();renderEscenarios();renderComparador();guardarDraft();return state}
+
+  /* ================== VERSIONES DEL CASO (comparador) ================== */
+  // Hasta 8 versiones del mismo caso. La versión ★ (esBase) es la referencia del comparador.
+  // Mismo patrón que Patrimonial/Unifamiliar; se guardan en la columna escenarios_json del Sheet.
+  let escenarios=[],escActivo='';
+  const MAX_ESC=8;
+  const escId=()=>'e'+Math.random().toString(36).slice(2,8);
+  function escGet(id){return escenarios.find(e=>e.id===id)}
+  function escBaseObj(){return escenarios.find(e=>e.esBase)||escenarios[0]}
+  function escInicial(nombre){escenarios=[{id:escId(),nombre:nombre||'Base',esBase:true,inputs:inputValues()}];escActivo=escenarios[0].id}
+  function escSyncActivo(){const e=escGet(escActivo);if(e)e.inputs=inputValues()}
+  function escAplicar(e){Object.entries(e.inputs||{}).forEach(([k,v])=>setControl(k,v))}
+  function escCambiar(id){if(id===escActivo)return;const e=escGet(id);if(!e)return;escSyncActivo();escActivo=id;escAplicar(e);calculate();toast('Versión activa: «'+e.nombre+'»',1800)}
+  function escNueva(){
+    if(escenarios.length>=MAX_ESC){toast('Máximo '+MAX_ESC+' versiones por caso');return}
+    const sug=escenarios.length===1?'Escenario B':'Versión '+(escenarios.length+1);
+    const nombre=prompt('Nombre de la nueva versión (copia de la activa):',sug);if(nombre===null)return;
+    escSyncActivo();
+    const e={id:escId(),nombre:(nombre.trim()||sug).slice(0,40),esBase:false,inputs:inputValues()};
+    escenarios.push(e);escActivo=e.id;calculate();
+    toast('Versión «'+e.nombre+'» creada: mueve solo los supuestos que cambian')}
+  function escRenombrar(id){const e=escGet(id);if(!e)return;const nombre=prompt('Nuevo nombre de la versión:',e.nombre);if(nombre===null)return;e.nombre=(nombre.trim()||e.nombre).slice(0,40);calculate()}
+  function escMarcarBase(id){if(!escGet(id))return;escenarios.forEach(e=>e.esBase=e.id===id);calculate()}
+  function escBorrar(id){
+    const e=escGet(id);if(!e)return;
+    if(escenarios.length<=1){toast('Es la única versión del caso');return}
+    if(!confirm('¿Borrar la versión "'+e.nombre+'" de este caso?'))return;
+    escenarios=escenarios.filter(x=>x.id!==id);
+    if(e.esBase)escenarios[0].esBase=true;
+    if(escActivo===id){const b=escBaseObj();escActivo=b.id;escAplicar(b)}
+    calculate()}
+  function escParaGuardar(){escSyncActivo();return escenarios.map(e=>({id:e.id,nombre:e.nombre,esBase:!!e.esBase,activo:e.id===escActivo,inputs:e.inputs}))}
+  function escDesdeJson(raw){
+    try{const arr=JSON.parse(raw||'null');
+      if(!Array.isArray(arr)||!arr.length)return false;
+      const limpio=arr.filter(e=>e&&typeof e==='object'&&e.inputs&&typeof e.inputs==='object')
+        .slice(0,MAX_ESC).map(e=>({id:String(e.id||escId()),nombre:String(e.nombre||'Versión').slice(0,40),esBase:!!e.esBase,activo:!!e.activo,inputs:e.inputs}));
+      if(!limpio.length)return false;
+      if(!limpio.some(e=>e.esBase))limpio[0].esBase=true;
+      escenarios=limpio.map(e=>({id:e.id,nombre:e.nombre,esBase:e.esBase,inputs:e.inputs}));
+      const act=limpio.find(e=>e.activo)||limpio.find(e=>e.esBase)||limpio[0];
+      escActivo=act.id;escAplicar(escGet(act.id));
+      return true}catch(err){return false}}
+  function renderEscenarios(){
+    const cont=$('escChips');if(!cont)return;
+    cont.innerHTML=escenarios.map(e=>{
+      const on=e.id===escActivo;
+      const acciones=on?`<button class="mini" data-esc-ren="${e.id}" title="Renombrar"><i class="ti ti-pencil"></i></button>${e.esBase?'':`<button class="mini" data-esc-base="${e.id}" title="Hacerla base de comparación (★)">☆</button>`}${escenarios.length>1?`<button class="mini" data-esc-del="${e.id}" title="Borrar versión"><i class="ti ti-x"></i></button>`:''}`:'';
+      return `<span class="esc-chip${on?' on':''}" data-esc="${e.id}" role="button" tabindex="0">${e.esBase?'<i class="star" title="Base de comparación">★</i>':''}${esc(e.nombre)}${acciones}</span>`
+    }).join('')+`<button class="esc-add" id="escAdd" title="Duplicar la versión activa"><i class="ti ti-plus"></i>Nueva versión</button>`;
+    cont.querySelectorAll('[data-esc]').forEach(ch=>{ch.onclick=ev=>{if(ev.target.closest('.mini'))return;escCambiar(ch.dataset.esc)};ch.onkeydown=ev=>{if(ev.key==='Enter'&&!ev.target.closest('.mini'))escCambiar(ch.dataset.esc)}});
+    cont.querySelectorAll('[data-esc-ren]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escRenombrar(b.dataset.escRen)});
+    cont.querySelectorAll('[data-esc-base]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escMarcarBase(b.dataset.escBase)});
+    cont.querySelectorAll('[data-esc-del]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escBorrar(b.dataset.escDel)});
+    const add=$('escAdd');if(add)add.onclick=escNueva}
+  function compCuerpo(res,filas){
+    const head=`<tr><th>Métrica</th>${res.map(x=>`<th class="${x.e.esBase?'base':''}${x.e.id===escActivo?' act':''}">${esc(x.e.nombre)}</th>`).join('')}</tr>`;
+    const cuerpo=filas.map(f=>{
+      let win=-1;
+      if(f[2]){const raws=res.map(x=>f[2](x));let best=-Infinity;
+        raws.forEach((v,i)=>{if(v!==null&&isFinite(v)&&v>best){best=v;win=i}});
+        if(raws.every(v=>v===raws[0]))win=-1}
+      return `<tr><td>${f[0]}</td>${res.map((x,i)=>`<td class="${i===win?'win':''}">${f[1](x)}</td>`).join('')}</tr>`
+    }).join('');
+    return `<thead>${head}</thead><tbody>${cuerpo}</tbody>`}
+
+  function renderComparador(){
+    const secc=$('compSection');if(!secc)return;
+    if(escenarios.length<2){secc.style.display='none';return}
+    secc.style.display='';
+    const res=escenarios.map(e=>({e,r:e.id===escActivo&&state?state:computar(e.inputs)}));
+    const base=res.find(x=>x.e.esBase)||res[0];
+    const otras=res.filter(x=>x!==base);
+    $('compMarginal').innerHTML=otras.map(x=>{
+      const dUtil=x.r.profit-base.r.profit,dVta=x.r.sales-base.r.sales,dCosto=(x.r.sales-x.r.profit)-(base.r.sales-base.r.profit);
+      const color=dUtil>=0?'var(--green)':'var(--red)';
+      const marg=dCosto>100000&&dUtil>0?` · el peso extra rinde ${pct(dUtil/dCosto*100,1)}`:'';
+      return `<div class="marg-card"><span class="k">Δ vs base · ${esc(x.e.nombre)}</span><div class="big" style="color:${color}">${sM(dUtil)}</div><div class="sub2">utilidad vs «${esc(base.e.nombre)}» (Δventas ${sM(dVta)} · Δcosto todo incluido ${sM(dCosto)}${marg}) · pico de deuda: ${sM(x.r.peak-base.r.peak)}</div></div>`
+    }).join('');
+    const filas=[
+      ['Departamentos',x=>fmtN(x.r.units),null],
+      ['m² vendibles',x=>fmtN(x.r.vendTotal)+' m²',null],
+      ['Ventas',x=>fmtM(x.r.sales),x=>x.r.sales],
+      ['Costo del proyecto',x=>fmtM(x.r.projectCost),null],
+      ['Financiero (PIK + fee)',x=>fmtM(x.r.interest+x.r.feeDebt),x=>-(x.r.interest+x.r.feeDebt)],
+      ['Utilidad',x=>fmtM(x.r.profit),x=>x.r.profit],
+      ['Margen',x=>pct(x.r.margin*100,1),x=>x.r.margin],
+      ['TIR desarrollador',x=>x.r.devIrr===null?'—':pct(x.r.devIrr*100,1),x=>x.r.devIrr],
+      ['MOIC desarrollador',x=>x.r.devMoic===null?'—':x.r.devMoic.toFixed(2)+'x',x=>x.r.devMoic],
+      ['Pico de deuda (mes)',x=>fmtM(x.r.peak)+' (m'+x.r.peakMonth+')',x=>-x.r.peak],
+      ['Equity usado',x=>fmtM(x.r.equityUsed),x=>-x.r.equityUsed],
+      ['Faltante de capital',x=>fmtM(x.r.fundingGap),x=>-x.r.fundingGap],
+      ['Dueño del terreno (total)',x=>fmtM(x.r.ownerTotalProceeds),x=>x.r.ownerTotalProceeds],
+      ['Colchón de precio',x=>x.r.priceCushion===null?'—':pct(x.r.priceCushion*100,1),x=>x.r.priceCushion],
+      ['Meses totales',x=>fmtN(x.r.totalMonths),x=>-x.r.totalMonths]
+    ];
+    $('compTable').innerHTML=compCuerpo(res,filas);
+    const foco=otras.find(x=>x.e.id===escActivo)||otras[0];
+    const dU=foco.r.profit-base.r.profit,dV=foco.r.sales-base.r.sales;
+    $('compLectura').innerHTML=`«<b>${esc(foco.e.nombre)}</b>» vs «${esc(base.e.nombre)}»: ventas ${sM(dV)} y utilidad <b>${sM(dU)}</b> (margen ${pct(foco.r.margin*100,1)} vs ${pct(base.r.margin*100,1)})${foco.r.devIrr!==null&&base.r.devIrr!==null?' · TIR '+pct(foco.r.devIrr*100,1)+' vs '+pct(base.r.devIrr*100,1):''}. Pico de deuda ${sM(foco.r.peak-base.r.peak)} y faltante ${sM(foco.r.fundingGap-base.r.fundingGap)}.`}
+
+  /* ================== RENDER ================== */
   function render(){
     const r=state;syncPills();
     txt('hudIngresos',fmtM(r.sales));txt('hudCostos',fmtM(r.projectCost+r.interest+r.feeDebt));txt('hudDeuda',fmtM(r.peak));txt('hudUtilidad',fmtM(r.profit));txt('hudMargen',pct(r.margin*100,1));txt('hudTir',r.devIrr===null?'—':pct(r.devIrr*100,1));txt('hudMoic',r.devMoic===null?'—':r.devMoic.toFixed(2)+'x');
@@ -746,8 +897,9 @@
   function apiGet(params){const q=new URLSearchParams(Object.assign({k:clave,tipo:NUBE.TIPO},params));return fetch(NUBE.ENDPOINT+'?'+q.toString()).then(r=>r.json())}
   function apiPost(body){body=Object.assign({k:clave,tipo_desarrollo:NUBE.TIPO},body);return fetch(NUBE.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(r=>r.json())}
   function nuevoRequestId(){return (crypto.randomUUID?.()||Date.now()+'-'+Math.random())}
-  function guardarDraft(){try{localStorage.setItem(LS.draft,JSON.stringify({inputs:inputValues(),caso}))}catch(e){}}
-  function cargarDraft(){try{const d=JSON.parse(localStorage.getItem(LS.draft)||'null');if(!d)return;if(d.inputs)Object.entries(d.inputs).forEach(([id,v])=>setControl(id,v));if(d.caso)caso=Object.assign(caso,d.caso)}catch(e){}}
+  function guardarDraft(){try{localStorage.setItem(LS.draft,JSON.stringify({inputs:inputValues(),caso,escenarios,escActivo}))}catch(e){}}
+  function cargarDraft(){try{const d=JSON.parse(localStorage.getItem(LS.draft)||'null');if(!d)return;if(d.inputs)Object.entries(d.inputs).forEach(([id,v])=>setControl(id,v));if(d.caso)caso=Object.assign(caso,d.caso);
+    if(Array.isArray(d.escenarios)&&d.escenarios.length){escenarios=d.escenarios;escActivo=d.escActivo&&escGet(d.escActivo)?d.escActivo:escenarios[0].id;const e=escGet(escActivo);if(e)escAplicar(e)}}catch(e){}}
   function pintaCaso(){
     const nombre=caso.nombre_caso||'Caso nuevo';
     $('heroNombre').innerHTML='';$('heroNombre').append(document.createTextNode(nombre));
@@ -763,7 +915,8 @@
   function aplicarCasoRemoto(obj){
     Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&$(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
     caso={caso_id:obj.caso_id||'',palabra:obj.palabra||'',correo:obj.correo||'',nombre_caso:obj.nombre_caso||'',estado:obj.estado||'EXPLORACIÓN',siguiente_paso:obj.siguiente_paso||'',notas_seguimiento:obj.notas_seguimiento||'',notas_caso:obj.notas_caso||'',version:Number(obj.version||1)};
-    calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado')
+    if(!escDesdeJson(obj.escenarios_json))escInicial('Base');
+    calculate();pintaCaso();cerrarOverlays();toast('Caso "'+(caso.nombre_caso||caso.palabra)+'" cargado'+(escenarios.length>1?' · '+escenarios.length+' versiones':''))
   }
   async function abrirPorId(id){try{const r=await apiGet({recurso:'caso',id});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'Ese caso ya no existe':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir el caso')}}
   async function abrirPorPalabra(palabra){if(!palabra.trim())return;try{const r=await apiGet({recurso:'caso',palabra:palabra.trim()});if(r.ok)aplicarCasoRemoto(r.caso);else toast(r.error==='no_existe'?'No hay caso con esa palabra':'No se pudo abrir: '+r.error)}catch(e){toast('Sin conexión: no se pudo abrir')}}
@@ -777,7 +930,7 @@
     if(enviarCorreo&&!correo){toast('Pon un correo para enviarte la palabra');return}
     const btns=[$('gGuardarSolo'),$('gGuardarEnviar')];btns.forEach(b=>b.disabled=true);
     const rSt=state||calculate();
-    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.pik+f.fee),Math.round(f.debt),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
+    const payload={tipo:'guardar',caso_id:caso.caso_id,palabra,correo,nombre_caso:nombre,notas_caso:notas,estado:caso.estado,inputs:inputValues(),resumen:resumenActual(),escenarios:escParaGuardar(),flujo:rSt.flows.map(f=>[f.m,Math.round(f.rev),Math.round(f.cost),Math.round(f.equity),Math.round(f.pik+f.fee),Math.round(f.debt),Math.round(f.caja)]),sendEmail:!!enviarCorreo,request_id:nuevoRequestId(),website:$('gWeb').value};
     try{
       const r=await apiPost(payload);
       btns.forEach(b=>b.disabled=false);
@@ -851,7 +1004,7 @@
   $('casosCerrar').onclick=cerrarOverlays;
   $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
   $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
-  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};calculate();pintaCaso();toast('Caso nuevo: supuestos de referencia')};
+  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};escInicial('Base');calculate();pintaCaso();toast('Caso nuevo: supuestos de referencia')};
   $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
@@ -861,7 +1014,7 @@
   $('gateLocal').onclick=modoSinConexion;
   document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)cerrarOverlays()}));
   window.addEventListener('online',drenarCola);setInterval(drenarCola,25000);
-  cargarDraft();calculate();pintaCaso();
+  cargarDraft();if(!escenarios.length)escInicial('Base');calculate();pintaCaso();
   if(modoLocal){$('gate').classList.add('off');$('modoLocalBanner').classList.add('on')}
   else if(clave){apiGet({recurso:'lista'}).then(r=>{if(r.ok){casosCache=r.casos||[];cfgBoard=r.config||{};$('gate').classList.add('off');drenarCola();procesarOpen()}else{reabrirGate()}}).catch(()=>{modoSinConexion();toast('Sin conexión: trabajando en modo local')})}
 })();
