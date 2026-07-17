@@ -297,6 +297,26 @@
   .prof-table select:focus,.prof-table input[type=number]:focus{outline:2px solid #B98B3C55;border-color:var(--gold)}
   .input-group.derived{opacity:.55}
   .input-group.derived .val-display{pointer-events:none}
+  /* ===== Modo Propuesta (vista limpia + impresión) ===== */
+  .prop-sheet{max-width:840px}
+  .prop-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:2px solid var(--gold);padding-bottom:10px;margin-bottom:12px}
+  .prop-head img{height:24px;filter:brightness(0)}
+  .prop-kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  .prop-doc h1{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:28px;margin:2px 0 2px;line-height:1.1}
+  .prop-meta{font-size:10.5px;color:var(--muted)}
+  .prop-lectura{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:15.5px;line-height:1.6;margin:10px 0 12px;color:var(--text)}
+  .prop-lectura b{color:var(--goldc);font-style:normal}
+  .prop-sec{font-size:9px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:16px 0 6px}
+  .prop-notas{font-size:11px;color:var(--suave);line-height:1.55;white-space:pre-wrap}
+  .prop-foot{margin-top:18px;padding-top:10px;border-top:1px solid var(--linea);font-size:9.5px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  @media print{
+    body{background:#fff!important}
+    body>*{display:none!important}
+    #ovPropuesta{display:block!important;position:static;padding:0;background:#fff;backdrop-filter:none;overflow:visible}
+    #ovPropuesta .sheet{box-shadow:none;border:0;max-width:none;border-radius:0;padding:0;margin:0}
+    .no-print{display:none!important}
+    .comp-scroll{border:1px solid #ddd;overflow:visible}
+  }
 </style>
 </head>
 <body>
@@ -327,6 +347,7 @@
       <button class="small-btn secondary" id="btnNuevo"><i class="ti ti-plus"></i>Nuevo</button>
       <button class="small-btn secondary" id="btnSeguimiento"><i class="ti ti-list-check"></i>Seguimiento</button>
       <button class="small-btn secondary" id="btnWhats"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
+      <button class="small-btn secondary" id="btnPropuesta"><i class="ti ti-file-text"></i>Propuesta</button>
       <button class="small-btn" id="btnGuardar"><i class="ti ti-device-floppy"></i>Guardar</button>
     </div>
   </div>
@@ -440,6 +461,11 @@
   <div class="sheet-actions"><button class="small-btn secondary" id="casosCerrar"><i class="ti ti-x"></i>Cerrar</button></div>
 </div></div>
 
+<div class="overlay" id="ovPropuesta"><div class="sheet prop-sheet">
+  <div class="prop-doc" id="propDoc"></div>
+  <div class="sheet-actions no-print"><button class="small-btn secondary" id="propCerrar"><i class="ti ti-x"></i>Cerrar</button><button class="small-btn" id="propImprimir"><i class="ti ti-printer"></i>Imprimir / PDF</button></div>
+</div></div>
+
 <div id="toast"></div>
 <script>
 (() => {
@@ -512,8 +538,8 @@
       inversion:Math.max(1,gv('inInversionTotal')),terrenoAportado:Math.round(gv('inTerrenoAportado')),capMercado:Math.max(.01,gv('inCapRateMercado')/100),plus:gv('inPlusvaliaPct')/100,
       credito:gv('inCreditoPct')/100,tasa:gv('inTasaCredito')/100,plazo:Math.max(1,Math.round(gv('inPlazoCredito'))),
       horizonte:Math.max(1,Math.round(gv('inHorizonte'))),tasaAlt:gv('inTasaAlternativa')/100};
-    // 1) renta → NOI
-    const rentaMes=(esc&&esc.prof&&Array.isArray(esc.depas)&&esc.depas.length?esc.depas.reduce((s,d)=>s+(Number(d.renta)||0),0):p.unidades*p.rentaU),rentaBrutaAnual=rentaMes*12,vacMonto=rentaBrutaAnual*p.vac,rentaEfectiva=rentaBrutaAnual-vacMonto;
+    // 1) renta → NOI (depas sin renta capturada caen a la renta por unidad de esa versión)
+    const rentaMes=(esc&&esc.prof&&Array.isArray(esc.depas)&&esc.depas.length?esc.depas.reduce((s,d)=>{const rd=Number(d.renta);return s+(isFinite(rd)&&rd>0?rd:p.rentaU)},0):p.unidades*p.rentaU),rentaBrutaAnual=rentaMes*12,vacMonto=rentaBrutaAnual*p.vac,rentaEfectiva=rentaBrutaAnual-vacMonto;
     const opexMonto=rentaEfectiva*p.opex,seguroMonto=p.inversion*p.seguro;
     const noi=rentaEfectiva-opexMonto-seguroMonto;
     const rentaM2=p.m2Rent?rentaMes/p.m2Rent:0;
@@ -640,15 +666,13 @@
     cont.querySelectorAll('[data-esc-base]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escMarcarBase(b.dataset.escBase)});
     cont.querySelectorAll('[data-esc-del]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();escBorrar(b.dataset.escDel)});
     const add=$('escAdd');if(add)add.onclick=escNueva}
-  function renderComparador(){
-    const secc=$('compSection');if(!secc)return;
-    if(escenarios.length<2){secc.style.display='none';return}
-    secc.style.display='';
+  // Conjunto comparable: cada versión con su corrida — lo usan el comparador y el modo Propuesta.
+  function compConjunto(){
     const res=escenarios.map(e=>({e,r:e.id===escActivo&&state?state:computar(e.inputs,e)}));
     const base=res.find(x=>x.e.esBase)||res[0];
-    const otras=res.filter(x=>x!==base);
-    // Tarjetas de retorno marginal (cada versión no-base vs la base ★)
-    $('compMarginal').innerHTML=otras.map(x=>{
+    return {res,base,otras:res.filter(x=>x!==base)}}
+  function htmlMarginalCards({base,otras}){
+    return otras.map(x=>{
       const dInv=x.r.p.inversion-base.r.p.inversion,dNoi=x.r.noi-base.r.noi;
       const marg=dInv>0?dNoi/dInv:null,alt=x.r.p.tasaAlt;
       let big,color,sub;
@@ -658,7 +682,8 @@
       else if(Math.abs(dInv)<1){color='var(--goldc)';big=sM(dNoi);sub=`misma inversión que «${esc(base.e.nombre)}»: el NOI cambia ${sM(dNoi)}/año`}
       else{color='var(--goldc)';big=sM(dNoi);sub=`invierte ${fmtM(-dInv)} MENOS que «${esc(base.e.nombre)}» y el NOI cambia ${sM(dNoi)}/año`}
       return `<div class="marg-card"><span class="k">Retorno marginal · ${esc(x.e.nombre)}</span><div class="big" style="color:${color}">${big}</div><div class="sub2">${sub}</div></div>`
-    }).join('');
+    }).join('')}
+  function htmlCompTabla({res}){
     // Tabla métricas × versiones (mejor valor por renglón en verde)
     const filas=[
       ['Unidades / puertas',x=>fmtN(x.r.p.unidades),null],
@@ -683,7 +708,8 @@
         if(raws.every(v=>v===raws[0]))win=-1}
       return `<tr><td>${f[0]}</td>${res.map((x,i)=>`<td class="${i===win?'win':''}">${f[1](x)}</td>`).join('')}</tr>`
     }).join('');
-    $('compTable').innerHTML=`<thead>${head}</thead><tbody>${cuerpo}</tbody>`;
+    return `<thead>${head}</thead><tbody>${cuerpo}</tbody>`}
+  function htmlCompLectura({base,otras}){
     // Lectura narrativa: la versión activa (o la primera no-base) contra la base
     const foco=otras.find(x=>x.e.id===escActivo)||otras[0];
     const dInv=foco.r.p.inversion-base.r.p.inversion,dNoi=foco.r.noi-base.r.noi;
@@ -691,8 +717,63 @@
     const dValor=foco.r.valorCreado-base.r.valorCreado;
     if(marg!==null){
       const veces=foco.r.p.tasaAlt>0&&marg>0?marg/foco.r.p.tasaAlt:null;
-      $('compLectura').innerHTML=`«<b>${esc(foco.e.nombre)}</b>» pide <b>${fmtM(dInv)}</b> más que «${esc(base.e.nombre)}» y ${dNoi>=0?'deja <b>'+fmtM(dNoi)+'</b> extra de NOI al año':'el NOI <b>cae '+sM(dNoi)+'</b> al año'}: cada peso adicional rinde <b>${pct(marg*100,1)}</b>${veces!==null&&isFinite(veces)?' — '+veces.toFixed(1)+'× tu alternativa del '+pct(foco.r.p.tasaAlt*100,0):''}. ${dValor>0?'Además crea <b>'+fmtM(dValor)+'</b> más de valor a cap de mercado.':'A cap de mercado no crea más valor que la base: la decisión vive en el flujo.'}`}
-    else $('compLectura').innerHTML=`«<b>${esc(foco.e.nombre)}</b>» no invierte más que «${esc(base.e.nombre)}»: compara el NOI (Δ ${sM(dNoi)}/año) y el patrimonio al horizonte en la tabla.`}
+      return `«<b>${esc(foco.e.nombre)}</b>» pide <b>${fmtM(dInv)}</b> más que «${esc(base.e.nombre)}» y ${dNoi>=0?'deja <b>'+fmtM(dNoi)+'</b> extra de NOI al año':'el NOI <b>cae '+sM(dNoi)+'</b> al año'}: cada peso adicional rinde <b>${pct(marg*100,1)}</b>${veces!==null&&isFinite(veces)?' — '+veces.toFixed(1)+'× tu alternativa del '+pct(foco.r.p.tasaAlt*100,0):''}. ${dValor>0?'Además crea <b>'+fmtM(dValor)+'</b> más de valor a cap de mercado.':'A cap de mercado no crea más valor que la base: la decisión vive en el flujo.'}`}
+    return `«<b>${esc(foco.e.nombre)}</b>» no invierte más que «${esc(base.e.nombre)}»: compara el NOI (Δ ${sM(dNoi)}/año) y el patrimonio al horizonte en la tabla.`}
+  function renderComparador(){
+    const secc=$('compSection');if(!secc)return;
+    if(escenarios.length<2){secc.style.display='none';return}
+    secc.style.display='';
+    const cj=compConjunto();
+    $('compMarginal').innerHTML=htmlMarginalCards(cj);
+    $('compTable').innerHTML=htmlCompTabla(cj);
+    $('compLectura').innerHTML=htmlCompLectura(cj)}
+  /* ================== MODO PROPUESTA ================== */
+  // Vista limpia de una página (sin sliders) para la sentada con el dueño o imprimir a PDF.
+  function htmlSupuestosTabla({res}){
+    const filas=[
+      ['Vacancia',x=>pct(x.r.p.vac*100,1)],['Operación (OpEx)',x=>pct(x.r.p.opex*100,1)],['Seguro (del valor/año)',x=>pct(x.r.p.seguro*100,2)],
+      ['Cap de mercado',x=>pct(x.r.p.capMercado*100,1)],['Plusvalía anual',x=>pct(x.r.p.plus*100,1)],
+      ['Crédito',x=>x.r.p.credito>0?pct(x.r.p.credito*100,0)+' · '+pct(x.r.p.tasa*100,1)+' · '+x.r.p.plazo+'a':'contado'],
+      ['Horizonte · alternativa',x=>x.r.p.horizonte+' años · '+pct(x.r.p.tasaAlt*100,1)]
+    ];
+    const head=`<tr><th>Supuesto</th>${res.map(x=>`<th class="${x.e.esBase?'base':''}">${esc(x.e.nombre)}</th>`).join('')}</tr>`;
+    return `<thead>${head}</thead><tbody>${filas.map(f=>`<tr><td>${f[0]}</td>${res.map(x=>`<td>${f[1](x)}</td>`).join('')}</tr>`).join('')}</tbody>`}
+  function distribucionLinea(e){
+    if(!e.depas||!e.depas.length)return '';
+    const rU=Number(e.inputs&&e.inputs.inRentaUnidadMes)||0;
+    const partes=NIVELES.map(nv=>{const ds=e.depas.filter(d=>d.nivel===nv);return ds.length?`${nv} ${ds.length} (${fmtN(ds.reduce((s,d)=>s+(Number(d.m2)||0),0))} m²)`:null}).filter(Boolean).join(' · ');
+    return `<div class="prop-notas"><b>${esc(e.nombre)}:</b> ${partes} · renta ${fmtMoney(e.depas.reduce((s,d)=>{const rd=Number(d.renta);return s+(isFinite(rd)&&rd>0?rd:rU)},0))}/mes</div>`}
+  function renderPropuesta(){
+    const doc=$('propDoc');if(!doc)return;
+    const r=state||calculate();
+    const fecha=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+    const multi=escenarios.length>1,cj=multi?compConjunto():null;
+    const nombre=caso.nombre_caso||'Caso patrimonial (sin guardar)';
+    let cuerpo='';
+    if(multi){
+      cuerpo=`<p class="prop-lectura">${htmlCompLectura(cj)}</p>
+        <div class="comp-marginal">${htmlMarginalCards(cj)}</div>
+        <div class="prop-sec">Las versiones, lado a lado</div>
+        <div class="comp-scroll"><table class="comp-table">${htmlCompTabla(cj)}</table></div>
+        <div class="prop-sec">Supuestos de cada versión</div>
+        <div class="comp-scroll"><table class="comp-table">${htmlSupuestosTabla(cj)}</table></div>
+        ${cj.res.some(x=>x.e.depas&&x.e.depas.length)?'<div class="prop-sec">Distribución de puertas</div>'+cj.res.map(x=>distribucionLinea(x.e)).join(''):''}`;
+    }else{
+      cuerpo=`<p class="prop-lectura">${r.p.unidades} unidades rentan <b>${fmtMoney(r.rentaMes)}/mes</b>; tras vacancia y operación queda un NOI de <b>${fmtM(r.noi)}/año</b> — ${pct(r.yieldOnCost*100,1)} sobre los ${fmtM(r.p.inversion)} invertidos. A cap de mercado ${pct(r.p.capMercado*100,1)} el activo vale <b>${fmtM(r.valorCap)}</b>. Punto dulce: <b>${r.aniosRetener>=r.p.horizonte?'retener '+r.p.horizonte+'+ años':'retener ~'+r.aniosRetener+' años'}</b>.</p>
+        <div class="prop-sec">El caso en números</div>
+        <div class="comp-scroll"><table class="comp-table"><tbody>
+          <tr><td>Unidades · m² rentables</td><td>${fmtN(r.p.unidades)} · ${fmtN(r.p.m2Rent)} m²</td></tr>
+          <tr><td>Renta bruta / NOI</td><td>${fmtMoney(r.rentaMes)}/mes · ${fmtM(r.noi)}/año</td></tr>
+          <tr><td>Inversión · yield on cost</td><td>${fmtM(r.p.inversion)} · ${pct(r.yieldOnCost*100,1)}</td></tr>
+          <tr><td>Valor a cap · valor creado</td><td>${fmtM(r.valorCap)} · ${fmtM(r.valorCreado)}</td></tr>
+          <tr><td>Recuperación · patrimonio a ${r.p.horizonte}a</td><td>${r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'} · ${fmtM(r.patrimH)}</td></tr>
+        </tbody></table></div>`;
+    }
+    const notas=[caso.notas_caso&&'<div class="prop-sec">Notas del caso</div><div class="prop-notas">'+esc(caso.notas_caso)+'</div>',
+      caso.siguiente_paso&&'<div class="prop-sec">Siguiente paso</div><div class="prop-notas">'+esc(caso.siguiente_paso)+'</div>'].filter(Boolean).join('');
+    doc.innerHTML=`<div class="prop-head"><div><span class="prop-kick">Propuesta patrimonial · YoDesarrollo</span><h1>${esc(nombre)}</h1><div class="prop-meta">${fecha} · estado: ${esc(caso.estado||'EXPLORACIÓN')}${caso.palabra?' · caso: '+esc(caso.palabra):''}</div></div><img src="img/yod-logo.png" alt="YoDesarrollo"></div>
+      ${cuerpo}${notas}
+      <div class="prop-foot"><span>Cifras sin IVA · supuestos por validar en sitio</span><span>yodesarrollo.mx · generado desde Potenciales YOD</span></div>`}
 
   /* ================== RENDER ================== */
   function render(){
@@ -947,6 +1028,9 @@
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
   $('btnWhats').onclick=whatsApp;
+  $('btnPropuesta').onclick=()=>{renderPropuesta();abrirOverlay('ovPropuesta')};
+  $('propCerrar').onclick=cerrarOverlays;
+  $('propImprimir').onclick=()=>window.print();
   $('refreshJson').onclick=refreshJson;$('applyJson').onclick=applyJson;$('exportJson').onclick=exportJson;
   $('gateBtn').onclick=intentarEntrar;$('gateClave').addEventListener('keydown',e=>{if(e.key==='Enter')intentarEntrar()});
   $('gateLocal').onclick=modoSinConexion;
