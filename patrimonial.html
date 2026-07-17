@@ -380,9 +380,9 @@
         <div class="input-group"><div class="input-header"><label>Renta por unidad ($/mes)</label><div class="val-display" data-input="inRentaUnidadMes">$17,625</div></div><input type="range" id="inRentaUnidadMes" min="2000" max="60000" step="1" value="17625" data-color="var(--green)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>m² construidos</label><div class="val-display" data-input="inM2Construccion">1,950</div></div><input type="range" id="inM2Construccion" min="80" max="8000" step="1" value="1950" data-color="var(--gold)"></div>
         <div class="input-group"><div class="input-header"><label>m² rentables</label><div class="val-display" data-input="inM2Rentable">1,444</div></div><input type="range" id="inM2Rentable" min="50" max="8000" step="1" value="1444" data-color="var(--green)"></div>
-        <div class="prof-toggle"><label><input type="checkbox" id="profOn">Profundizar · depa por depa (m², planta y pasillos)</label></div>
+        <div class="prof-toggle"><label><input type="checkbox" id="profOn">Profundizar · depa por depa (m², renta, planta y pasillos)</label></div>
         <div class="prof-panel" id="profPanel" style="display:none">
-          <table class="prof-table"><thead><tr><th>Depa</th><th>Planta</th><th>m²</th></tr></thead><tbody id="profRows"></tbody></table>
+          <table class="prof-table"><thead><tr><th>Depa</th><th>Planta</th><th>m²</th><th>Renta/mes</th></tr></thead><tbody id="profRows"></tbody></table>
           <div class="input-group" style="margin-top:10px"><div class="input-header"><label>Pasillos y comunes (m²) · no rentables</label><div class="val-display" data-input="inPasillosM2">0</div></div><input type="range" id="inPasillosM2" min="0" max="600" step="1" value="0" data-color="var(--orange)"></div>
           <div class="micro-readout" id="profResumen">Suma de depas…</div>
         </div>
@@ -503,7 +503,9 @@
   /* ================== MOTOR PATRIMONIAL ================== */
   // Motor puro: recibe un objeto {inXxx:valor} y regresa el estado calculado (sin tocar el DOM).
   // Lo usan calculate() (versión activa, desde los sliders) y el comparador (todas las versiones).
-  function computar(vals){
+  // esc (opcional): la versión dueña de los inputs — si trae detalle depa por depa (prof/depas),
+  // la renta mensual es la SUMA exacta de la tabla (el slider solo guarda el promedio).
+  function computar(vals,esc){
     const gv=id=>Number(vals[id])||0;
     const p={unidades:Math.max(1,Math.round(gv('inUnidades'))),rentaU:gv('inRentaUnidadMes'),m2Const:Math.max(1,gv('inM2Construccion')),m2Rent:Math.max(1,gv('inM2Rentable')),
       vac:gv('inVacanciaPct')/100,opex:gv('inOpexPct')/100,seguro:gv('inSeguroPct')/100,
@@ -511,7 +513,7 @@
       credito:gv('inCreditoPct')/100,tasa:gv('inTasaCredito')/100,plazo:Math.max(1,Math.round(gv('inPlazoCredito'))),
       horizonte:Math.max(1,Math.round(gv('inHorizonte'))),tasaAlt:gv('inTasaAlternativa')/100};
     // 1) renta → NOI
-    const rentaMes=p.unidades*p.rentaU,rentaBrutaAnual=rentaMes*12,vacMonto=rentaBrutaAnual*p.vac,rentaEfectiva=rentaBrutaAnual-vacMonto;
+    const rentaMes=(esc&&esc.prof&&Array.isArray(esc.depas)&&esc.depas.length?esc.depas.reduce((s,d)=>s+(Number(d.renta)||0),0):p.unidades*p.rentaU),rentaBrutaAnual=rentaMes*12,vacMonto=rentaBrutaAnual*p.vac,rentaEfectiva=rentaBrutaAnual-vacMonto;
     const opexMonto=rentaEfectiva*p.opex,seguroMonto=p.inversion*p.seguro;
     const noi=rentaEfectiva-opexMonto-seguroMonto;
     const rentaM2=p.m2Rent?rentaMes/p.m2Rent:0;
@@ -541,7 +543,7 @@
       rows,patrim0,aniosRetener,anioCorte,patrimH:last.patrim,valorH:last.valor,acumH:last.acum,roiPat}}
   function calculate(){
     profDerivar();
-    state=computar(inputValues());
+    state=computar(inputValues(),escGet(escActivo));
     escSyncActivo();
     render();renderEscenarios();renderComparador();guardarDraft();return state}
 
@@ -553,27 +555,32 @@
     const e=escGet(escActivo);if(!e||!e.prof)return;
     if(!Array.isArray(e.depas))e.depas=[];
     const n=Math.max(1,Math.round(get('inUnidades')));
+    let rerender=false;
     if(e.depas.length!==n){
-      const molde=e.depas[e.depas.length-1]||{m2:Math.max(8,Math.round(get('inM2Rentable')/n)),nivel:'PB'};
-      while(e.depas.length<n)e.depas.push({m2:molde.m2,nivel:molde.nivel});
-      e.depas.length=n;
-      renderProf()}
+      const molde=e.depas[e.depas.length-1]||{m2:Math.max(8,Math.round(get('inM2Rentable')/n)),nivel:'PB',renta:get('inRentaUnidadMes')};
+      while(e.depas.length<n)e.depas.push({m2:molde.m2,nivel:molde.nivel,renta:molde.renta});
+      e.depas.length=n;rerender=true}
+    // Depas guardados antes de la renta-por-depa heredan la renta del slider.
+    e.depas.forEach(d=>{if(!isFinite(Number(d.renta))||Number(d.renta)<=0){d.renta=get('inRentaUnidadMes');rerender=true}});
+    if(rerender)renderProf();
     const suma=e.depas.reduce((s,d)=>s+(Number(d.m2)||0),0);
+    const sumaRenta=e.depas.reduce((s,d)=>s+(Number(d.renta)||0),0);
     setControl('inM2Rentable',suma);
     setControl('inM2Construccion',suma+get('inPasillosM2'));
-    const rentaU=get('inRentaUnidadMes');
-    const porNivel=NIVELES.map(nv=>{const ds=e.depas.filter(d=>d.nivel===nv);return ds.length?`${nv}: ${ds.length} · ${fmtN(ds.reduce((s,d)=>s+(Number(d.m2)||0),0))} m² · ${fmtMoney(ds.length*rentaU)}/mes`:null}).filter(Boolean);
-    const res=$('profResumen');if(res)res.innerHTML=`Rentable = suma de depas: <b>${fmtN(suma)} m²</b> · construido = depas + pasillos: <b>${fmtN(suma+get('inPasillosM2'))} m²</b>${porNivel.length?'<br>'+porNivel.join(' &nbsp;·&nbsp; '):''}`}
+    setControl('inRentaUnidadMes',Math.round(sumaRenta/n));
+    const porNivel=NIVELES.map(nv=>{const ds=e.depas.filter(d=>d.nivel===nv);return ds.length?`${nv}: ${ds.length} · ${fmtN(ds.reduce((s,d)=>s+(Number(d.m2)||0),0))} m² · ${fmtMoney(ds.reduce((s,d)=>s+(Number(d.renta)||0),0))}/mes`:null}).filter(Boolean);
+    const res=$('profResumen');if(res)res.innerHTML=`Rentable = suma de depas: <b>${fmtN(suma)} m²</b> · construido = depas + pasillos: <b>${fmtN(suma+get('inPasillosM2'))} m²</b> · renta total: <b>${fmtMoney(sumaRenta)}/mes</b>${porNivel.length?'<br>'+porNivel.join(' &nbsp;·&nbsp; '):''}`}
   function renderProf(){
     const e=escGet(escActivo),on=!!(e&&e.prof);
     const chk=$('profOn');if(chk&&chk.checked!==on)chk.checked=on;
     const panel=$('profPanel');if(panel)panel.style.display=on?'':'none';
-    ['inM2Rentable','inM2Construccion'].forEach(id=>{const c=$(id);if(!c)return;c.disabled=on;const g=c.closest('.input-group');if(g)g.classList.toggle('derived',on)});
+    ['inM2Rentable','inM2Construccion','inRentaUnidadMes'].forEach(id=>{const c=$(id);if(!c)return;c.disabled=on;const g=c.closest('.input-group');if(g)g.classList.toggle('derived',on)});
     if(!on)return;
     if(!Array.isArray(e.depas))e.depas=[];
     const tb=$('profRows');if(!tb)return;
-    tb.innerHTML=e.depas.map((d,i)=>`<tr><td>${i+1}</td><td><select data-prof-nivel="${i}">${NIVELES.map(nv=>`<option${d.nivel===nv?' selected':''}>${nv}</option>`).join('')}</select></td><td><input type="number" min="5" max="999" step="1" value="${Number(d.m2)||0}" data-prof-m2="${i}"></td></tr>`).join('');
+    tb.innerHTML=e.depas.map((d,i)=>`<tr><td>${i+1}</td><td><select data-prof-nivel="${i}">${NIVELES.map(nv=>`<option${d.nivel===nv?' selected':''}>${nv}</option>`).join('')}</select></td><td><input type="number" min="5" max="999" step="1" value="${Number(d.m2)||0}" data-prof-m2="${i}"></td><td><input type="number" min="0" max="200000" step="100" value="${Number(d.renta)||0}" data-prof-renta="${i}"></td></tr>`).join('');
     tb.querySelectorAll('[data-prof-m2]').forEach(inp=>inp.addEventListener('input',()=>{const v=Number(inp.value);if(isFinite(v)&&v>0){e.depas[+inp.dataset.profM2].m2=v;calculate()}}));
+    tb.querySelectorAll('[data-prof-renta]').forEach(inp=>inp.addEventListener('input',()=>{const v=Number(inp.value);if(isFinite(v)&&v>=0){e.depas[+inp.dataset.profRenta].renta=v;calculate()}}));
     tb.querySelectorAll('[data-prof-nivel]').forEach(sel=>sel.addEventListener('change',()=>{e.depas[+sel.dataset.profNivel].nivel=sel.value;calculate()}))}
 
   /* ================== VERSIONES DEL CASO (comparador) ================== */
@@ -614,7 +621,7 @@
       if(!Array.isArray(arr)||!arr.length)return false;
       const limpio=arr.filter(e=>e&&typeof e==='object'&&e.inputs&&typeof e.inputs==='object')
         .slice(0,MAX_ESC).map(e=>({id:String(e.id||escId()),nombre:String(e.nombre||'Versión').slice(0,40),esBase:!!e.esBase,activo:!!e.activo,inputs:e.inputs,
-          prof:!!e.prof,depas:Array.isArray(e.depas)?e.depas.filter(d=>d&&isFinite(Number(d.m2))).map(d=>({m2:Number(d.m2),nivel:NIVELES.includes(d.nivel)?d.nivel:'PB'})):undefined}));
+          prof:!!e.prof,depas:Array.isArray(e.depas)?e.depas.filter(d=>d&&isFinite(Number(d.m2))).map(d=>({m2:Number(d.m2),nivel:NIVELES.includes(d.nivel)?d.nivel:'PB',renta:isFinite(Number(d.renta))?Number(d.renta):undefined})):undefined}));
       if(!limpio.length)return false;
       if(!limpio.some(e=>e.esBase))limpio[0].esBase=true;
       escenarios=limpio.map(e=>({id:e.id,nombre:e.nombre,esBase:e.esBase,inputs:e.inputs,prof:e.prof,depas:e.depas}));
@@ -637,7 +644,7 @@
     const secc=$('compSection');if(!secc)return;
     if(escenarios.length<2){secc.style.display='none';return}
     secc.style.display='';
-    const res=escenarios.map(e=>({e,r:e.id===escActivo&&state?state:computar(e.inputs)}));
+    const res=escenarios.map(e=>({e,r:e.id===escActivo&&state?state:computar(e.inputs,e)}));
     const base=res.find(x=>x.e.esBase)||res[0];
     const otras=res.filter(x=>x!==base);
     // Tarjetas de retorno marginal (cada versión no-base vs la base ★)
@@ -900,7 +907,7 @@
     const r=state||calculate();
     let marginal='';
     if(escenarios.length>1){
-      const res=escenarios.map(e=>({e,r:e.id===escActivo?r:computar(e.inputs)}));
+      const res=escenarios.map(e=>({e,r:e.id===escActivo?r:computar(e.inputs,e)}));
       const b=res.find(x=>x.e.esBase)||res[0];
       const f=res.find(x=>x.e.id===escActivo&&x!==b)||res.find(x=>x!==b);
       if(f){const dI=f.r.p.inversion-b.r.p.inversion,dN=f.r.noi-b.r.noi;
