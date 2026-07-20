@@ -171,6 +171,9 @@
   .factor-tooltip p{margin:4px 0}.factor-tooltip a{color:var(--goldc);text-decoration:underline}
   .factor-help.hov .factor-tooltip,.factor-help.open .factor-tooltip{display:block}
   .kpi-box[data-kpi-help]{cursor:help}
+  .metric-hover{cursor:help}
+  #metricTip{pointer-events:none}
+  #metricTip b{color:inherit;font-weight:800}
   /* ===== Herramientas avanzadas ===== */
   .advanced-board{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:14px}
   .advanced-board summary{cursor:pointer;font-weight:800;font-size:12px;color:var(--suave)}
@@ -333,7 +336,7 @@
 <div class="sticky-header"><div class="header-inner">
   <div class="brandrow"><img src="img/yod-logo.png" alt="YoDesarrollo"><span class="kick">Potenciales · PPP Patrimonial / Rentas</span></div>
   <div class="suelo-bar" id="rentaBar" title="Cada peso de renta y a dónde se va"></div>
-  <div class="urban-hud" style="margin:4px 0 5px;padding:6px 0"><div class="urban-item"><span>Unidades</span><b id="hudUnidades" class="c-gold">0</b></div><div class="urban-item"><span>m² rentables</span><b id="hudRentable">0</b></div><div class="urban-item"><span>Renta/mes</span><b id="hudRentaMes" class="c-green">$0</b></div><div class="urban-item"><span>NOI/año</span><b id="hudNoi" class="c-green">$0</b></div><div class="urban-item"><span>Yield s/costo</span><b id="hudYield" class="c-purple">—</b></div><div class="urban-item"><span>Valor a cap</span><b id="hudValor" class="c-gold">$0</b></div><div class="urban-item"><span>CoC c/crédito</span><b id="hudCoc" class="c-blue">—</b></div><div class="urban-item"><span>DSCR</span><b id="hudDscr">—</b></div><div class="urban-item"><span>Recuperación</span><b id="hudRecup" class="c-orange">—</b></div><div class="urban-item"><span>Retener</span><b id="hudOptimo" class="c-purple">—</b></div></div>
+  <div class="urban-hud" style="margin:4px 0 5px;padding:6px 0"><div class="urban-item"><span>Unidades</span><b id="hudUnidades" class="c-gold">0</b></div><div class="urban-item"><span>m² rentables</span><b id="hudRentable">0</b></div><div class="urban-item"><span>Renta/mes</span><b id="hudRentaMes" class="c-green">$0</b></div><div class="urban-item"><span>Flujo neto (NOI)/año</span><b id="hudNoi" class="c-green">$0</b></div><div class="urban-item"><span>Rendimiento s/costo</span><b id="hudYield" class="c-purple">—</b></div><div class="urban-item"><span>Valor de mercado</span><b id="hudValor" class="c-gold">$0</b></div><div class="urban-item"><span>Retorno de bolsa (CoC)</span><b id="hudCoc" class="c-blue">—</b></div><div class="urban-item"><span>Cobertura (DSCR)</span><b id="hudDscr">—</b></div><div class="urban-item"><span>Recuperación</span><b id="hudRecup" class="c-orange">—</b></div><div class="urban-item"><span>Retener</span><b id="hudOptimo" class="c-purple">—</b></div></div>
 </div></div>
 
 <main class="container">
@@ -370,7 +373,7 @@
     <h1 class="serif" id="heroNombre">Caso nuevo<span class="estado-pill" id="heroEstado">EXPLORACIÓN</span></h1>
     <p class="hsub" id="heroSub">Mueve los supuestos y guarda el caso con una palabra para volver.</p>
     <div class="hero-grid">
-      <div class="hcard"><span class="k">Flujo neto anual (NOI)</span><div class="big serif" id="heroNoi">$0</div><div class="sub2" id="heroNoiSub">yield sobre costo —</div></div>
+      <div class="hcard"><span class="k">Flujo neto anual (NOI)</span><div class="big serif" id="heroNoi">$0</div><div class="sub2" id="heroNoiSub">rendimiento sobre costo —</div></div>
       <div class="hcard"><span class="k">Valor creado</span><div class="big serif" id="heroValor">$0</div><div class="sub2" id="heroValorSub">valor a cap de mercado vs lo invertido</div></div>
       <div class="hcard"><span class="k">El punto dulce del patrimonio</span><div class="big serif" id="heroOptimo">—</div><div class="sub2" id="heroOptimoSub">mientras crezca más que tu alternativa</div></div>
     </div>
@@ -390,7 +393,7 @@
     <div class="comp-marginal" id="compMarginal"></div>
     <div class="comp-scroll"><table class="comp-table" id="compTable"></table></div>
     <p class="comp-lectura" id="compLectura"></p>
-    <p class="note">La versión ★ es la base de comparación (ej. "como está hoy"). El <b>retorno marginal</b> = ΔNOI ÷ Δinversión: lo que rinde cada peso adicional de esa versión contra la base. Duplica la versión activa con "+ Nueva versión" y mueve solo lo que cambia.</p>
+    <p class="note">La versión ★ es la base de comparación (ej. "como está hoy"). El <b>retorno marginal</b> = Δ flujo neto (NOI) ÷ Δ inversión: lo que rinde cada peso adicional de esa versión contra la base. Duplica la versión activa con "+ Nueva versión" y mueve solo lo que cambia.</p>
   </section>
 
   <section class="grid-2">
@@ -413,8 +416,8 @@
         <div class="micro-readout" id="readRenta">Calculando renta…</div></div></article>
 
     <article class="card" data-card="dInv"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#e0605a1f;color:var(--red)"><i class="ti ti-hammer"></i></div><div class="card-title">Inversión &amp; Valor</div></div><div class="edit-pill">AJUSTAR</div></div>
-      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Inversión total</span><span class="kpi-val c-red" id="lblInversion">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Yield on cost (NOI/inversión)</span><span class="kpi-val c-purple" id="lblYield">—</span></div><div class="kpi-box"><span class="kpi-lbl">Valor a cap de mercado</span><span class="kpi-val c-gold" id="lblValorCap">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Valor creado (desarrollo)</span><span class="kpi-val c-green" id="lblValorCreado">$0</span></div></div>
-      <div class="drawer" id="dInv"><div class="partner-guide"><b>La jugada patrimonial YOD:</b> construir renta a costo de desarrollador. Si tu NOI cuesta 9-10% (yield on cost) y el mercado valúa a cap 7-8%, el valor creado es la diferencia — sin vender un solo m².</div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Inversión total</span><span class="kpi-val c-red" id="lblInversion">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Rendimiento sobre costo (NOI ÷ inversión)</span><span class="kpi-val c-purple" id="lblYield">—</span></div><div class="kpi-box"><span class="kpi-lbl">Valor de mercado (NOI ÷ cap)</span><span class="kpi-val c-gold" id="lblValorCap">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Valor creado (desarrollo)</span><span class="kpi-val c-green" id="lblValorCreado">$0</span></div></div>
+      <div class="drawer" id="dInv"><div class="partner-guide"><b>La jugada patrimonial YOD:</b> construir renta a costo de desarrollador. Si tu flujo neto (NOI) te cuesta 9-10% de rendimiento sobre costo y el mercado valúa a cap 7-8%, el valor creado es la diferencia — sin vender un solo m².</div>
         <div class="input-group"><div class="input-header"><label>Inversión total ($) · terreno + obra + todo</label><div class="val-display" data-input="inInversionTotal">$29,760,000</div></div><input type="range" id="inInversionTotal" min="500000" max="150000000" step="10000" value="29760000" data-color="var(--red)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>¿Terreno aportado? (1 = sí, ya dentro de la inversión)</label><div class="val-display" data-input="inTerrenoAportado">1</div></div><input type="range" id="inTerrenoAportado" min="0" max="1" step="1" value="1" data-color="var(--orange)"></div>
         <div class="input-group"><div class="input-header"><label>Cap rate de mercado (%) · para valuar el activo</label><div class="val-display" data-input="inCapRateMercado">8.0%</div></div><input type="range" id="inCapRateMercado" min="5" max="14" step=".25" value="8" data-color="var(--gold)" data-format="pct1"></div>
@@ -422,15 +425,15 @@
         <div class="micro-readout" id="readInv">Calculando inversión…</div></div></article>
 
     <article class="card" data-card="dCredito"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#8ab8ff1f;color:var(--blue)"><i class="ti ti-building-bank"></i></div><div class="card-title">Crédito vs Contado</div></div><div class="edit-pill">AJUSTAR</div></div>
-      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Crédito / Equity</span><span class="kpi-val c-blue" id="lblCredito">$0 / $0</span></div><div class="kpi-box"><span class="kpi-lbl">Mensualidad del crédito</span><span class="kpi-val c-red" id="lblMensCredito">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Cash-on-Cash</span><span class="kpi-val c-gold" id="lblCoc">—</span></div><div class="kpi-box"><span class="kpi-lbl">DSCR (NOI / servicio)</span><span class="kpi-val" id="lblDscr">—</span></div></div>
-      <div class="drawer" id="dCredito"><div class="partner-guide"><b>La pregunta de la PLANTILLA:</b> ¿apalancar o ir de contado? El crédito baja tu equity y sube el Cash-on-Cash mientras el DSCR aguante (sano ≥ 1.2). Con 0% de crédito ves el caso de contado puro.</div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Crédito / Capital propio</span><span class="kpi-val c-blue" id="lblCredito">$0 / $0</span></div><div class="kpi-box"><span class="kpi-lbl">Mensualidad del crédito</span><span class="kpi-val c-red" id="lblMensCredito">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Retorno de tu bolsa (Cash-on-Cash)</span><span class="kpi-val c-gold" id="lblCoc">—</span></div><div class="kpi-box"><span class="kpi-lbl">Cobertura de la deuda (DSCR)</span><span class="kpi-val" id="lblDscr">—</span></div></div>
+      <div class="drawer" id="dCredito"><div class="partner-guide"><b>La pregunta de la PLANTILLA:</b> ¿apalancar o ir de contado? El crédito baja tu capital propio y sube el retorno de tu bolsa (Cash-on-Cash) mientras la cobertura de la deuda (DSCR) aguante (sana ≥ 1.2). Con 0% de crédito ves el caso de contado puro.</div>
         <div class="input-group"><div class="input-header"><label>Crédito (% de la inversión)</label><div class="val-display" data-input="inCreditoPct">0%</div></div><input type="range" id="inCreditoPct" min="0" max="80" step="5" value="0" data-color="var(--blue)" data-format="pct"></div>
         <div class="input-group"><div class="input-header"><label>Tasa anual del crédito (%)</label><div class="val-display" data-input="inTasaCredito">12.5%</div></div><input type="range" id="inTasaCredito" min="6" max="20" step=".25" value="12.5" data-color="var(--blue)" data-format="pct1"></div>
         <div class="input-group"><div class="input-header"><label>Plazo del crédito (años)</label><div class="val-display" data-input="inPlazoCredito">15</div></div><input type="range" id="inPlazoCredito" min="5" max="25" step="1" value="15" data-color="var(--blue)"></div>
         <div class="micro-readout" id="readCredito">Calculando crédito…</div></div></article>
 
     <article class="card" data-card="dHorizonte"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#a9a4f51f;color:var(--purple)"><i class="ti ti-chart-line"></i></div><div class="card-title">Horizonte Patrimonial</div></div><div class="edit-pill">AJUSTAR</div></div>
-      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Recuperación (sin crédito)</span><span class="kpi-val c-orange" id="lblRecup">—</span></div><div class="kpi-box"><span class="kpi-lbl">Punto dulce (retener)</span><span class="kpi-val c-gold" id="lblOptimo">—</span></div><div class="kpi-box"><span class="kpi-lbl">Patrimonio al horizonte</span><span class="kpi-val c-green" id="lblPatrimonio">$0</span></div><div class="kpi-box"><span class="kpi-lbl">ROI patrimonial</span><span class="kpi-val c-purple" id="lblRoiPat">—</span></div></div>
+      <div class="kpi-grid"><div class="kpi-box"><span class="kpi-lbl">Recuperación (sin crédito)</span><span class="kpi-val c-orange" id="lblRecup">—</span></div><div class="kpi-box"><span class="kpi-lbl">Punto dulce (retener)</span><span class="kpi-val c-gold" id="lblOptimo">—</span></div><div class="kpi-box"><span class="kpi-lbl">Patrimonio al horizonte</span><span class="kpi-val c-green" id="lblPatrimonio">$0</span></div><div class="kpi-box"><span class="kpi-lbl">Retorno patrimonial (ROI)</span><span class="kpi-val c-purple" id="lblRoiPat">—</span></div></div>
       <div class="drawer" id="dHorizonte">
         <div class="input-group"><div class="input-header"><label>Horizonte (años)</label><div class="val-display" data-input="inHorizonte">10</div></div><input type="range" id="inHorizonte" min="3" max="25" step="1" value="10" data-color="var(--purple)"></div>
         <div class="input-group"><div class="input-header"><label>Tu alternativa de inversión (% anual)</label><div class="val-display" data-input="inTasaAlternativa">10.0%</div></div><input type="range" id="inTasaAlternativa" min="4" max="25" step=".5" value="10" data-color="var(--gold)" data-format="pct1"></div>
@@ -494,17 +497,47 @@
     inM2Rentable:{t:'m² rentables',k:'Proyecto',q:'m² que generan renta. Con Profundizar = suma de la tabla de depas.',m:'Renta por m² (eficiencia).',d:'RdA: 1,444 de 1,950 (74%).'},
     inPasillosM2:{t:'Pasillos y comunes',k:'Proyecto',q:'m² construidos que NO se rentan: pasillos, escaleras, azotea común.',m:'Suben los m² construidos (costo) sin subir la renta.',d:'Plano; en la plantilla es "área común".'},
     inVacanciaPct:{t:'Vacancia',k:'Riesgo',q:'% del año sin inquilino.',m:'Reduce la renta efectiva.',d:'Rotación real del producto (5-7% plantilla).'},
-    inOpexPct:{t:'OpEx',k:'Operación',q:'% de la renta en operar: admón, mantenimiento, predial.',m:'Reduce el NOI.',d:'Plantilla: 11-15%.'},
-    inSeguroPct:{t:'Seguro',k:'Operación',q:'% de la INVERSIÓN al año en seguro.',m:'Reduce el NOI.',d:'Póliza de edificio.'},
+    inOpexPct:{t:'Operación (OpEx)',k:'Operación',q:'% de la renta en operar: admón, mantenimiento, predial.',m:'Reduce el flujo neto (NOI).',d:'Plantilla: 11-15%.'},
+    inSeguroPct:{t:'Seguro',k:'Operación',q:'% de la INVERSIÓN al año en seguro.',m:'Reduce el flujo neto (NOI).',d:'Póliza de edificio.'},
     inInversionTotal:{t:'Inversión total',k:'Dato del caso',q:'Todo lo invertido: terreno + obra + proyecto + trámites.',m:'Base del yield y la recuperación.',d:'RdA: $29.76M con terreno aportado.'},
     inTerrenoAportado:{t:'Terreno aportado',k:'Estructura',q:'1 si el terreno ya está dentro de la inversión (aportado).',m:'Solo informativo del caso.',d:'Estructura del deal.'},
-    inCapRateMercado:{t:'Cap de mercado',k:'Mercado de capitales',q:'Tasa a la que el mercado valúa NOI estabilizado.',m:'Valor del activo = NOI ÷ cap. Menor cap = más valor.',d:'Residencial en renta MX ~7-9%.'},
+    inCapRateMercado:{t:'Cap de mercado',k:'Mercado de capitales',q:'Tasa a la que el mercado valúa el flujo neto (NOI) estabilizado.',m:'Valor del activo = flujo neto (NOI) ÷ cap. Menor cap = más valor.',d:'Residencial en renta MX ~7-9%.'},
     inPlusvaliaPct:{t:'Plusvalía',k:'Mercado',q:'% anual de apreciación.',m:'Curva patrimonial y renta futura.',d:'Zona (RdA/poniente ~7%).'},
-    inCreditoPct:{t:'Crédito',k:'Decisión',q:'% de la inversión con crédito hipotecario.',m:'Baja equity, sube CoC, castiga DSCR.',d:'La pregunta central de la PLANTILLA.'},
+    inCreditoPct:{t:'Crédito',k:'Decisión',q:'% de la inversión con crédito hipotecario.',m:'Baja tu capital propio, sube el retorno de bolsa (CoC) y castiga la cobertura (DSCR).',d:'La pregunta central de la PLANTILLA.'},
     inTasaCredito:{t:'Tasa',k:'Crédito',q:'Tasa anual del crédito.',m:'Servicio de deuda.',d:'Hipotecario comercial ~11-14%.'},
     inPlazoCredito:{t:'Plazo',k:'Crédito',q:'Años del crédito.',m:'Mensualidad y saldo.',d:'Term sheet.'},
     inHorizonte:{t:'Horizonte',k:'Estrategia',q:'Años que proyecta la tabla.',m:'Largo de la curva.',d:'Patrimonial: 10-20 años.'},
     inTasaAlternativa:{t:'Tu alternativa',k:'Costo de oportunidad',q:'Lo que ganaría tu dinero en otro lado.',m:'Define el punto dulce RETENER/VENDER.',d:'Meta YOD ~10%+.'}};
+  /* ===== Glosario de métricas de RESULTADO (letreros al pasar el cursor) ===== */
+  const GLOSARIO={
+    unidades:{t:'Unidades (puertas en renta)',k:'Renta',q:'Cuántas puertas cobran renta: departamentos, cuartos o locales.',r:'Multiplican la renta bruta mensual. Se ajustan en la tarjeta «Unidades & Renta».'},
+    rentable:{t:'Metros cuadrados rentables',k:'Renta',q:'Los metros que sí cobran renta; pasillos y áreas comunes no cuentan.',r:'Junto con la renta da el $/m²; contra los m² construidos mide la eficiencia del proyecto.'},
+    rentaMes:{t:'Renta bruta mensual',k:'Renta',q:'Unidades × renta por unidad, antes de descontar vacancia y gastos.',r:'De aquí se descuentan vacancia, operación y seguro para llegar al flujo neto (NOI).'},
+    rentaAnual:{t:'Renta efectiva anual',k:'Renta',q:'La renta del año ya descontando la vacancia (el tiempo sin inquilino).',r:'Restándole operación y seguro queda el flujo neto (NOI).'},
+    rentaM2:{t:'Renta por m² rentable',k:'Renta',q:'Cuánto cobra cada metro rentable al mes.',r:'Sirve para comparar este caso contra otras propiedades de la zona.'},
+    noi:{t:'Flujo neto operativo (NOI) al año',k:'Flujo',q:'Lo que deja la renta en un año después de vacancia, operación y seguro — ANTES de pagar el crédito.',r:'Es la base de casi todo: valor de mercado (NOI ÷ cap), rendimiento s/costo (NOI ÷ inversión) y cobertura de la deuda (NOI ÷ pago del crédito).'},
+    yield:{t:'Rendimiento sobre costo (yield on cost)',k:'Valor',q:'Flujo neto (NOI) ÷ inversión total: lo que te rinde al año cada peso invertido, sin crédito.',r:'Se compara contra el cap de mercado: si tu costo rinde más de lo que el mercado paga, creaste valor al desarrollar.'},
+    valorCap:{t:'Valor de mercado (a cap)',k:'Valor',q:'Flujo neto (NOI) ÷ cap de mercado: lo que valdría el edificio ya rentando si lo vendieras hoy.',r:'Contra la inversión total da el valor creado. El cap se ajusta en «Inversión & Valor».'},
+    valorCreado:{t:'Valor creado (por desarrollar)',k:'Valor',q:'Valor de mercado − inversión total: lo que ganaste por construir a costo de desarrollador en vez de comprar hecho — sin vender.',r:'Vive del arbitraje entre el rendimiento sobre costo y el cap de mercado.'},
+    inversion:{t:'Inversión total',k:'Inversión',q:'Terreno + obra + proyecto + trámites: todo lo que cuesta llegar a rentar.',r:'Divide al rendimiento s/costo y a la recuperación; de aquí sale cuánto es crédito y cuánto capital propio.'},
+    credito:{t:'Crédito / capital propio (equity)',k:'Crédito',q:'Cuánto pone el banco y cuánto pones tú de la inversión.',r:'Más crédito = menos capital tuyo y más retorno de bolsa (CoC)… mientras la cobertura (DSCR) aguante.'},
+    mensualidad:{t:'Mensualidad del crédito',k:'Crédito',q:'El pago mensual al banco, según monto, tasa y plazo.',r:'Su total anual (servicio de deuda) es contra lo que se mide la cobertura (DSCR).'},
+    coc:{t:'Retorno de tu bolsa (Cash-on-Cash)',k:'Crédito',q:'El flujo que te queda después de pagar el crédito ÷ el capital que pusiste de tu bolsa.',r:'Sube con más crédito; se compara contra tu alternativa (dónde más rendiría tu dinero).'},
+    dscr:{t:'Cobertura de la deuda (DSCR)',k:'Crédito',q:'Flujo neto (NOI) ÷ pago anual del crédito: cuántas veces alcanza la renta para la mensualidad. 1.19 = sobra 19% de colchón.',r:'El banco suele pedir ≥ 1.2. La mueven el % de crédito, la tasa y el plazo.'},
+    recup:{t:'Recuperación (sin crédito)',k:'Patrimonio',q:'Inversión ÷ flujo neto (NOI): años para recuperar lo invertido solo con la renta.',r:'Es la gráfica «Recuperación»; el crédito no entra en esta cuenta.'},
+    retener:{t:'Punto dulce (cuándo vender)',k:'Patrimonio',q:'Hasta qué año el patrimonio crece más rápido que tu alternativa; después conviene vender o reciclar el capital.',r:'Lo mueven la plusvalía, el crecimiento del flujo y tu tasa alternativa. Es la curva «¿Cuándo vender?».'},
+    patrimonio:{t:'Patrimonio al horizonte',k:'Patrimonio',q:'Lo que acumulas al final del horizonte: valor del activo + rentas cobradas − saldo de deuda.',r:'Resume el caso completo; el retorno patrimonial (ROI) lo divide entre tu inversión.'},
+    roiPat:{t:'Retorno patrimonial (ROI)',k:'Patrimonio',q:'Patrimonio al horizonte ÷ inversión: cuántas veces multiplicaste tu dinero en el plazo.',r:'Depende del horizonte, la plusvalía y el flujo acumulado.'},
+    vizRio:{t:'El peso de renta · a dónde se va',k:'Gráfica',q:'Reparte cada peso de renta: vacancia, operación, seguro, crédito y lo que queda (flujo neto).',r:'Es la misma barra de colores del encabezado, explicada peso por peso.'},
+    vizRecup:{t:'Recuperación · invertido vs cobrado',k:'Gráfica',q:'Las rentas acumuladas contra la inversión: donde se cruzan las líneas, ya recuperaste tu dinero.',r:'Se relaciona con la métrica «Recuperación» de la tarjeta Horizonte.'},
+    vizCurva:{t:'¿Cuándo vender? · la curva patrimonial',k:'Gráfica',q:'El crecimiento del patrimonio año por año contra tu alternativa.',r:'De aquí sale el punto dulce («retener ~N años»).'}};
+  const metricHelp={hudUnidades:'unidades',hudRentable:'rentable',hudRentaMes:'rentaMes',hudNoi:'noi',hudYield:'yield',hudValor:'valorCap',hudCoc:'coc',hudDscr:'dscr',hudRecup:'recup',hudOptimo:'retener',
+    heroNoi:'noi',heroValor:'valorCreado',heroOptimo:'retener',
+    lblUnidades:'unidades',lblRentaMes:'rentaMes',lblRentaAnual:'rentaAnual',lblRentaM2:'rentaM2',
+    lblInversion:'inversion',lblYield:'yield',lblValorCap:'valorCap',lblValorCreado:'valorCreado',
+    lblCredito:'credito',lblMensCredito:'mensualidad',lblCoc:'coc',lblDscr:'dscr',
+    lblRecup:'recup',lblOptimo:'retener',lblPatrimonio:'patrimonio',lblRoiPat:'roiPat',
+    vizRio:'vizRio',vizRecup:'vizRecup',vizCurvaPat:'vizCurva'};
   function get(id){return Number($(id).value)||0} function txt(id,value){const e=$(id);if(e)e.textContent=value}
   function inputValues(){return Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]))}
   function updateColor(c){const min=Number(c.min),max=Number(c.max),v=Number(c.value),x=Math.max(0,Math.min(100,(v-min)/(max-min)*100));c.style.background=`linear-gradient(to right, ${c.dataset.color||'var(--gold)'} ${x}%, rgba(35,29,20,.10) ${x}%)`}
@@ -522,6 +555,15 @@
     if(top+th>window.innerHeight-12)top=Math.max(12,r.top-th-6);
     tip.style.left=left+'px';tip.style.top=top+'px';
   }
+  /* ===== Letreros de métricas: un tooltip compartido que sigue al cursor ===== */
+  const metricTip=document.createElement('div');metricTip.className='factor-tooltip';metricTip.id='metricTip';document.body.appendChild(metricTip);
+  function showMetricTip(box,info){metricTip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué es:</b> ${info.q}</p><p><b>Se relaciona con:</b> ${info.r}</p>`;metricTip.style.display='block';const rc=box.getBoundingClientRect(),tw=Math.min(310,window.innerWidth*.7);let x=Math.min(window.innerWidth-tw-8,Math.max(8,rc.left));metricTip.style.left=x+'px';metricTip.style.top='0px';const th=metricTip.offsetHeight;let y=rc.bottom+8;if(y+th>window.innerHeight-8)y=Math.max(8,rc.top-th-8);metricTip.style.top=y+'px'}
+  function hideMetricTip(){metricTip.style.display='none';metricTip.dataset.for=''}
+  function installMetricHelp(){Object.entries(metricHelp).forEach(([id,key])=>{const v=$(id),info=GLOSARIO[key];if(!v||!info)return;const box=v.closest('.urban-item,.kpi-box,.hcard,.viz-card')||v;if(box.dataset.metricTip)return;box.dataset.metricTip=id;box.classList.add('metric-hover');
+    box.addEventListener('mouseenter',()=>{if(tipNarrow())return;showMetricTip(box,info);metricTip.dataset.for=id});
+    box.addEventListener('mouseleave',()=>{if(metricTip.dataset.for===id)hideMetricTip()});
+    box.addEventListener('click',e=>{if(!tipNarrow())return;if(metricTip.dataset.for===id)hideMetricTip();else{showMetricTip(box,info);metricTip.dataset.for=id}})})}
+  window.addEventListener('scroll',hideMetricTip,{passive:true});
   window.addEventListener('scroll',()=>{if(tipNarrow())return;document.querySelectorAll('.factor-help.open,.factor-help.hov').forEach(b=>b.classList.remove('open','hov'))},{passive:true});
   window.addEventListener('resize',()=>{document.querySelectorAll('.factor-help.open,.factor-help.hov').forEach(b=>b.classList.remove('open','hov'))});
   function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open');if(btn.classList.contains('open'))positionFactorTip(btn)});btn.addEventListener('mouseenter',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('mouseleave',()=>btn.classList.remove('hov'));btn.addEventListener('focus',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('blur',()=>btn.classList.remove('hov'))})}
@@ -678,9 +720,9 @@
       let big,color,sub;
       if(marg!==null){
         const ok=marg>=alt;color=ok?'var(--green)':'var(--red)';big=pct(marg*100,1);
-        sub=`ΔNOI ${sM(dNoi)}/año ÷ Δinversión ${fmtM(dInv)} — lo que rinde cada peso EXTRA vs «${esc(base.e.nombre)}» · tu alternativa: ${pct(alt*100,0)}`}
-      else if(Math.abs(dInv)<1){color='var(--goldc)';big=sM(dNoi);sub=`misma inversión que «${esc(base.e.nombre)}»: el NOI cambia ${sM(dNoi)}/año`}
-      else{color='var(--goldc)';big=sM(dNoi);sub=`invierte ${fmtM(-dInv)} MENOS que «${esc(base.e.nombre)}» y el NOI cambia ${sM(dNoi)}/año`}
+        sub=`Δ flujo neto (NOI) ${sM(dNoi)}/año ÷ Δ inversión ${fmtM(dInv)} — lo que rinde cada peso EXTRA vs «${esc(base.e.nombre)}» · tu alternativa: ${pct(alt*100,0)}`}
+      else if(Math.abs(dInv)<1){color='var(--goldc)';big=sM(dNoi);sub=`misma inversión que «${esc(base.e.nombre)}»: el flujo neto (NOI) cambia ${sM(dNoi)}/año`}
+      else{color='var(--goldc)';big=sM(dNoi);sub=`invierte ${fmtM(-dInv)} MENOS que «${esc(base.e.nombre)}» y el flujo neto (NOI) cambia ${sM(dNoi)}/año`}
       return `<div class="marg-card"><span class="k">Retorno marginal · ${esc(x.e.nombre)}</span><div class="big" style="color:${color}">${big}</div><div class="sub2">${sub}</div></div>`
     }).join('')}
   function htmlCompTabla({res}){
@@ -689,13 +731,13 @@
       ['Unidades / puertas',x=>fmtN(x.r.p.unidades),null],
       ['Renta bruta / mes',x=>fmtMoney(x.r.rentaMes),x=>x.r.rentaMes],
       ['Inversión total',x=>fmtM(x.r.p.inversion),null],
-      ['NOI / año',x=>fmtM(x.r.noi),x=>x.r.noi],
-      ['Yield on cost',x=>pct(x.r.yieldOnCost*100,1),x=>x.r.yieldOnCost],
+      ['Flujo neto (NOI) / año',x=>fmtM(x.r.noi),x=>x.r.noi],
+      ['Rendimiento s/costo',x=>pct(x.r.yieldOnCost*100,1),x=>x.r.yieldOnCost],
       ['Valor a cap de mercado',x=>fmtM(x.r.valorCap),x=>x.r.valorCap],
       ['Valor creado',x=>fmtM(x.r.valorCreado),x=>x.r.valorCreado],
       ['Recuperación (solo rentas)',x=>x.r.recupAnios===null?'—':x.r.recupAnios.toFixed(1)+' años',x=>x.r.recupAnios===null?null:-x.r.recupAnios],
-      ['Cash-on-Cash',x=>x.r.coc===null?'—':pct(x.r.coc*100,1),x=>x.r.coc],
-      ['DSCR',x=>x.r.dscr===null?'—':x.r.dscr.toFixed(2),x=>x.r.dscr],
+      ['Retorno de bolsa (CoC)',x=>x.r.coc===null?'—':pct(x.r.coc*100,1),x=>x.r.coc],
+      ['Cobertura (DSCR)',x=>x.r.dscr===null?'—':x.r.dscr.toFixed(2),x=>x.r.dscr],
       ['Patrimonio al horizonte',x=>fmtM(x.r.patrimH),x=>x.r.patrimH],
       ['ROI patrimonial',x=>pct(x.r.roiPat*100,1),x=>x.r.roiPat],
       ['Punto dulce',x=>x.r.aniosRetener>=x.r.p.horizonte?'retener '+x.r.p.horizonte+'+ años':x.r.aniosRetener===0?'vender ya':'retener ~'+x.r.aniosRetener+' años',null]
@@ -717,8 +759,8 @@
     const dValor=foco.r.valorCreado-base.r.valorCreado;
     if(marg!==null){
       const veces=foco.r.p.tasaAlt>0&&marg>0?marg/foco.r.p.tasaAlt:null;
-      return `«<b>${esc(foco.e.nombre)}</b>» pide <b>${fmtM(dInv)}</b> más que «${esc(base.e.nombre)}» y ${dNoi>=0?'deja <b>'+fmtM(dNoi)+'</b> extra de NOI al año':'el NOI <b>cae '+sM(dNoi)+'</b> al año'}: cada peso adicional rinde <b>${pct(marg*100,1)}</b>${veces!==null&&isFinite(veces)?' — '+veces.toFixed(1)+'× tu alternativa del '+pct(foco.r.p.tasaAlt*100,0):''}. ${dValor>0?'Además crea <b>'+fmtM(dValor)+'</b> más de valor a cap de mercado.':'A cap de mercado no crea más valor que la base: la decisión vive en el flujo.'}`}
-    return `«<b>${esc(foco.e.nombre)}</b>» no invierte más que «${esc(base.e.nombre)}»: compara el NOI (Δ ${sM(dNoi)}/año) y el patrimonio al horizonte en la tabla.`}
+      return `«<b>${esc(foco.e.nombre)}</b>» pide <b>${fmtM(dInv)}</b> más que «${esc(base.e.nombre)}» y ${dNoi>=0?'deja <b>'+fmtM(dNoi)+'</b> extra de flujo neto (NOI) al año':'el flujo neto (NOI) <b>cae '+sM(dNoi)+'</b> al año'}: cada peso adicional rinde <b>${pct(marg*100,1)}</b>${veces!==null&&isFinite(veces)?' — '+veces.toFixed(1)+'× tu alternativa del '+pct(foco.r.p.tasaAlt*100,0):''}. ${dValor>0?'Además crea <b>'+fmtM(dValor)+'</b> más de valor a cap de mercado.':'A cap de mercado no crea más valor que la base: la decisión vive en el flujo.'}`}
+    return `«<b>${esc(foco.e.nombre)}</b>» no invierte más que «${esc(base.e.nombre)}»: compara el flujo neto (NOI) (Δ ${sM(dNoi)}/año) y el patrimonio al horizonte en la tabla.`}
   function renderComparador(){
     const secc=$('compSection');if(!secc)return;
     if(escenarios.length<2){secc.style.display='none';return}
@@ -759,11 +801,11 @@
         <div class="comp-scroll"><table class="comp-table">${htmlSupuestosTabla(cj)}</table></div>
         ${cj.res.some(x=>x.e.depas&&x.e.depas.length)?'<div class="prop-sec">Distribución de puertas</div>'+cj.res.map(x=>distribucionLinea(x.e)).join(''):''}`;
     }else{
-      cuerpo=`<p class="prop-lectura">${r.p.unidades} unidades rentan <b>${fmtMoney(r.rentaMes)}/mes</b>; tras vacancia y operación queda un NOI de <b>${fmtM(r.noi)}/año</b> — ${pct(r.yieldOnCost*100,1)} sobre los ${fmtM(r.p.inversion)} invertidos. A cap de mercado ${pct(r.p.capMercado*100,1)} el activo vale <b>${fmtM(r.valorCap)}</b>. Punto dulce: <b>${r.aniosRetener>=r.p.horizonte?'retener '+r.p.horizonte+'+ años':'retener ~'+r.aniosRetener+' años'}</b>.</p>
+      cuerpo=`<p class="prop-lectura">${r.p.unidades} unidades rentan <b>${fmtMoney(r.rentaMes)}/mes</b>; tras vacancia y operación queda un flujo neto (NOI) de <b>${fmtM(r.noi)}/año</b> — ${pct(r.yieldOnCost*100,1)} sobre los ${fmtM(r.p.inversion)} invertidos. A cap de mercado ${pct(r.p.capMercado*100,1)} el activo vale <b>${fmtM(r.valorCap)}</b>. Punto dulce: <b>${r.aniosRetener>=r.p.horizonte?'retener '+r.p.horizonte+'+ años':'retener ~'+r.aniosRetener+' años'}</b>.</p>
         <div class="prop-sec">El caso en números</div>
         <div class="comp-scroll"><table class="comp-table"><tbody>
           <tr><td>Unidades · m² rentables</td><td>${fmtN(r.p.unidades)} · ${fmtN(r.p.m2Rent)} m²</td></tr>
-          <tr><td>Renta bruta / NOI</td><td>${fmtMoney(r.rentaMes)}/mes · ${fmtM(r.noi)}/año</td></tr>
+          <tr><td>Renta bruta / flujo neto (NOI)</td><td>${fmtMoney(r.rentaMes)}/mes · ${fmtM(r.noi)}/año</td></tr>
           <tr><td>Inversión · yield on cost</td><td>${fmtM(r.p.inversion)} · ${pct(r.yieldOnCost*100,1)}</td></tr>
           <tr><td>Valor a cap · valor creado</td><td>${fmtM(r.valorCap)} · ${fmtM(r.valorCreado)}</td></tr>
           <tr><td>Recuperación · patrimonio a ${r.p.horizonte}a</td><td>${r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'} · ${fmtM(r.patrimH)}</td></tr>
@@ -783,29 +825,29 @@
     txt('hudUnidades',r.p.unidades);txt('hudRentable',fmtN(r.p.m2Rent)+' m²');txt('hudRentaMes',fmtMoney(r.rentaMes));txt('hudNoi',fmtM(r.noi));
     txt('hudYield',pct(r.yieldOnCost*100,1));txt('hudValor',fmtM(r.valorCap));txt('hudCoc',r.coc===null?'—':pct(r.coc*100,1));txt('hudDscr',r.dscr===null?'—':r.dscr.toFixed(2));
     txt('hudRecup',r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años');txt('hudOptimo',r.aniosRetener>=r.p.horizonte?r.p.horizonte+'+ años':r.aniosRetener+' años');
-    txt('heroNoi',fmtM(r.noi)+'/año');txt('heroNoiSub','yield on cost '+pct(r.yieldOnCost*100,2)+' · recuperación '+(r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'));
+    txt('heroNoi',fmtM(r.noi)+'/año');txt('heroNoiSub','rendimiento s/costo '+pct(r.yieldOnCost*100,2)+' · recuperación '+(r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años'));
     txt('heroValor',fmtM(r.valorCreado));txt('heroValorSub','activo vale '+fmtM(r.valorCap)+' a cap '+pct(r.p.capMercado*100,1)+' vs '+fmtM(r.p.inversion)+' invertidos');
     txt('heroOptimo',r.aniosRetener>=r.p.horizonte?'retener '+r.p.horizonte+'+ años':r.aniosRetener===0?'vender ya':'retener ~'+r.aniosRetener+' años');
     txt('heroOptimoSub',r.anioCorte===null?'el patrimonio crece más que tu '+pct(r.p.tasaAlt*100,0)+' todo el horizonte':'en el año '+r.anioCorte+' cae debajo de tu '+pct(r.p.tasaAlt*100,0));
-    const lect=$('heroLectura');if(lect)lect.innerHTML=`${r.p.unidades} unidades rentan <b>${fmtMoney(r.rentaMes)}/mes</b>; tras vacancia y operación queda un NOI de <b>${fmtM(r.noi)}/año</b> — ${pct(r.yieldOnCost*100,1)} sobre los ${fmtM(r.p.inversion)} invertidos. A cap de mercado ${pct(r.p.capMercado*100,1)} el activo vale <b>${fmtM(r.valorCap)}</b>${r.valorCreado>0?' (creaste <b>'+fmtM(r.valorCreado)+'</b> sin vender)':''}. ${r.montoCredito>0?'Con crédito, el Cash-on-Cash es <b>'+pct((r.coc||0)*100,1)+'</b> y el DSCR '+(r.dscr||0).toFixed(2)+'.':'Caso de contado puro (sube el crédito para ver el apalancado).'} Punto dulce: <b>${r.aniosRetener>=r.p.horizonte?'retener todo el horizonte':r.aniosRetener===0?'vender ya':'~'+r.aniosRetener+' años'}</b>.`;
+    const lect=$('heroLectura');if(lect)lect.innerHTML=`${r.p.unidades} unidades rentan <b>${fmtMoney(r.rentaMes)}/mes</b>; tras vacancia y operación queda un flujo neto (NOI) de <b>${fmtM(r.noi)}/año</b> — ${pct(r.yieldOnCost*100,1)} sobre los ${fmtM(r.p.inversion)} invertidos. A cap de mercado ${pct(r.p.capMercado*100,1)} el activo vale <b>${fmtM(r.valorCap)}</b>${r.valorCreado>0?' (creaste <b>'+fmtM(r.valorCreado)+'</b> sin vender)':''}. ${r.montoCredito>0?'Con crédito, el retorno de tu bolsa (Cash-on-Cash) es <b>'+pct((r.coc||0)*100,1)+'</b> y la cobertura de la deuda (DSCR) '+(r.dscr||0).toFixed(2)+'.':'Caso de contado puro (sube el crédito para ver el apalancado).'} Punto dulce: <b>${r.aniosRetener>=r.p.horizonte?'retener todo el horizonte':r.aniosRetener===0?'vender ya':'~'+r.aniosRetener+' años'}</b>.`;
     txt('lblUnidades',r.p.unidades+' · '+fmtN(r.p.m2Rent)+' m² rentables');txt('lblRentaMes',fmtMoney(r.rentaMes));txt('lblRentaAnual',fmtM(r.rentaEfectiva));txt('lblRentaM2',fmtMoney(r.rentaM2)+'/m²');
-    $('readRenta').innerHTML=`<b>Renta:</b> ${r.p.unidades} × ${fmtMoney(r.p.rentaU)} = ${fmtMoney(r.rentaMes)}/mes (${fmtMoney(r.rentaM2)}/m² rentable). Anual bruta ${fmtM(r.rentaBrutaAnual)} − vacancia ${pct(r.p.vac*100,1)} (${fmtM(r.vacMonto)}) − OpEx ${pct(r.p.opex*100,1)} (${fmtM(r.opexMonto)}) − seguro ${fmtM(r.seguroMonto)} = <b>NOI ${fmtM(r.noi)}</b>.`;
+    $('readRenta').innerHTML=`<b>Renta:</b> ${r.p.unidades} × ${fmtMoney(r.p.rentaU)} = ${fmtMoney(r.rentaMes)}/mes (${fmtMoney(r.rentaM2)}/m² rentable). Anual bruta ${fmtM(r.rentaBrutaAnual)} − vacancia ${pct(r.p.vac*100,1)} (${fmtM(r.vacMonto)}) − OpEx ${pct(r.p.opex*100,1)} (${fmtM(r.opexMonto)}) − seguro ${fmtM(r.seguroMonto)} = <b>flujo neto (NOI) ${fmtM(r.noi)}</b>.`;
     txt('lblInversion',fmtM(r.p.inversion)+(r.p.terrenoAportado?' · terreno aportado':''));txt('lblYield',pct(r.yieldOnCost*100,2));txt('lblValorCap',fmtM(r.valorCap));
     const vc=$('lblValorCreado');if(vc){vc.textContent=fmtM(r.valorCreado);vc.className='kpi-val '+(r.valorCreado>0?'c-green':'status-bad')}
-    $('readInv').innerHTML=`<b>El arbitraje del desarrollador:</b> tu NOI cuesta ${pct(r.yieldOnCost*100,2)} (yield on cost) y el mercado lo valúa a ${pct(r.p.capMercado*100,1)}. ${r.valorCreado>0?'Diferencia a favor: <b>'+fmtM(r.valorCreado)+'</b> de valor creado al terminar y estabilizar.':'<b>⚠ Sin arbitraje:</b> el activo vale menos de lo que cuesta — revisa renta, costo o cap.'}`;
+    $('readInv').innerHTML=`<b>El arbitraje del desarrollador:</b> tu flujo neto (NOI) te cuesta ${pct(r.yieldOnCost*100,2)} de rendimiento sobre costo y el mercado lo valúa a ${pct(r.p.capMercado*100,1)}. ${r.valorCreado>0?'Diferencia a favor: <b>'+fmtM(r.valorCreado)+'</b> de valor creado al terminar y estabilizar.':'<b>⚠ Sin arbitraje:</b> el activo vale menos de lo que cuesta — revisa renta, costo o cap.'}`;
     txt('lblCredito',fmtM(r.montoCredito)+' / '+fmtM(r.equity));txt('lblMensCredito',fmtMoney(r.mensCredito)+'/mes');
     txt('lblCoc',r.coc===null?'— (sin crédito)':pct(r.coc*100,1));txt('lblDscr',r.dscr===null?'— (sin crédito)':r.dscr.toFixed(2)+(r.dscr>=1.2?' ✓':' ⚠'));
-    $('readCredito').innerHTML=r.montoCredito>0?`<b>Apalancado:</b> crédito ${fmtM(r.montoCredito)} (${pct(r.p.credito*100,0)}) a ${pct(r.p.tasa*100,2)} × ${r.p.plazo} años → ${fmtMoney(r.mensCredito)}/mes (${fmtM(r.servicioAnual)}/año). Flujo tras deuda ${fmtM(r.flujoConCredito)} sobre equity ${fmtM(r.equity)} = <b>CoC ${pct((r.coc||0)*100,1)}</b> · DSCR ${(r.dscr||0).toFixed(2)} ${r.dscr>=1.2?'(sano)':'(apretado: el banco quiere ≥1.2)'}.`:`<b>Contado puro:</b> todo el NOI es tuyo (${pct(r.yieldOnCost*100,2)} sobre inversión). Sube el % de crédito para comparar el apalancado — la pregunta de la PLANTILLA.`;
+    $('readCredito').innerHTML=r.montoCredito>0?`<b>Apalancado:</b> crédito ${fmtM(r.montoCredito)} (${pct(r.p.credito*100,0)}) a ${pct(r.p.tasa*100,2)} × ${r.p.plazo} años → ${fmtMoney(r.mensCredito)}/mes (${fmtM(r.servicioAnual)}/año). Flujo tras deuda ${fmtM(r.flujoConCredito)} sobre capital propio ${fmtM(r.equity)} = <b>retorno de bolsa (CoC) ${pct((r.coc||0)*100,1)}</b> · cobertura (DSCR) ${(r.dscr||0).toFixed(2)} ${r.dscr>=1.2?'(sana)':'(apretada: el banco quiere ≥1.2)'}.`:`<b>Contado puro:</b> todo el flujo neto (NOI) es tuyo (${pct(r.yieldOnCost*100,2)} sobre inversión). Sube el % de crédito para comparar el apalancado — la pregunta de la PLANTILLA.`;
     txt('lblRecup',r.recupAnios===null?'—':r.recupAnios.toFixed(1)+' años');txt('lblOptimo',r.aniosRetener>=r.p.horizonte?r.p.horizonte+'+ años':r.aniosRetener+' años');
     txt('lblPatrimonio',fmtM(r.patrimH)+' ('+r.p.horizonte+'a)');txt('lblRoiPat',pct(r.roiPat*100,0)+' s/inversión');
     const rr=$('rentaRows');if(rr)rr.innerHTML=r.rows.map(x=>`<tr${x.a===r.anioCorte?' style="background:#B98B3C14"':''}><td>${x.a}</td><td>${fmtM(x.valor)}</td><td>${fmtM(x.flujo)}</td><td>${fmtM(x.acum)}</td><td>${fmtM(x.saldo)}</td><td>${fmtM(x.patrim)}</td><td>${pct(x.crec*100,1)}</td><td>${x.crec>=r.p.tasaAlt?'<span class="status-ok">RETENER</span>':'<span class="status-warn">VENDER</span>'}</td></tr>`).join('');
     $('readHorizonte').innerHTML=`<b>Al año ${r.p.horizonte}:</b> el activo vale ${fmtM(r.valorH)}, llevas ${fmtM(r.acumH)} de flujos${r.montoCredito>0?' y el crédito va en '+fmtM(r.rows[r.rows.length-1]?.saldo||0):''}: patrimonio neto <b>${fmtM(r.patrimH)}</b> (partiste de ${fmtM(r.patrim0)}). La señal VENDER aparece cuando crece menos que tu ${pct(r.p.tasaAlt*100,0)}${r.anioCorte===null?' — en este horizonte nunca aparece.':' (año '+r.anioCorte+').'}`;
     // semáforo
     const warnings=[];
-    if(r.noi<=0)warnings.push('El NOI es NEGATIVO: la renta no cubre operación y seguro');
-    if(r.yieldOnCost<r.p.capMercado&&r.noi>0)warnings.push('Yield on cost ('+pct(r.yieldOnCost*100,1)+') debajo del cap de mercado ('+pct(r.p.capMercado*100,1)+'): no hay valor creado');
-    if(r.dscr!==null&&r.dscr<1.2)warnings.push('DSCR '+r.dscr.toFixed(2)+' debajo de 1.2: el crédito está apretado');
-    if(r.coc!==null&&r.coc<0)warnings.push('Cash-on-Cash NEGATIVO: la deuda se come todo el flujo');
+    if(r.noi<=0)warnings.push('El flujo neto (NOI) es NEGATIVO: la renta no cubre operación y seguro');
+    if(r.yieldOnCost<r.p.capMercado&&r.noi>0)warnings.push('Rendimiento sobre costo ('+pct(r.yieldOnCost*100,1)+') debajo del cap de mercado ('+pct(r.p.capMercado*100,1)+'): no hay valor creado');
+    if(r.dscr!==null&&r.dscr<1.2)warnings.push('Cobertura de la deuda (DSCR) '+r.dscr.toFixed(2)+' debajo de 1.2: el crédito está apretado');
+    if(r.coc!==null&&r.coc<0)warnings.push('Retorno de tu bolsa (Cash-on-Cash) NEGATIVO: la deuda se come todo el flujo');
     if(r.recupAnios!==null&&r.recupAnios>15)warnings.push('Recuperación de '+r.recupAnios.toFixed(0)+' años: muy larga sin contar plusvalía');
     if(!warnings.length)warnings.push('Renta, valor, crédito y horizonte pasan con los supuestos capturados.');
     $('checks').innerHTML=warnings.map(w=>`<div class="${w.includes('pasan')?'status-ok':(w.includes('NEGATIVO'))?'status-bad':'status-warn'}">${w}</div>`).join('');
@@ -1015,7 +1057,7 @@
   function cerrarOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on'))}
   /* ================== ARRANQUE ================== */
   document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
-  controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();
+  controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();installMetricHelp();
   $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
   $('gGuardarSolo').onclick=()=>guardarCaso(false);$('gGuardarEnviar').onclick=()=>guardarCaso(true);$('gCancelar').onclick=cerrarOverlays;
   $('btnMisCasos').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave');return}abrirOverlay('ovCasos');cargarLista()};
