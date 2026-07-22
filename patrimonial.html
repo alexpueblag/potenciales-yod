@@ -666,7 +666,7 @@
   function escNueva(){
     if(escenarios.length>=MAX_ESC){toast('Máximo '+MAX_ESC+' versiones por caso');return}
     const sug=escenarios.length===1?'Remodelado / proyecto':'Versión '+(escenarios.length+1);
-    const nombre=prompt('Nombre de la nueva versión (copia de la activa):',sug);if(nombre===null)return;
+    const nombre=sug; // sin prompt() bloqueante: crea con nombre sugerido; renombrar después con el lápiz
     escSyncActivo();
     const act=escGet(escActivo);
     const e={id:escId(),nombre:(nombre.trim()||sug).slice(0,40),esBase:false,inputs:inputValues(),
