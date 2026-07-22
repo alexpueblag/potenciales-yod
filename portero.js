@@ -24,6 +24,16 @@
     q.delete('sesion');
     history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
   }
+  /* 1b) liga de UN SOLO USO: ?liga=TOKEN → se intercambia por una sesión (la sesión NO queda en la URL) */
+  const lg = q.get('liga');
+  if (lg) {
+    fetch(ENDPOINT + '?recurso=activar&liga=' + encodeURIComponent(lg), { credentials: 'omit' })
+      .then(x => x.json())
+      .then(r => { if (r && r.ok && r.token) { localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol'); } })
+      .catch(() => {})
+      .finally(() => { q.delete('liga'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); location.reload(); });
+    return;   // esperamos el intercambio; la recarga re-ejecuta el flujo ya con la sesión
+  }
 
   /* 2) bitácora codificada */
   const buf = []; const t0 = Date.now(); let nueva = 1, nEv = 0, cerrado = false;
