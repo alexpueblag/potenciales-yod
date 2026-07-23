@@ -575,6 +575,10 @@
       <div class="drawer" id="dAgua"><div class="subheading">Candado del agua (veda Costa de Hermosillo)</div>
         <div class="land-modes"><button type="button" class="gate-mode land-mode active" data-gate="0"><b>⚠ En veda · sin resolver</b><span>Pozo nuevo es ilegal. El caso queda en rojo.</span></button><button type="button" class="gate-mode land-mode" data-gate="1"><b>En trámite</b><span>Gestoría CONAGUA / derechos en proceso.</span></button><button type="button" class="gate-mode land-mode" data-gate="2"><b>Derechos asignados</b><span>Fuente de agua resuelta y documentada.</span></button></div>
         <div class="subheading">Dotaciones del polo</div>
+        <div class="subheading">Giro de los inquilinos — mueve carga, agua, viajes, cajones y residuos de un jalón</div>
+        <div class="land-modes" id="girosNave"></div>
+        <div class="land-modes" id="girosMacro" style="margin-top:8px"></div>
+        <p class="note" style="margin:6px 0 0">Cada botón aplica las densidades de RS Means, ITE y la NTC-PA-2018 que verás citadas en el <b>?</b> de cada perilla. Puedes ajustar cualquiera a mano después.</p>
         <div class="subheading">Cuadro de agua · dotaciones (NMX-R-046: mín 0.5 · rec 1 l/s/ha)</div>
         <div class="input-group"><div class="input-header"><label>Agua de proceso industrial (L/m² const/día)</label><div class="val-display" data-input="inAguaM2Const">1.5</div></div><input type="range" id="inAguaM2Const" min=".2" max="30" step=".1" value="1.5" data-color="var(--blue)" data-format="decimal"></div>
         <div class="input-group"><div class="input-header"><label>Agua sanitaria (L/trabajador/turno)</label><div class="val-display" data-input="inLTrabajador">80</div></div><input type="range" id="inLTrabajador" min="40" max="200" step="5" value="80" data-color="var(--blue)"></div>
@@ -920,6 +924,45 @@
   function installFactorHelp(){controls.forEach(c=>{const info=factorHelp[c.id]||{t:c.id,k:'Supuesto',q:'Variable editable.',m:'Actualiza los resultados.',d:'Fuente del supuesto.'};const group=c.closest('.input-group'),header=group?.querySelector('.input-header'),label=header?.querySelector('label');if(!header||!label||header.querySelector('.factor-help'))return;const wrap=document.createElement('span'),btn=document.createElement('button'),tip=document.createElement('span');wrap.className='label-help';btn.className='factor-help';btn.type='button';btn.textContent='?';tip.className='factor-tooltip';tip.innerHTML=`<span class="help-type">${info.k}</span><br><b>${info.t}</b><p><b>Qué mide:</b> ${info.q}</p><p><b>Qué mueve:</b> ${info.m}</p><p><b>De qué depende:</b> ${info.d}</p>${info.f?`<p class="tip-fuente"><b>&#128209; Fuente:</b> ${info.f}</p>`:''}`;btn.title=`${info.t}. ${info.q}`;btn.append(tip);label.parentNode.insertBefore(wrap,label);wrap.append(label,btn);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();document.querySelectorAll('.factor-help.open').forEach(x=>{if(x!==btn)x.classList.remove('open')});btn.classList.toggle('open');if(btn.classList.contains('open'))positionFactorTip(btn)});btn.addEventListener('mouseenter',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('mouseleave',()=>btn.classList.remove('hov'));btn.addEventListener('focus',()=>{if(tipNarrow())return;btn.classList.add('hov');positionFactorTip(btn)});btn.addEventListener('blur',()=>btn.classList.remove('hov'))})}
   function irr(flows){if(!flows.some(x=>x<0)||!flows.some(x=>x>0))return null;let lo=-.999,hi=4;const npv=r=>flows.reduce((s,x,i)=>s+x/Math.pow(1+r,i),0);while(npv(hi)>0&&hi<500)hi*=2;for(let i=0;i<100;i++){const mid=(lo+hi)/2;if(npv(mid)>0)lo=mid;else hi=mid}return Math.pow(1+(lo+hi)/2,12)-1}
 
+
+  /* ===== Selector de giro: un clic acomoda las densidades de los 8 servicios ===== */
+  const GIROS={
+    nave:{
+      'Logística / bodega':   {v:{inWm2Const:20, inAguaM2Const:0.5,inViajesNave:2,inM2XCajonNave:1000,inKgEmpleado:0.3},d:'20 VA/m² · 0.5 L/m² · 2 viajes · 1 cajón/1,000 m²'},
+      'Industria ligera':     {v:{inWm2Const:50, inAguaM2Const:1.5,inViajesNave:7,inM2XCajonNave:400, inKgEmpleado:0.5},d:'50 VA/m² · 1.5 L/m² · 7 viajes · 1 cajón/400 m²'},
+      'Maquinado / mediana':  {v:{inWm2Const:85, inAguaM2Const:3,  inViajesNave:8,inM2XCajonNave:500, inKgEmpleado:0.8},d:'85 VA/m² · 3 L/m² · 8 viajes · 1 cajón/500 m²'},
+      'Alimentos / pesada':   {v:{inWm2Const:130,inAguaM2Const:15, inViajesNave:8,inM2XCajonNave:1000,inKgEmpleado:1.5},d:'130 VA/m² · 15 L/m² · agua ×10 — revisa el gate'}
+    },
+    macro:{
+      'Logística / bodega':   {v:{inVaMacro:20, inViajesMacro:2,inM2XCajonMacro:1000},d:'20 VA/m² · 2 viajes · 1 cajón/1,000 m²'},
+      'Industria ligera':     {v:{inVaMacro:60, inViajesMacro:5,inM2XCajonMacro:400}, d:'60 VA/m² · 5 viajes · 1 cajón/400 m²'},
+      'Maquinado / mediana':  {v:{inVaMacro:85, inViajesMacro:8,inM2XCajonMacro:500}, d:'85 VA/m² · 8 viajes · 1 cajón/500 m²'},
+      'Alimentos / pesada':   {v:{inVaMacro:130,inViajesMacro:8,inM2XCajonMacro:1000},d:'130 VA/m² · el giro más pesado'}
+    }
+  };
+  const GIRO_CLAVE={nave:'inWm2Const',macro:'inVaMacro'};
+  function installGiros(){
+    Object.entries(GIROS).forEach(([tipo,presets])=>{
+      const cont=$(tipo==='nave'?'girosNave':'girosMacro'); if(!cont)return;
+      cont.innerHTML=`<div style="width:100%;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">${tipo==='nave'?'Naves PyME':'Macro-lotes'}</div>`+
+        Object.entries(presets).map(([nom,o])=>`<button type="button" class="land-mode giro-mode" data-giro-tipo="${tipo}" data-giro="${nom}"><b>${nom}</b><span>${o.d}</span></button>`).join('');
+      cont.querySelectorAll('[data-giro]').forEach(b=>b.onclick=()=>{
+        const o=GIROS[b.dataset.giroTipo][b.dataset.giro];
+        Object.entries(o.v).forEach(([k,val])=>setControl(k,val));
+        calculate();
+      });
+    });
+  }
+  function renderGiros(){
+    Object.entries(GIROS).forEach(([tipo,presets])=>{
+      const actual=Number(($(GIRO_CLAVE[tipo])||{}).value);
+      document.querySelectorAll(`[data-giro-tipo="${tipo}"]`).forEach(b=>{
+        const o=presets[b.dataset.giro];
+        b.classList.toggle('active', Math.abs(o.v[GIRO_CLAVE[tipo]]-actual)<0.51);
+      });
+    });
+  }
+
   /* ================== MOTOR (8 pasos del PPP) ================== */
   function computar(vals){
     const gv=id=>Number(vals[id])||0;
@@ -1237,6 +1280,7 @@
 
   /* ================== RENDER ================== */
   function render(){
+    renderGiros();
     const r=state;syncPills();
     txt('hudIngresos',fmtM(r.ingresos));txt('hudDeuda',fmtM(r.peak));txt('hudUtilidad',fmtM(r.utilidadFinal));txt('hudMargen',pct(r.margenFinal*100,1));txt('hudTir',r.devIrr===null?'—':pct(r.devIrr*100,1));
     const gInfo=[['⚠ en veda','var(--red)'],['en trámite','var(--orange)'],['resuelta','var(--green)']][r.p.gateAgua];const hg=$('hudGate');hg.textContent=gInfo[0];hg.style.color=gInfo[1];
@@ -1663,7 +1707,7 @@
   function cerrarOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on'))}
   /* ================== ARRANQUE ================== */
   document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
-  controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installFactorHelp();installMetricHelp();
+  controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installGiros();installFactorHelp();installMetricHelp();
   document.querySelectorAll('.gate-mode').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();gateAgua=Number(b.dataset.gate);calculate();pintaCaso()}));
   document.querySelectorAll('.estr-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();if(b.dataset.estr==='naves')estrNaves=Number(b.dataset.val);else estrCom=Number(b.dataset.val);calculate()}));
   $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
