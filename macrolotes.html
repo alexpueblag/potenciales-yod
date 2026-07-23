@@ -100,6 +100,11 @@
   @media(max-width:700px){input,select,textarea{font-size:16px}}
   .seguimiento{display:none;background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:14px;margin:-6px 0 14px}
   .seguimiento.on{display:block}
+  .reu-card{border:1px solid var(--linea);border-radius:10px;margin-bottom:6px;overflow:hidden}
+  .reu-head{padding:9px 11px;cursor:pointer;font-size:13px}.reu-head b{color:var(--goldc)}
+  .reu-chev{float:right;color:var(--muted);transition:transform .2s}.reu-chev.open{transform:rotate(90deg)}
+  .reu-body{display:none;padding:0 11px 11px;font-size:12.5px;color:var(--suave);line-height:1.5}.reu-body.open{display:block}
+  .reu-links{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.reu-links a{text-decoration:none}
   .estado-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
   .echip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:6px 11px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;text-transform:uppercase;letter-spacing:.06em}
   .echip.on{background:rgba(154,123,63,.2);border-color:transparent;color:#F6F3ED}
@@ -376,6 +381,7 @@
       <button class="small-btn secondary" id="btnMisCasos"><i class="ti ti-folder"></i>Mis casos</button>
       <button class="small-btn secondary" id="btnNuevo"><i class="ti ti-plus"></i>Nuevo</button>
       <button class="small-btn secondary" id="btnSeguimiento"><i class="ti ti-list-check"></i>Seguimiento</button>
+      <button class="small-btn secondary" id="btnReuniones"><i class="ti ti-calendar-event"></i>Reuniones</button>
       <button class="small-btn secondary" id="btnWhats"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
       <button class="small-btn" id="btnGuardar"><i class="ti ti-device-floppy"></i>Guardar</button>
     </div>
@@ -393,6 +399,16 @@
     <div class="seg-row"><input id="segSiguiente" placeholder="Siguiente paso (ej. gestoría CONAGUA, cita urbanista…)"><button class="small-btn" id="btnSegPaso"><i class="ti ti-check"></i>Fijar paso</button></div>
     <div class="seg-row"><input id="segNota" placeholder="Anotar avance…"><button class="small-btn" id="btnSegNota"><i class="ti ti-pencil"></i>Anotar</button></div>
     <div class="notas-log" id="segLog">Sin notas todavía.</div>
+  </section>
+  <section class="seguimiento" id="reuPanel">
+    <div class="subheading" style="margin-top:0">Track de reuniones del PPP · toca una para ver lo que se propuso</div>
+    <div id="reuLog"><p class="note">Aún no hay reuniones registradas.</p></div>
+    <div class="subheading">Agregar reunión</div>
+    <div class="seg-row"><input id="reuFecha" type="date" style="max-width:160px"><input id="reuTitulo" placeholder="Título de la reunión"></div>
+    <div class="seg-row"><input id="reuResumen" placeholder="Qué se propuso / acuerdos clave"></div>
+    <div class="seg-row"><input id="reuMin" placeholder="Link a la minuta (Google Doc)"><input id="reuTrans" placeholder="Link a la transcripción"></div>
+    <div class="seg-row"><input id="reuResp" placeholder="Asistentes / responsables"><button class="small-btn" id="btnReuAdd"><i class="ti ti-calendar-plus"></i>Agregar al track</button></div>
+    <p class="note">Las reuniones se guardan en el seguimiento del caso (columna del Sheet). Al abrir una, se ve el resumen y se enlaza la minuta y la transcripción.</p>
   </section>
 
   <section class="hero">
@@ -826,6 +842,7 @@
       valorTierraM2:gv('inValorTierraM2'),aporteTierra:gv('inAporteTierra')/100,pctDueno:gv('inPctDueno')/100,
       gateAgua:Math.max(0,Math.min(2,Math.round(Number(vals.inGateAgua)||0))),varPrecios:0,varCostos:0,
       m2Empleo:Math.max(1,gv('inM2Empleo')),aguaM2:gv('inAguaM2Const'),wm2:gv('inWm2Const'),factorDemanda:gv('inFactorDemanda')/100,vaMacro:gv('inVaMacro')||60,vaCom:gv('inVaCom')||60,cosMacro:(gv('inCosMacro')||60)/100,cosCom:(gv('inCosCom')||40)/100,dpeaVial:gv('inDpeaVial')||0.6,factorCoinc:Math.max(.5,Math.min(1,(gv('inFactorCoinc')||90)/100)),reservaElec:(gv('inReservaElec')||20)/100,puKvaCFE:gv('inPuKvaCFE')||2450,
+      lTrabajador:gv('inLTrabajador')||80,lm2Com:gv('inLm2Com')||6,lm2Riego:gv('inLm2Riego')||4,pctVerdeRiego:(gv('inPctVerdeRiego')||30)/100,lHab:gv('inLHab')||200,cvd:gv('inCVD')||1.4,cvh:gv('inCVH')||1.55,reservaCI:gv('inReservaCI')||114,diasCisterna:gv('inDiasCisterna')||1,
       estrNaves:Number(vals.inEstrNaves)?1:0,estrCom:Number(vals.inEstrCom)?1:0,rentaNave:gv('inRentaNave'),rentaCom:gv('inRentaCom'),vacancia:gv('inVacancia')/100,opex:gv('inOpex')/100,capRate:gv('inCapRate')/100,mesesSalida:Math.max(0,Math.round(gv('inMesesSalida'))),
       habViv:gv('inHabPorViv'),trabViv:gv('inTrabPorViv'),m2EmpleoCom:Math.max(1,gv('inM2EmpleoCom')),gastoFam:gv('inGastoFamMes'),nivelesViv:Math.max(1,gv('inNivelesViv')||1),modoViv:gv('inModoViv')||0,preVivBrena:gv('inPreVivBrena')||475};
     const fP=1+p.varPrecios,fC=1+p.varCostos;
@@ -1397,7 +1414,9 @@
     $('estadoChips').innerHTML=ESTADOS.map(e=>`<button class="echip${(caso.estado||'EXPLORACIÓN')===e?' on':''}" data-estado="${e}">${e}</button>`).join('');
     document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>cambiarEstado(b.dataset.estado));
     $('segSiguiente').value=caso.siguiente_paso||'';
-    $('segLog').textContent=caso.notas_seguimiento||'Sin notas todavía.'+(caso.caso_id?'':' Guarda el caso primero.');
+    const _sinReu=(caso.notas_seguimiento||'').split('\n').filter(l=>!l.trim().startsWith('📅')).join('\n');
+    $('segLog').textContent=_sinReu||('Sin notas todavía.'+(caso.caso_id?'':' Guarda el caso primero.'));
+    renderReuniones();
   }
   function aplicarCasoRemoto(obj){
     Object.keys(obj).forEach(kk=>{if(/^in[A-Z]/.test(kk)&&obj[kk]!==''&&isFinite(Number(obj[kk])))setControl(kk,Number(obj[kk]))});
@@ -1494,6 +1513,11 @@
   $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
+  // ---- Track de reuniones del PPP (se persiste en notas_seguimiento del caso) ----
+  function parseReuniones(){return (caso.notas_seguimiento||'').split('\n').map(l=>l.trim()).filter(l=>l.indexOf('\u{1F4C5}')===0).map(l=>{const p=l.replace(/^\u{1F4C5}\s*/u,'').split(' ¦ ');return{fecha:(p[0]||'').trim(),titulo:(p[1]||'').trim(),resumen:(p[2]||'').trim(),minuta:(p[3]||'').replace(/^MIN:/,'').trim(),transcripcion:(p[4]||'').replace(/^TRANS:/,'').trim(),responsables:(p[5]||'').trim()}}).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)))}
+  function renderReuniones(){const box=$('reuLog');if(!box)return;const rs=parseReuniones();if(!rs.length){box.innerHTML='<p class="note">Aún no hay reuniones registradas. Agrega la primera abajo.</p>';return}box.innerHTML=rs.map((r,i)=>`<div class="reu-card"><div class="reu-head" data-i="${i}"><b>${esc(r.fecha)}</b> · ${esc(r.titulo)}<span class="reu-chev">▸</span></div><div class="reu-body" id="reuBody${i}">${r.resumen?`<p>${esc(r.resumen)}</p>`:''}${r.responsables?`<p class="note">Asistentes / responsables: ${esc(r.responsables)}</p>`:''}<div class="reu-links">${r.minuta?`<a class="small-btn" href="${esc(r.minuta)}" target="_blank" rel="noopener">Ver minuta · lo que se propuso</a>`:''}${r.transcripcion?`<a class="small-btn secondary" href="${esc(r.transcripcion)}" target="_blank" rel="noopener">Transcripción</a>`:''}</div></div></div>`).join('');box.querySelectorAll('.reu-head').forEach(h=>h.onclick=()=>{const b=$('reuBody'+h.dataset.i),c=h.querySelector('.reu-chev');if(b)b.classList.toggle('open');if(c)c.classList.toggle('open')})}
+  $('btnReuniones').onclick=()=>{const p=$('reuPanel');p.classList.toggle('on');if(p.classList.contains('on'))renderReuniones()};
+  $('btnReuAdd').onclick=()=>{if(!caso.caso_id){toast('Guarda el caso primero');return}const f=$('reuFecha').value.trim(),t=$('reuTitulo').value.trim(),s=$('reuResumen').value.trim(),m=$('reuMin').value.trim(),tr=$('reuTrans').value.trim(),re=$('reuResp').value.trim();if(!f||!t){toast('Pon al menos fecha y título');return}const linea='\u{1F4C5} '+[f,t,s,'MIN:'+m,'TRANS:'+tr,re].join(' ¦ ');caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+linea;['reuFecha','reuTitulo','reuResumen','reuMin','reuTrans','reuResp'].forEach(id=>{const e=$(id);if(e)e.value=''});renderReuniones();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:linea,request_id:nuevoRequestId()},'Reunión agregada al track')};
   $('btnWhats').onclick=whatsApp;
   $('refreshJson').onclick=refreshJson;$('applyJson').onclick=applyJson;$('exportJson').onclick=exportJson;
   $('gateBtn').onclick=intentarEntrar;$('gateClave').addEventListener('keydown',e=>{if(e.key==='Enter')intentarEntrar()});
