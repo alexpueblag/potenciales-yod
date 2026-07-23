@@ -133,7 +133,29 @@
   .kpi-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
   .kpi-val{font-size:14px;font-weight:800;letter-spacing:-.3px}
   .drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease;background:#f6f3ed;margin:0 -16px -16px;padding:0 16px}
-  .drawer.active{max-height:3800px;opacity:1;padding:16px;border-top:1px solid var(--linea);margin-top:16px}
+  .modo-lotes{margin:2px 0 10px}
+  .modo-lotes button{width:100%;display:block;text-align:left;background:rgba(35,29,20,.04);border:1px dashed var(--linea);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.18s;font-family:inherit;color:var(--text)}
+  .modo-lotes button:hover{border-color:var(--gold);background:rgba(185,139,60,.08)}
+  .modo-lotes button.on{border-style:solid;border-color:var(--gold);background:rgba(185,139,60,.13)}
+  .modo-lotes b{display:block;font-size:12px;font-weight:800;margin-bottom:2px}
+  .modo-lotes b i{margin-right:6px;color:var(--gold)}
+  .modo-lotes span{display:block;font-size:10.5px;line-height:1.45;color:var(--muted)}
+  .drawer.active{max-height:none;opacity:1;padding:16px;border-top:1px solid var(--linea);margin-top:16px}
+  /* temas plegables: cada subheading manda sobre el bloque que le sigue */
+  .subheading.tema-head{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;margin:14px -8px 0;padding:9px 10px;border-radius:9px;border:1px solid transparent;transition:background .18s,border-color .18s}
+  .subheading.tema-head:first-child{margin-top:0}
+  .subheading.tema-head:hover{background:rgba(35,29,20,.05);border-color:var(--linea)}
+  .subheading.tema-head:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .tema-head .tema-chev{flex:0 0 auto;width:13px;height:13px;transition:transform .22s ease;opacity:.6}
+  .tema-head[aria-expanded="true"] .tema-chev{transform:rotate(90deg);opacity:1}
+  .tema-head .tema-txt{flex:1 1 auto;min-width:0}
+  .tema-head .tema-n{flex:0 0 auto;font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--muted);background:rgba(35,29,20,.07);border-radius:20px;padding:2px 8px;text-transform:none}
+  .tema-head[aria-expanded="true"] .tema-n{background:var(--gold);color:#17140F}
+  .tema-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;margin:0 -8px}
+  .tema-body>.tema-inner{overflow:hidden;min-height:0;padding:0 8px}
+  .tema-body.abierto{grid-template-rows:1fr}
+  .tema-body.abierto>.tema-inner{padding:8px 8px 4px}
+  @media (prefers-reduced-motion:reduce){.tema-body,.tema-head .tema-chev{transition:none}}
   .input-group{margin-bottom:15px}.input-group:last-child{margin-bottom:4px}
   .input-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}
   .input-header label{font-size:11px;font-weight:800;color:var(--suave);text-transform:uppercase}
@@ -483,9 +505,11 @@
         <div class="input-group"><div class="input-header"><label>Viviendas por lote · niveles (1 unifamiliar · 4 social vertical)</label><div class="val-display" data-input="inNivelesViv">1</div></div><input type="range" id="inNivelesViv" min="1" max="4" step="1" value="1" data-color="var(--green)"></div>
         <div class="input-group"><div class="input-header"><label>Modo vivienda (0 = urbanizar y vender lotes · 1 = vender en breña a Infonavit)</label><div class="val-display" data-input="inModoViv">0</div></div><input type="range" id="inModoViv" min="0" max="1" step="1" value="0" data-color="var(--green)"></div>
         <div class="input-group"><div class="input-header"><label>Precio en breña a Infonavit ($/m² de tierra bruta)</label><div class="val-display" data-input="inPreVivBrena">$475</div></div><input type="range" id="inPreVivBrena" min="300" max="900" step="25" value="475" data-color="var(--green)" data-format="money"></div>
-        <div class="subheading">Estrategia por producto · vender o quedar rentando</div>
-        <div class="estrategia-row"><span class="et">Naves</span><button type="button" class="estr-btn on" data-estr="naves" data-val="0"><i class="ti ti-cash"></i>Vender</button><button type="button" class="estr-btn" data-estr="naves" data-val="1"><i class="ti ti-key"></i>Rentar (BTR)</button></div>
+        <div class="subheading">Estrategia por producto · construir, rentar o sólo vender suelo</div>
+        <div class="modo-lotes"><button type="button" id="btnSoloLotes"><i class="ti ti-map-2"></i><b>Poner todo en lotes</b><span>Nadie construye ni renta: se urbaniza y se vende puro terreno a terceros.</span></button></div>
+        <div class="estrategia-row"><span class="et">Naves</span><button type="button" class="estr-btn on" data-estr="naves" data-val="0"><i class="ti ti-building-factory"></i>Construir y vender</button><button type="button" class="estr-btn" data-estr="naves" data-val="1"><i class="ti ti-key"></i>Rentar (BTR)</button><button type="button" class="estr-btn" data-estr="naves" data-val="2"><i class="ti ti-map-2"></i>Sólo vender el lote</button></div>
         <div class="estrategia-row"><span class="et">Comercial</span><button type="button" class="estr-btn on" data-estr="com" data-val="0"><i class="ti ti-cash"></i>Vender lotes</button><button type="button" class="estr-btn" data-estr="com" data-val="1"><i class="ti ti-building-store"></i>Renta de suelo (ground lease)</button></div>
+        <div class="input-group"><div class="input-header"><label>Lote de naves urbanizado ($/m² de terreno)</label><div class="val-display" data-input="inPreNaveLote">$2,600</div></div><input type="range" id="inPreNaveLote" min="800" max="6000" step="50" value="2600" data-color="var(--gold)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>Renta de nave ($/m²/mes)</label><div class="val-display" data-input="inRentaNave">$95</div></div><input type="range" id="inRentaNave" min="40" max="250" step="5" value="95" data-color="var(--gold)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>Renta de lote comercial ($/m²/mes)</label><div class="val-display" data-input="inRentaCom">$35</div></div><input type="range" id="inRentaCom" min="10" max="150" step="5" value="35" data-color="var(--teal)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>Vacancia (%)</label><div class="val-display" data-input="inVacancia">5%</div></div><input type="range" id="inVacancia" min="0" max="30" step="1" value="5" data-color="var(--orange)" data-format="pct"></div>
@@ -570,11 +594,11 @@
         <div class="input-group"><div class="input-header"><label>TIR objetivo del desarrollador (%)</label><div class="val-display" data-input="inTirObjetivo">25.0%</div></div><input type="range" id="inTirObjetivo" min="0" max="100" step=".5" value="25" data-color="var(--orange)" data-format="pct1"></div>
         <div class="micro-readout" id="readCapital">Calculando flujo…</div></div></article>
 
-    <article class="card" data-card="dAgua"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)"><i class="ti ti-droplet"></i></div><div class="card-title">Agua, Energía &amp; Polo</div></div><div class="edit-pill">AJUSTAR</div></div>
+    <article class="card" data-card="dAgua"><div class="card-header"><div class="title-wrap"><div class="icon-box" style="background:#7fd4e81f;color:var(--teal)"><i class="ti ti-droplet"></i></div><div class="card-title">Servicios</div></div><div class="edit-pill">AJUSTAR</div></div>
       <div class="kpi-grid"><div class="kpi-box full" id="boxGate" style="border-color:#e0605a66;background:#e0605a12"><span class="kpi-lbl" style="color:#f4b8b3">Candado del agua (gate) — bloqueante</span><span class="kpi-val c-red" id="lblGate">EN VEDA · sin resolver</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda de agua</span><span class="kpi-val c-blue" id="lblAguaDia">0 m³/día</span></div><div class="kpi-box"><span class="kpi-lbl">Demanda eléctrica</span><span class="kpi-val c-orange" id="lblKva">0 MVA</span></div><div class="kpi-box"><span class="kpi-lbl">Empleos estimados</span><span class="kpi-val c-green" id="lblEmpleos">0</span></div><div class="kpi-box"><span class="kpi-lbl">Eficiencia de suelo</span><span class="kpi-val c-green" id="lblEficSuelo">—</span></div></div>
       <div class="drawer" id="dAgua"><div class="subheading">Candado del agua (veda Costa de Hermosillo)</div>
         <div class="land-modes"><button type="button" class="gate-mode land-mode active" data-gate="0"><b>⚠ En veda · sin resolver</b><span>Pozo nuevo es ilegal. El caso queda en rojo.</span></button><button type="button" class="gate-mode land-mode" data-gate="1"><b>En trámite</b><span>Gestoría CONAGUA / derechos en proceso.</span></button><button type="button" class="gate-mode land-mode" data-gate="2"><b>Derechos asignados</b><span>Fuente de agua resuelta y documentada.</span></button></div>
-        <div class="subheading">Dotaciones del polo</div>
+        <div class="subheading">Dotaciones</div>
         <div class="subheading">Giro de los inquilinos — mueve carga, agua, viajes, cajones y residuos de un jalón</div>
         <div class="land-modes" id="girosNave"></div>
         <div class="land-modes" id="girosMacro" style="margin-top:8px"></div>
@@ -638,12 +662,12 @@
         <div class="input-group"><div class="input-header"><label>Reserva de crecimiento (%)</label><div class="val-display" data-input="inReservaElec">20%</div></div><input type="range" id="inReservaElec" min="0" max="50" step="5" value="20" data-color="var(--orange)" data-format="pct"></div>
         <div class="input-group"><div class="input-header"><label>Costo capacidad CFE ($/kVA)</label><div class="val-display" data-input="inPuKvaCFE">$2,450</div></div><input type="range" id="inPuKvaCFE" min="0" max="6000" step="50" value="2450" data-color="var(--orange)" data-format="money"></div>
         <div class="input-group"><div class="input-header"><label>m² de nave por empleo</label><div class="val-display" data-input="inM2Empleo">40</div></div><input type="range" id="inM2Empleo" min="15" max="150" step="5" value="40" data-color="var(--green)"></div>
-        <div class="subheading">Polo mixto · demografía y comercio</div>
+        <div class="subheading">Vivienda · demografía y comercio</div>
         <div class="input-group"><div class="input-header"><label>Habitantes por vivienda</label><div class="val-display" data-input="inHabPorViv">3.5</div></div><input type="range" id="inHabPorViv" min="1" max="6" step=".1" value="3.5" data-color="var(--green)" data-format="decimal"></div>
         <div class="input-group"><div class="input-header"><label>Trabajadores por hogar (PEA)</label><div class="val-display" data-input="inTrabPorViv">1.2</div></div><input type="range" id="inTrabPorViv" min=".5" max="3" step=".1" value="1.2" data-color="var(--green)" data-format="decimal"></div>
         <div class="input-group"><div class="input-header"><label>m² de lote comercial por empleo</label><div class="val-display" data-input="inM2EmpleoCom">50</div></div><input type="range" id="inM2EmpleoCom" min="20" max="200" step="5" value="50" data-color="var(--teal)"></div>
         <div class="input-group"><div class="input-header"><label>Gasto familiar mensual ($ MXN)</label><div class="val-display" data-input="inGastoFamMes">$8,000</div></div><input type="range" id="inGastoFamMes" min="2000" max="30000" step="500" value="8000" data-color="var(--teal)" data-format="money"></div>
-        <div class="micro-readout" id="readPolo">Calculando demografía del polo…</div>
+        <div class="micro-readout" id="readPolo">Calculando demografía…</div>
         <div class="micro-readout" id="readAgua">Calculando dotaciones…</div></div></article>
   </section>
 
@@ -897,7 +921,7 @@
   function inputValues(){const o=Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]));o.inGateAgua=gateAgua;o.inEstrNaves=estrNaves;o.inEstrCom=estrCom;return o}
   function updateColor(c){const min=Number(c.min),max=Number(c.max),v=Number(c.value),x=Math.max(0,Math.min(100,(v-min)/(max-min)*100));c.style.background=`linear-gradient(to right, ${c.dataset.color||'var(--gold)'} ${x}%, rgba(35,29,20,.10) ${x}%)`}
   function displayValue(c){const v=Number(c.value),f=c.dataset.format||'';if(f==='pct')return pct(v,0);if(f==='pct1')return pct(v,1);if(f==='money')return fmtMoney(v);if(f==='decimal')return v.toFixed(1);return fmtN(v)}
-  function setControl(id,value){if(id==='inGateAgua'){gateAgua=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='inEstrNaves'){estrNaves=Number(value)?1:0;return}if(id==='inEstrCom'){estrCom=Number(value)?1:0;return}const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
+  function setControl(id,value){if(id==='inGateAgua'){gateAgua=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='inEstrNaves'){estrNaves=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='__inEstrNavesViejo'){estrNaves=Number(value)?1:0;return}if(id==='inEstrCom'){estrCom=Number(value)?1:0;return}const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
   function readPills(){document.querySelectorAll('.val-display[data-input]').forEach(p=>{p.contentEditable='true';p.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();p.blur()}});p.addEventListener('blur',()=>{const raw=p.textContent.replace(/[^0-9.\-]/g,''),n=Number(raw);if(Number.isFinite(n))setControl(p.dataset.input,n);calculate()})})}
   function syncPills(){controls.forEach(c=>{const p=document.querySelector(`.val-display[data-input="${c.id}"]`);if(p&&document.activeElement!==p)p.textContent=displayValue(c);updateColor(c)})}
     const tipNarrow=()=>window.matchMedia('(max-width:700px)').matches;
@@ -1010,7 +1034,7 @@
       pctVial:gv('inPctVialidades')/100,pctBanq:gv('inPctBanquetas')/100,pctVerdes:gv('inPctVerdes')/100,pctEquip:gv('inPctEquipamiento')/100,pctRet:gv('inPctRetencion')/100,pctDDV:gv('inPctDDV')/100,
       mixNaves:gv('inMixNaves')/100,mixMacro:gv('inMixMacro')/100,mixCom:gv('inMixCom')/100,mixViv:gv('inMixViv')/100,cosNaves:gv('inCosNaves')/100,efSubdiv:gv('inEfSubdiv')/100,
       m2Nave:Math.max(1,gv('inM2Nave')),m2Macro:Math.max(1,gv('inM2Macro')),m2LoteCom:Math.max(1,gv('inM2LoteCom')),m2LoteViv:Math.max(1,gv('inM2LoteViv')),
-      preNave:gv('inPreNave'),preMacro:gv('inPreMacro'),preCom:gv('inPreCom'),preVivLote:gv('inPreVivLote'),
+      preNave:gv('inPreNave'),preNaveLote:gv('inPreNaveLote'),preMacro:gv('inPreMacro'),preCom:gv('inPreCom'),preVivLote:gv('inPreVivLote'),
       puDespalme:gv('inPuDespalme'),puTerracerias:gv('inPuTerracerias'),puPavimento:gv('inPuPavimento'),puGuarniciones:gv('inPuGuarniciones'),puRedAgua:gv('inPuRedAgua'),puDrenaje:gv('inPuDrenaje'),puPluvial:gv('inPuPluvial'),puMT:gv('inPuMT'),puFibra:gv('inPuFibra'),puAlumbrado:gv('inPuAlumbrado'),puJardineria:gv('inPuJardineria'),puBarda:gv('inPuBarda'),
       puPtar:gv('inPuPtar'),puSubestacion:gv('inPuSubestacion'),puDerechosAgua:gv('inPuDerechosAgua'),puCisterna:gv('inPuCisterna'),puCaseta:gv('inPuCaseta'),puSenaletica:gv('inPuSenaletica'),
       costoNave:gv('inCostoNave'),
@@ -1031,7 +1055,7 @@
       puLsPtar:gv('inPuLsPtar')||675000,puM3Cisterna:gv('inPuM3Cisterna')||2535,puM3Derechos:gv('inPuM3Derechos')||11.5,puM3Vaso:gv('inPuM3Vaso')||150,puM2Acopio:gv('inPuM2Acopio')||3500,pctEstacDev:(gv('inPctEstacDev')||100)/100,
       m2xCajonNave:gv('inM2XCajonNave')||400,m2xCajonMacro:gv('inM2XCajonMacro')||500,m2xCajonCom:gv('inM2XCajonCom')||200,m2Cajon:gv('inM2Cajon')||25,m2xCamion:gv('inM2XCamion')||200,m2Camion:gv('inM2Camion')||120,
       viajesNave:gv('inViajesNave')||7,viajesMacro:gv('inViajesMacro')||5,viajesCom:gv('inViajesCom')||41,viajesViv:gv('inViajesViv')||1,pctPesados:(gv('inPctPesados')||15)/100,pcePesado:gv('inPCEPesado')||2,repartoDir:(gv('inRepartoDir')||60)/100,capCarril:gv('inCapCarril')||1900,carrilesAcceso:Math.max(1,gv('inCarrilesAcceso')||2),
-      estrNaves:Number(vals.inEstrNaves)?1:0,estrCom:Number(vals.inEstrCom)?1:0,rentaNave:gv('inRentaNave'),rentaCom:gv('inRentaCom'),vacancia:gv('inVacancia')/100,opex:gv('inOpex')/100,capRate:gv('inCapRate')/100,mesesSalida:Math.max(0,Math.round(gv('inMesesSalida'))),
+      estrNaves:Math.max(0,Math.min(2,Math.round(Number(vals.inEstrNaves)||0))),estrCom:Number(vals.inEstrCom)?1:0,rentaNave:gv('inRentaNave'),rentaCom:gv('inRentaCom'),vacancia:gv('inVacancia')/100,opex:gv('inOpex')/100,capRate:gv('inCapRate')/100,mesesSalida:Math.max(0,Math.round(gv('inMesesSalida'))),
       habViv:gv('inHabPorViv'),trabViv:gv('inTrabPorViv'),m2EmpleoCom:Math.max(1,gv('inM2EmpleoCom')),gastoFam:gv('inGastoFamMes'),nivelesViv:Math.max(1,gv('inNivelesViv')||1),modoViv:gv('inModoViv')||0,preVivBrena:gv('inPreVivBrena')||475};
     const fP=1+p.varPrecios,fC=1+p.varCostos;
     // 1-3) terreno y cuadro de áreas
@@ -1110,9 +1134,15 @@
     const costoAcopio=areaAcopio*p.puM2Acopio;             // almacén temporal de residuos
     const camionesNaves=Math.ceil(m2NavesConst/Math.max(1,p.m2xCamion));
     const supEstacNaves=cajNaves*p.m2Cajon+camionesNaves*p.m2Camion;
-    const costoEstacNaves=supEstacNaves*p.puPavimento*p.pctEstacDev;  // patio y cajones de las naves que sí construye el desarrollador
+    const costoEstacNaves=(p.estrNaves===2?0:supEstacNaves*p.puPavimento*p.pctEstacDev);  // patio y cajones de las naves que sí construye el desarrollador
     const costoServicios=costoPtar+costoCisterna+costoDerechos+costoVaso+costoAcopio+subestacionCFE+costoEstacNaves;
     // Estrategia por producto (V15): vender o quedar rentando (BTR / ground lease)
+    // Solo lote (V16): el segmento de naves se urbaniza y se vende como terreno; el comprador construye.
+    const loteNaves=p.estrNaves===2&&terrNaves>0;
+    const m2NavesLote=loteNaves?terrNaves*p.efSubdiv:0;
+    const supLoteNave=p.cosNaves>0?p.m2Nave/p.cosNaves:0;              // terreno que ocupaba cada nave
+    const nNavesLote=loteNaves&&supLoteNave>0?Math.floor(m2NavesLote/supLoteNave):0;
+    const m2NavesLoteVend=nNavesLote*supLoteNave;
     const rentaN=p.estrNaves===1&&nNaves>0,rentaC=p.estrCom===1&&nCom>0,noiFactor=(1-p.vacancia)*(1-p.opex);
     const noiEstabNaves=rentaN?m2NavesConst*p.rentaNave*fP*12*noiFactor:0,terminalNaves=rentaN&&p.capRate>0?noiEstabNaves/p.capRate:0;
     const noiEstabCom=rentaC?m2ComVend*p.rentaCom*fP*12*noiFactor:0,terminalCom=rentaC&&p.capRate>0?noiEstabCom/p.capRate:0;
@@ -1123,11 +1153,11 @@
     const urbVariable=((superficie-vivExcl)*p.puDespalme+(m2Vial+vendible-vivExcl)*p.puTerracerias+(m2Vial*p.puPavimento+m2Banq*p.puGuarniciones+mlVial*(p.puRedAgua+p.puDrenaje+p.puPluvial+p.puMT+p.puFibra)+luminarias*p.puAlumbrado)*(1-vivFracB)+m2Verdes*p.puJardineria+perimetro*p.puBarda+costoEstacNaves)*fC;
     const urbanizacion=obraFija+urbVariable;
     // 6) construcción de naves (se construyen igual si se venden o se rentan)
-    const construccion=m2NavesConst*p.costoNave*fC,directo=urbanizacion+construccion;
+    const construccion=(loteNaves?0:m2NavesConst*p.costoNave)*fC,directo=urbanizacion+construccion;
     const tierraPago=superficie*p.valorTierraM2*(1-p.aporteTierra);
     // ---- calendario ----
     const mesesUrb=p.etapas*p.mesesUrbEtapa;
-    const finVentaNaves=p.inicioVentas+(nNaves?nNaves/p.absNaves:0),finNaves=rentaN?finVentaNaves+p.mesesEntregaNave+p.mesesSalida+1:finVentaNaves+p.mesesEntregaNave;
+    const uNaves=loteNaves?nNavesLote:nNaves,finVentaNaves=p.inicioVentas+(uNaves?uNaves/p.absNaves:0),finNaves=rentaN?finVentaNaves+p.mesesEntregaNave+p.mesesSalida+1:(loteNaves?finVentaNaves+p.mesesSaldoLote:finVentaNaves+p.mesesEntregaNave);
     const finMacro=p.inicioVentas+(nMacro?nMacro/p.absMacro:0)+p.mesesSaldoLote;
     const finCom=rentaC?p.inicioVentas+(nCom?nCom/p.absCom:0)+1+p.mesesSalida+1:p.inicioVentas+(nCom?nCom/p.absCom:0)+p.mesesSaldoLote;
     const finViv=p.inicioVentas+(nViv?nViv/p.absViv:0)+p.mesesSaldoLote;
@@ -1150,13 +1180,14 @@
     const precioNaveU=p.m2Nave*p.preNave*fP,precioMacroU=p.m2Macro*p.preMacro*fP,precioComU=p.m2LoteCom*p.preCom*fP,precioVivU=p.m2LoteViv*p.preVivLote*fP;
     let rentasNaves=0,rentasCom=0;
     if(rentaN)rentasNaves=rentaSerie(nNaves,p.absNaves,p.m2Nave,p.rentaNave*fP,p.mesesEntregaNave,true,terminalNaves);
+    else if(loteNaves)ventaSerie(nNavesLote,p.absNaves,supLoteNave*p.preNaveLote*fP,p.engLote,p.mesesSaldoLote,false);
     else ventaSerie(nNaves,p.absNaves,precioNaveU,p.engNave,0,true);
     ventaSerie(nMacro,p.absMacro,precioMacroU,p.engLote,p.mesesSaldoLote,false);
     if(rentaC)rentasCom=rentaSerie(nCom,p.absCom,p.m2LoteCom,p.rentaCom*fP,1,false,terminalCom);
     else ventaSerie(nCom,p.absCom,precioComU,p.engLote,p.mesesSaldoLote,false);
     ventaSerie(nViv,p.absViv,precioVivU,p.engLote,p.mesesSaldoLote,false);
     // ingresos por producto (venta o renta+salida) — ya con el calendario resuelto
-    const ingNaves=rentaN?rentasNaves+terminalNaves:m2NavesConst*p.preNave*fP;
+    const ingNaves=rentaN?rentasNaves+terminalNaves:(loteNaves?m2NavesLoteVend*p.preNaveLote*fP:m2NavesConst*p.preNave*fP);
     const ingCom=rentaC?rentasCom+terminalCom:m2ComVend*p.preCom*fP;
     const ingresos=ingNaves+ingMacro+ingCom+ingViv;
     // 7) blandos y 8) resumen económico
@@ -1205,7 +1236,7 @@
     const colas=[['naves',finNaves,nNaves],['macro-lotes',finMacro,nMacro],['comercial',finCom,nCom],['vivienda',finViv,nViv]].filter(c=>c[2]>0);
     const cola=colas.length?colas.reduce((a,b)=>b[1]>a[1]?b:a):['—',0,0],colaProducto=cola[0],colaMes=Math.ceil(cola[1]);
     return {p,superficie,perimetro,sumaCesiones,vendiblePct,vendible,m2Vial,m2Banq,m2Verdes,m2Equip,m2Ret,m2DDV,mlVial,luminarias,mixTotal,mixValid,valido:mixValid&&sumaCesiones<=1.0001&&vendible>0,
-      terrNaves,nNaves,m2NavesConst,ingNaves,terrMacro,nMacro,m2MacroVend,ingMacro,terrCom,nCom,m2ComVend,ingCom,terrViv,nViv,m2VivVend,ingViv,ingresos,
+      terrNaves,nNaves,m2NavesConst,ingNaves,loteNaves,nNavesLote,m2NavesLoteVend,supLoteNave,terrMacro,nMacro,m2MacroVend,ingMacro,terrCom,nCom,m2ComVend,ingCom,terrViv,nViv,m2VivVend,ingViv,ingresos,
       obraFija,urbVariable,urbanizacion,construccion,directo,blandosDirecto,blandosIngresos,blandos,tierraPago,costoProyecto,utilidadPre,margenPre,
       mesesUrb,totalMonths,flows,urbSerie,constSerie,debtCap,peak,peakMonth,fundingGap,interest,cashInterest,feeDebt,debt,cash,equityUsed,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,
       utilidadFinal,margenFinal,duenoUtilidad,ownerTotal,devDist,devIrr,devMoic,valorTerrenoM2,distribuible,
@@ -1343,11 +1374,12 @@
     const tirEl=$('heroTir');tirEl.textContent=(r.devIrr===null?'—':pct(r.devIrr*100,1))+' · '+fmtM(r.peak);tirEl.className='big serif '+(r.devIrr===null?'':r.devIrr>=r.p.tirTarget?'status-ok':'status-bad');txt('heroTirSub','vs objetivo '+pct(r.p.tirTarget*100,1)+' · múltiplo del capital (MOIC) '+(r.devMoic===null?'—':r.devMoic.toFixed(2)+'x')+' · '+r.totalMonths+' meses');
     const hgate=$('heroGate');hgate.textContent=['⚠ agua: en veda','agua: en trámite','agua: resuelta'][r.p.gateAgua];hgate.className='gate-agua g'+r.p.gateAgua;
     txt('lblFxF',fmtN(r.p.frente)+' × '+fmtN(r.p.fondo)+' m');txt('lblSupPer',fmtHa(r.superficie)+' · '+fmtN(r.perimetro)+' ml');txt('lblVendible',fmtN(r.vendible)+' m² · '+pct(r.vendiblePct*100,0));txt('lblVialidades',fmtN(r.m2Vial)+' m² · '+fmtN(r.mlVial)+' ml');
-    txt('lblNaves',r.rentaN?fmtN(r.nNaves)+' en renta (BTR) · flujo neto (NOI) '+fmtM(r.noiEstabNaves)+'/año · sale '+fmtM(r.terminalNaves):fmtN(r.nNaves)+' → '+fmtM(r.ingNaves));
+    txt('lblNaves',r.loteNaves?fmtN(r.nNavesLote)+' lotes de '+fmtN(r.supLoteNave)+' m² · sin construir → '+fmtM(r.ingNaves):r.rentaN?fmtN(r.nNaves)+' en renta (BTR) · flujo neto (NOI) '+fmtM(r.noiEstabNaves)+'/año · sale '+fmtM(r.terminalNaves):fmtN(r.nNaves)+' → '+fmtM(r.ingNaves));
     txt('lblMacro',fmtN(r.nMacro)+' → '+fmtM(r.ingMacro));
     txt('lblCom',r.rentaC?fmtN(r.nCom)+' en renta de suelo · flujo neto (NOI) '+fmtM(r.noiEstabCom)+'/año · sale '+fmtM(r.terminalCom):fmtN(r.nCom)+' → '+fmtM(r.ingCom));
     txt('lblViv',fmtN(r.nViv)+' → '+fmtM(r.ingViv));txt('lblIngresoM2',fmtMoney(r.vendible?r.ingresos/r.vendible:0)+' /m²');
     document.querySelectorAll('.estr-btn').forEach(b=>{const v=b.dataset.estr==='naves'?r.p.estrNaves:r.p.estrCom;b.classList.toggle('on',Number(b.dataset.val)===v)});
+    {const bt=$('btnSoloLotes');if(bt)bt.classList.toggle('on',r.p.estrNaves===2&&r.p.estrCom===0)}
     const rp=$('readPolo');if(rp)rp.innerHTML=r.nViv>0?`<b>Demografía del polo:</b> ${fmtN(r.habitantes)} habitantes en ${fmtN(r.viviendasTot)} viviendas · PEA ${fmtN(r.pea)} vs ${fmtN(r.empleos)} empleos (ratio ${r.ratioEmpleoPea===null?'—':r.ratioEmpleoPea.toFixed(2)}: ${r.ratioEmpleoPea>=0.9&&r.ratioEmpleoPea<=1.15?'polo equilibrado — vive y trabaja aquí':'desequilibrado'}) · ${fmtN(r.vehiculos)} vehículos · OMS ${r.omsM2Hab===null?'—':r.omsM2Hab.toFixed(1)+' m² verdes/hab (recomendado 9+)'}. <b>Comercio:</b> gasto interno ${fmtM(r.gastoInternoAnual)}/año → ${r.demandaComM2===null?'—':fmtMoney(r.demandaComM2)+'/m² comercial de demanda'} ${r.demandaComM2===null?'':r.demandaComM2>=20000?'(el retail se sostiene solo con el polo ✓)':r.demandaComM2>=10000?'(justo: necesita algo de carretera)':'(el retail dependerá del tráfico de la carretera)'}`:`<b>Sin vivienda en la mezcla:</b> los ${fmtN(r.empleos)} empleos y ${fmtN(r.vehiculos)} vehículos vienen de naves y comercio; el retail (${fmtN(r.m2ComVend)} m²) depende 100% del tráfico de la Carr. a Kino. Sube el % de vivienda para ver demografía y demanda interna.`;
     txt('lblUrbTotal',fmtM(r.urbanizacion));txt('lblUrbM2',fmtMoney(r.vendible?r.urbanizacion/r.vendible:0));txt('lblLumBarda',fmtN(r.luminarias)+' · '+fmtN(r.perimetro)+' ml');txt('lblObraFija',fmtM(r.obraFija));
     txt('lblConstNaves',fmtM(r.construccion));txt('lblBlandos',fmtM(r.blandos));txt('lblCostoTotal',fmtM(r.costoProyecto)+' · '+fmtMoney(r.costoM2)+'/m²');
@@ -1632,7 +1664,55 @@
   ];
   function labelFor(id){const input=$(id);return input?.closest('.input-group')?.querySelector('label')?.textContent||id}
   function renderFormulas(){$('formulaList').innerHTML=formulaDefs.map((f,i)=>`<div class="formula-row"><b>${f[0]}</b><code>${f[1]}</code><button class="formula-btn" data-formula="${i}">ver</button></div>`).join('');document.querySelectorAll('[data-formula]').forEach(b=>b.onclick=e=>openFormula(Number(e.currentTarget.dataset.formula)))}
-  function openFormula(i){const f=formulaDefs[i],r=state;$('formulaDetail').innerHTML=`<b>${f[0]}</b><br><code>${f[1]}</code><p>${f[3](r)}</p>${f[2].map(id=>`<button class="chip" data-jump="${id}">${labelFor(id)}</button>`).join('')}`;document.querySelectorAll('.chip[data-jump]').forEach(b=>b.onclick=()=>{const el=$(b.dataset.jump);const card=el?.closest('.card');if(card){card.scrollIntoView({behavior:'smooth',block:'center'});el.focus()}})}
+  function openFormula(i){const f=formulaDefs[i],r=state;$('formulaDetail').innerHTML=`<b>${f[0]}</b><br><code>${f[1]}</code><p>${f[3](r)}</p>${f[2].map(id=>`<button class="chip" data-jump="${id}">${labelFor(id)}</button>`).join('')}`;document.querySelectorAll('.chip[data-jump]').forEach(b=>b.onclick=()=>{const el=$(b.dataset.jump);if(!el)return;revelar(el);setTimeout(()=>{el.scrollIntoView({behavior:'smooth',block:'center'});el.focus()},260)})}
+  /* Agrupa el contenido de cada cajón por temas plegables.
+     Se hace en JS sobre el marcado que ya existe: cada .subheading manda
+     sobre todo lo que le sigue hasta el próximo .subheading. */
+  function agruparTemas(){
+    const CHEV='<svg class="tema-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+    document.querySelectorAll('.drawer').forEach(drawer=>{
+      if(drawer.dataset.temas)return;
+      const hijos=[...drawer.children];
+      let inner=null;
+      hijos.forEach(el=>{
+        if(el.classList.contains('subheading')){
+          const txt=el.innerHTML;
+          const body=document.createElement('div'); body.className='tema-body';
+          inner=document.createElement('div'); inner.className='tema-inner';
+          body.appendChild(inner);
+          el.classList.add('tema-head');
+          el.innerHTML=CHEV+'<span class="tema-txt">'+txt+'</span><span class="tema-n"></span>';
+          el.setAttribute('role','button'); el.setAttribute('tabindex','0');
+          el.setAttribute('aria-expanded','false');
+          el.insertAdjacentElement('afterend',body);
+          el._body=body;
+        } else if(inner){ inner.appendChild(el); }
+      });
+      /* rotular cuántas perillas trae cada tema y abrir el primero */
+      const heads=[...drawer.querySelectorAll('.tema-head')];
+      heads.forEach((hd,i)=>{
+        const k=hd._body.querySelectorAll('.input-group').length;
+        hd.querySelector('.tema-n').textContent=k?(k+(k===1?' perilla':' perillas')):'ver';
+        hd.onclick=ev=>{ev.stopPropagation();toggleTema(hd)};
+        hd.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();ev.stopPropagation();toggleTema(hd)}};
+        if(i===0)toggleTema(hd,true);
+      });
+      drawer.dataset.temas=heads.length;
+    });
+  }
+  function toggleTema(head,forzarAbrir){
+    const body=head._body,abre=forzarAbrir!==undefined?forzarAbrir:!body.classList.contains('abierto');
+    body.classList.toggle('abierto',abre);
+    head.setAttribute('aria-expanded',abre?'true':'false');
+  }
+  /* Si algo salta a un control escondido, se abre su tema primero. */
+  function revelar(el){
+    if(!el)return;
+    const card=el.closest('.card');
+    if(card&&!card.classList.contains('open'))toggleDrawer(card);
+    const body=el.closest('.tema-body');
+    if(body){const head=body.previousElementSibling;if(head&&head.classList.contains('tema-head'))toggleTema(head,true)}
+  }
   function toggleDrawer(card){const drawer=$(card.dataset.card),was=drawer.classList.contains('active');document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'));document.querySelectorAll('.edit-pill').forEach(e=>e.textContent='AJUSTAR');if(!was){drawer.classList.add('active');card.classList.add('open');card.querySelector('.edit-pill').textContent='CERRAR';setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'center'}),150)}}
   /* ================== JSON / RESUMEN ================== */
   function resumenActual(){const r=state||calculate();const num=(v,d=0)=>v===null||v===undefined||!isFinite(v)?'':Number(v.toFixed(d));return{ventas:num(r.ingresos),costo_proyecto:num(r.costoProyecto),utilidad:num(r.utilidadFinal),margen_pct:num(r.margenFinal*100,2),tir_dev_pct:r.devIrr===null?'':num(r.devIrr*100,2),moic_dev:r.devMoic===null?'':num(r.devMoic,2),pico_deuda:num(r.peak),faltante_capital:num(r.fundingGap),resultado_dueno:num(r.ownerTotal),resultado_dev:num(r.devDist),meses_totales:r.totalMonths,pico_mes:r.peakMonth,deuda_cierre:num(r.debt),intereses_mas_fee:num(r.interest+r.feeDebt),superficie_ha:num(r.superficie/10000,2),vendible_m2:num(r.vendible),vendible_pct:num(r.vendiblePct*100,1),naves:r.nNaves,macrolotes_n:r.nMacro,lotes_com_n:r.nCom,lotes_viv_n:r.nViv,ml_vialidades:num(r.mlVial),luminarias:r.luminarias,barda_ml:num(r.perimetro),urbanizacion_total:num(r.urbanizacion),urb_m2_vendible:num(r.vendible?r.urbanizacion/r.vendible:0),construccion_total:num(r.construccion),blandos_total:num(r.blandos),obra_fija_total:num(r.obraFija),ingreso_m2_vendible:num(r.vendible?r.ingresos/r.vendible:0),costo_m2_vendible:num(r.vendible?r.costoProyecto/r.vendible:0),utilidad_pre_fin:num(r.utilidadPre),valor_terreno_m2:num(r.valorTerrenoM2),empleos:r.empleos,agua_m3_dia:num(r.aguaDia,1),agua_ls_max:num(r.qMaxLs,2),agua_ls_ha:num(r.lsHa,3),agua_m3_anual:num(r.aguaAnual),cisterna_m3:num(r.cisternaM3,1),agua_sanitaria_m3:num(r.aguaSanit,1),agua_riego_m3:num(r.aguaRiego,1),coef_escurrimiento:num(r.cPond,3),gasto_pluvial_m3s:num(r.qDev,3),incremento_pluvial_m3s:num(r.deltaQ,3),vol_retencion_m3:num(r.volRetencion),area_retencion_req_m2:num(r.areaRetenReq),viajes_hora_pico:num(r.viajesTot),viajes_autos_equiv:num(r.viajesEquiv),carriles_requeridos:num(r.carrilesReq,2),cajones_requeridos:r.cajonesTot,camiones_maniobra:r.camionesTot,sup_estacionamiento_m2:num(r.supEstac),agua_residual_m3dia:num(r.aguaResidual,1),ptar_ls:num(r.ptarLs,2),reuso_m3dia:num(r.reusoDisp,1),residuos_kg_dia:num(r.residuosDia),area_acopio_m2:num(r.areaAcopio,1),verde_req_nmx_m2:num(r.verdeReqPI),costo_servicios_total:num(r.costoServicios),costo_ptar:num(r.costoPtar),costo_cisterna:num(r.costoCisterna),costo_derechos_agua:num(r.costoDerechos),costo_vaso_retencion:num(r.costoVaso),costo_estac_naves:num(r.costoEstacNaves),demanda_kva:num(r.demandaKva),carga_instalada_kva:num(r.kvaInstalada),demanda_contrato_kva:num(r.demandaContrato),densidad_kva_ha:num(r.densidadKvaHa),subestacion_cfe:num(r.subestacionCFE),gate_agua:r.p.gateAgua,var_precios_pct:num(r.p.varPrecios*100,0),var_costos_pct:num(r.p.varCostos*100,0),habitantes_polo:r.habitantes,pea:r.pea,ratio_empleo_pea:r.ratioEmpleoPea===null?'':num(r.ratioEmpleoPea,2),viviendas_tot:r.viviendasTot,viv_por_empleo:r.vivPorEmpleo==null?'':num(r.vivPorEmpleo,2),modo_viv:r.p.modoViv,niveles_viv:r.p.nivelesViv,vehiculos:r.vehiculos,oms_m2_hab:r.omsM2Hab===null?'':num(r.omsM2Hab,1),gasto_interno_anual:num(r.gastoInternoAnual),demanda_com_m2:r.demandaComM2===null?'':num(r.demandaComM2),estrategia_naves:r.p.estrNaves,estrategia_com:r.p.estrCom,rentas_totales:num(r.rentasNaves+r.rentasCom),noi_anual:num(r.noiAnualTotal),valor_salida_renta:num(r.valorSalidaRenta),coc_pct:r.equityUsed>0&&r.noiAnualTotal>0?num(r.noiAnualTotal/r.equityUsed*100,2):''}}
@@ -1747,9 +1827,11 @@
   function cerrarOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on'))}
   /* ================== ARRANQUE ================== */
   document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
+  agruparTemas();
   controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installGiros();installFactorHelp();installMetricHelp();
   setTimeout(()=>{if(clave&&!modoLocal)cargarCatalogo()},0);
   document.querySelectorAll('.gate-mode').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();gateAgua=Number(b.dataset.gate);calculate();pintaCaso()}));
+  $('btnSoloLotes').addEventListener('click',e=>{e.stopPropagation();const todoLotes=estrNaves===2&&estrCom===0;estrNaves=todoLotes?0:2;estrCom=0;calculate();pintaCaso&&pintaCaso()});
   document.querySelectorAll('.estr-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();if(b.dataset.estr==='naves')estrNaves=Number(b.dataset.val);else estrCom=Number(b.dataset.val);calculate()}));
   $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
   $('gGuardarSolo').onclick=()=>guardarCaso(false);$('gGuardarEnviar').onclick=()=>guardarCaso(true);$('gCancelar').onclick=cerrarOverlays;
