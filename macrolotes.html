@@ -133,6 +133,7 @@
   .kpi-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
   .kpi-val{font-size:14px;font-weight:800;letter-spacing:-.3px}
   .drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease;background:#f6f3ed;margin:0 -16px -16px;padding:0 16px}
+  .rep-btn{}
   .modo-lotes{margin:2px 0 10px}
   .modo-lotes button{width:100%;display:block;text-align:left;background:rgba(35,29,20,.04);border:1px dashed var(--linea);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.18s;font-family:inherit;color:var(--text)}
   .modo-lotes button:hover{border-color:var(--gold);background:rgba(185,139,60,.08)}
@@ -570,8 +571,8 @@
         <div class="land-modes"><button type="button" class="land-mode" data-land-mode="0"><b>Dueño vende</b><span>El proyecto paga la tierra a valor de mercado; el dueño no participa.</span></button><button type="button" class="land-mode active" data-land-mode="100"><b>Dueño aporta</b><span>La tierra entra al proyecto; el dueño recibe % de la utilidad.</span></button><button type="button" class="land-mode" data-land-mode="50"><b>Acuerdo mixto</b><span>Parte pagada al cierre, parte aportada con % proporcional.</span></button></div>
         <div class="input-group"><div class="input-header"><label>Porción de terreno aportada (%)</label><div class="val-display" data-input="inAporteTierra">100%</div></div><input type="range" id="inAporteTierra" min="0" max="100" step="1" value="100" data-color="var(--orange)" data-format="pct"></div>
         <div class="input-group"><div class="input-header"><label>Valor de mercado del terreno ($/m²)</label><div class="val-display" data-input="inValorTierraM2">$150</div></div><input type="range" id="inValorTierraM2" min="0" max="2000" step="10" value="150" data-color="var(--orange)" data-format="money"></div>
-        <div class="input-group"><div class="input-header"><label>% de utilidad para el dueño</label><div class="val-display" data-input="inPctDueno">25%</div></div><input type="range" id="inPctDueno" min="0" max="60" step="1" value="25" data-color="var(--blue)" data-format="pct"></div>
-        <div class="land-deal-summary" id="landDealSummary">Calculando tratamiento del terreno…</div>
+        <div class="estrategia-row"><span class="et">Cómo cobra el dueño</span><button type="button" class="rep-btn on" data-rep="0"><i class="ti ti-chart-pie"></i>% de la utilidad</button><button type="button" class="rep-btn" data-rep="1"><i class="ti ti-cash-banknote"></i>% de cada venta cobrada</button></div><p class="note" style="margin:2px 0 10px">El trato presentado a La Cercada el 24-jul-2026 es <b>15% de cada venta efectivamente cobrada</b>: por cada $1.00 que entra, $0.15 al propietario, sin esperar utilidades.</p><div class="input-group"><div class="input-header"><label>% de utilidad para el dueño</label><div class="val-display" data-input="inPctDueno">25%</div></div><input type="range" id="inPctDueno" min="0" max="60" step="1" value="25" data-color="var(--blue)" data-format="pct"></div>
+        <div class="land-deal-summary" id="landDealSummary">Calculando tratamiento del terreno…</div><div class="input-group"><div class="input-header"><label>% de cada venta cobrada para el dueño</label><div class="val-display" data-input="inPctDuenoVenta">15%</div></div><input type="range" id="inPctDuenoVenta" min="0" max="40" step="0.5" value="15" data-color="var(--gold)" data-format="pct"></div><div class="input-group"><div class="input-header"><label>Lotes por macroparcela de vivienda (breña)</label><div class="val-display" data-input="inLotesPorMacroViv">400</div></div><input type="range" id="inLotesPorMacroViv" min="50" max="1500" step="50" value="400" data-color="var(--green)" data-format="num"></div>
         <div class="subheading">2. Calendario y absorción</div>
         <div class="input-group"><div class="input-header"><label>Etapas de urbanización</label><div class="val-display" data-input="inEtapas">3</div></div><input type="range" id="inEtapas" min="1" max="8" step="1" value="3" data-color="var(--orange)"></div>
         <div class="input-group"><div class="input-header"><label>Meses de obra por etapa</label><div class="val-display" data-input="inMesesUrbEtapa">10</div></div><input type="range" id="inMesesUrbEtapa" min="4" max="24" step="1" value="10" data-color="var(--orange)"></div>
@@ -711,7 +712,7 @@
   const PRELLENADO={inFrente:500,inFondo:1000,inAnchoVialidad:12,inSepLuminarias:30,inPctVialidades:18,inPctBanquetas:4,inPctVerdes:12,inPctEquipamiento:3,inPctRetencion:3,inPctDDV:2,inMixNaves:50,inMixMacro:30,inMixCom:20,inMixViv:0,inCosNaves:47.5,inEfSubdiv:92,inM2Nave:250,inM2Macro:5000,inM2LoteCom:2000,inM2LoteViv:160,inPreNave:14000,inPreMacro:2200,inPreCom:4500,inPreVivLote:1800,inPuDespalme:20,inPuTerracerias:45,inPuPavimento:450,inPuGuarniciones:350,inPuRedAgua:900,inPuDrenaje:1200,inPuPluvial:800,inPuMT:1100,inPuFibra:300,inPuAlumbrado:18000,inPuJardineria:180,inPuBarda:1500,inPuPtar:3500000,inPuSubestacion:4000000,inPuDerechosAgua:2500000,inPuCisterna:1800000,inPuCaseta:800000,inPuSenaletica:400000,inCostoNave:7800,inEstudios:5,inLicencias:3,inSupervision:4,inLegalPct:2,inAdminPct:3,inComisionPct:4,inMktPct:2,inImprevistos:12,inEtapas:3,inMesesUrbEtapa:10,inInicioVentas:4,inAbsNaves:6,inAbsMacro:0.5,inAbsCom:1,inAbsViv:4,inEngNave:30,inMesesEntregaNave:8,inEngLote:50,inMesesSaldoLote:6,inEquity:80000000,inMaxDeuda:400000000,inLTC:60,inPIK:14,inFeeDeuda:1.5,inTirObjetivo:25,inValorTierraM2:150,inAporteTierra:100,inPctDueno:25,inGateAgua:0,inVarPrecios:0,inVarCostos:0,inM2Empleo:40,inAguaM2Const:1.5,inWm2Const:50,inFactorDemanda:85,inVaMacro:60,inVaCom:60,inCosMacro:60,inCosCom:40,inDpeaVial:0.6,inFactorCoinc:90,inReservaElec:20,inPuKvaCFE:2450,inLTrabajador:80,inLm2Com:6,inLm2Riego:4,inPctVerdeRiego:30,inLHab:200,inCVD:1.4,inCVH:1.5,inReservaCI:114,inDiasCisterna:1,inIntensidadLluvia:60,inCNatural:40,inCTecho:95,inCPavimento:90,inCVerde:20,inDuracionTormenta:60,inProfRetencion:1.5,inViajesNave:7,inViajesMacro:5,inViajesCom:41,inViajesViv:1,inPctPesados:15,inPCEPesado:2,inRepartoDir:60,inCapCarril:1900,inCarrilesAcceso:2,inM2XCajonNave:400,inM2XCajonMacro:500,inM2XCajonCom:200,inM2Cajon:25,inM2XCamion:200,inM2Camion:120,inPctRetorno:75,inCoefPicoSan:3,inPctReuso:100,inKgEmpleado:0.5,inKgM2Com:0.05,inDiasAcopio:3,inDensResiduo:200,inAlturaAcopio:2,inPctVerdeNMX:3,inPctVerdeLote:5,inPuLsPtar:675000,inPuM3Cisterna:2535,inPuM3Derechos:11.5,inPuM3Vaso:150,inPuM2Acopio:3500,inPctEstacDev:100,inEstrNaves:0,inEstrCom:0,inRentaNave:95,inRentaCom:35,inVacancia:5,inOpex:15,inCapRate:9,inMesesSalida:12,inHabPorViv:3.5,inTrabPorViv:1.2,inM2EmpleoCom:50,inGastoFamMes:8000,inNivelesViv:1,inModoViv:0,inPreVivBrena:475};
   const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),PRELLENADO);
   Object.entries(DEFAULTS).forEach(([id,v])=>{const c=$(id);if(c)c.value=v});
-  let gateAgua=PRELLENADO.inGateAgua,estrNaves=PRELLENADO.inEstrNaves,estrCom=PRELLENADO.inEstrCom;
+  let gateAgua=PRELLENADO.inGateAgua,estrNaves=PRELLENADO.inEstrNaves,estrCom=PRELLENADO.inEstrCom,modoReparto=Number(PRELLENADO.inModoReparto)||0;
 
   const factorHelp={
     inFrente:{t:'Frente',k:'Dato verificable',q:'Metros de frente sobre la carretera.',m:'Mueve superficie, perímetro (barda) y el master plan.',d:'Escritura y levantamiento topográfico.'},
@@ -784,6 +785,8 @@
     inTirObjetivo:{t:'TIR objetivo',k:'Meta de inversión',q:'Meta del desarrollador. Su letrero completo: Tasa Interna de Retorno (TIR).',m:'Solo se compara: no altera el flujo.',d:'Costo de oportunidad.'},
     inValorTierraM2:{t:'Valor del terreno',k:'Avalúo / negociación',q:'$/m² de mercado del terreno EN BRUTO.',m:'Define el pago si el dueño vende (total o parcial).',d:'Avalúo — el dueño hoy no tiene cifra.'},
     inAporteTierra:{t:'Terreno aportado',k:'Acuerdo de socios',q:'% del terreno que el dueño aporta (no se le paga al cierre).',m:'Separa pago de tierra vs participación.',d:'Negociación del co-desarrollo.'},
+    inPctDuenoVenta:{t:'% de cada venta al dueño',k:'Acuerdo · La Cercada 24-jul-2026',q:'Porcentaje de cada venta EFECTIVAMENTE COBRADA que va al propietario de la tierra.',m:'No depende de la utilidad: sube y baja con la cobranza real.',d:'Trato presentado al propietario: 15%.'},
+    inLotesPorMacroViv:{t:'Lotes por macroparcela',k:'Supuesto de venta',q:'Cuántos lotes de vivienda se agrupan en cada macroparcela que se vende en breña.',m:'En breña la vivienda se vende como macroparcela (a Infonavit), no lote por lote: manda sobre el plazo.',d:'Precedente: Infonavit compró 10 ha de un jalón.'},
     inPctDueno:{t:'% del dueño',k:'Acuerdo de socios',q:'% de la utilidad neta para el dueño que aporta tierra.',m:'Mueve el reparto (PPP: 25/75).',d:'Negociación; escala con el % aportado.'},
     inGateAgua:{t:'Candado del agua (gate)',k:'Riesgo #1',q:'Estatus de la fuente de agua (veda Costa de Hermosillo).',m:'Gobierna la viabilidad: en veda bloquea la vivienda (agua potable) y marca los derechos como pozo ilegal SIN COTIZAR.',d:'Gestoría CONAGUA / Agua de Hermosillo.'},
     inRentaNave:{t:'Renta de nave',k:'Comparable por validar',q:'$/m²/mes de renta industrial (solo aplica en estrategia RENTAR).',m:'Genera flujo neto (NOI) mensual y el valor de salida al cap de mercado.',d:'Mercado industrial Hmo ~$85-105 MXN/m²/mes (Solili).'},
@@ -918,10 +921,10 @@
     lblGate:'gate',lblAguaDia:'aguaDia',lblKva:'kva',lblEmpleos:'empleos',lblEficSuelo:'eficSuelo',
     vizPlan:'vizPlan',vizEmbudo:'vizEmbudo',vizCascada:'vizCascada',vizCorrida:'vizCorrida'};
   function get(id){return Number($(id).value)||0} function txt(id,value){const e=$(id);if(e)e.textContent=value}
-  function inputValues(){const o=Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]));o.inGateAgua=gateAgua;o.inEstrNaves=estrNaves;o.inEstrCom=estrCom;return o}
+  function inputValues(){const o=Object.fromEntries(controls.map(c=>[c.id,Number(c.value)]));o.inGateAgua=gateAgua;o.inEstrNaves=estrNaves;o.inEstrCom=estrCom;o.inModoReparto=modoReparto;return o}
   function updateColor(c){const min=Number(c.min),max=Number(c.max),v=Number(c.value),x=Math.max(0,Math.min(100,(v-min)/(max-min)*100));c.style.background=`linear-gradient(to right, ${c.dataset.color||'var(--gold)'} ${x}%, rgba(35,29,20,.10) ${x}%)`}
   function displayValue(c){const v=Number(c.value),f=c.dataset.format||'';if(f==='pct')return pct(v,0);if(f==='pct1')return pct(v,1);if(f==='money')return fmtMoney(v);if(f==='decimal')return v.toFixed(1);return fmtN(v)}
-  function setControl(id,value){if(id==='inGateAgua'){gateAgua=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='inEstrNaves'){estrNaves=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='__inEstrNavesViejo'){estrNaves=Number(value)?1:0;return}if(id==='inEstrCom'){estrCom=Number(value)?1:0;return}const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
+  function setControl(id,value){if(id==='inGateAgua'){gateAgua=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='inModoReparto'){modoReparto=Number(value)?1:0;return}if(id==='inEstrNaves'){estrNaves=Math.max(0,Math.min(2,Math.round(Number(value)||0)));return}if(id==='__inEstrNavesViejo'){estrNaves=Number(value)?1:0;return}if(id==='inEstrCom'){estrCom=Number(value)?1:0;return}const c=$(id);if(!c||!Number.isFinite(Number(value)))return;const min=Number(c.min),max=Number(c.max);c.value=Math.max(min,Math.min(max,Number(value)));updateColor(c)}
   function readPills(){document.querySelectorAll('.val-display[data-input]').forEach(p=>{p.contentEditable='true';p.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();p.blur()}});p.addEventListener('blur',()=>{const raw=p.textContent.replace(/[^0-9.\-]/g,''),n=Number(raw);if(Number.isFinite(n))setControl(p.dataset.input,n);calculate()})})}
   function syncPills(){controls.forEach(c=>{const p=document.querySelector(`.val-display[data-input="${c.id}"]`);if(p&&document.activeElement!==p)p.textContent=displayValue(c);updateColor(c)})}
     const tipNarrow=()=>window.matchMedia('(max-width:700px)').matches;
@@ -1044,7 +1047,7 @@
       absNaves:Math.max(.01,gv('inAbsNaves')),absMacro:Math.max(.01,gv('inAbsMacro')),absCom:Math.max(.01,gv('inAbsCom')),absViv:Math.max(.01,gv('inAbsViv')),
       engNave:gv('inEngNave')/100,mesesEntregaNave:Math.max(1,Math.round(gv('inMesesEntregaNave'))),engLote:gv('inEngLote')/100,mesesSaldoLote:Math.max(1,Math.round(gv('inMesesSaldoLote'))),
       equity:gv('inEquity'),maxDeuda:gv('inMaxDeuda'),ltc:gv('inLTC')/100,pik:gv('inPIK')/100,feeDeuda:gv('inFeeDeuda')/100,tirTarget:gv('inTirObjetivo')/100,
-      valorTierraM2:gv('inValorTierraM2'),aporteTierra:gv('inAporteTierra')/100,pctDueno:gv('inPctDueno')/100,
+      valorTierraM2:gv('inValorTierraM2'),aporteTierra:gv('inAporteTierra')/100,pctDueno:gv('inPctDueno')/100,modoReparto:Number(vals.inModoReparto)?1:0,pctDuenoVenta:gv('inPctDuenoVenta')/100,
       gateAgua:Math.max(0,Math.min(2,Math.round(Number(vals.inGateAgua)||0))),varPrecios:0,varCostos:0,
       m2Empleo:Math.max(1,gv('inM2Empleo')),aguaM2:gv('inAguaM2Const'),wm2:gv('inWm2Const'),factorDemanda:gv('inFactorDemanda')/100,vaMacro:gv('inVaMacro')||60,vaCom:gv('inVaCom')||60,cosMacro:(gv('inCosMacro')||60)/100,cosCom:(gv('inCosCom')||40)/100,dpeaVial:gv('inDpeaVial')||0.6,factorCoinc:Math.max(.5,Math.min(1,(gv('inFactorCoinc')||90)/100)),reservaElec:(gv('inReservaElec')||20)/100,puKvaCFE:gv('inPuKvaCFE')||2450,
       lTrabajador:gv('inLTrabajador')||80,lm2Com:gv('inLm2Com')||6,lm2Riego:gv('inLm2Riego')||4,pctVerdeRiego:(gv('inPctVerdeRiego')||30)/100,lHab:gv('inLHab')||200,cvd:gv('inCVD')||1.4,cvh:gv('inCVH')||1.55,reservaCI:gv('inReservaCI')||114,diasCisterna:gv('inDiasCisterna')||1,
@@ -1056,7 +1059,7 @@
       m2xCajonNave:gv('inM2XCajonNave')||400,m2xCajonMacro:gv('inM2XCajonMacro')||500,m2xCajonCom:gv('inM2XCajonCom')||200,m2Cajon:gv('inM2Cajon')||25,m2xCamion:gv('inM2XCamion')||200,m2Camion:gv('inM2Camion')||120,
       viajesNave:gv('inViajesNave')||7,viajesMacro:gv('inViajesMacro')||5,viajesCom:gv('inViajesCom')||41,viajesViv:gv('inViajesViv')||1,pctPesados:(gv('inPctPesados')||15)/100,pcePesado:gv('inPCEPesado')||2,repartoDir:(gv('inRepartoDir')||60)/100,capCarril:gv('inCapCarril')||1900,carrilesAcceso:Math.max(1,gv('inCarrilesAcceso')||2),
       estrNaves:Math.max(0,Math.min(2,Math.round(Number(vals.inEstrNaves)||0))),estrCom:Number(vals.inEstrCom)?1:0,rentaNave:gv('inRentaNave'),rentaCom:gv('inRentaCom'),vacancia:gv('inVacancia')/100,opex:gv('inOpex')/100,capRate:gv('inCapRate')/100,mesesSalida:Math.max(0,Math.round(gv('inMesesSalida'))),
-      habViv:gv('inHabPorViv'),trabViv:gv('inTrabPorViv'),m2EmpleoCom:Math.max(1,gv('inM2EmpleoCom')),gastoFam:gv('inGastoFamMes'),nivelesViv:Math.max(1,gv('inNivelesViv')||1),modoViv:gv('inModoViv')||0,preVivBrena:gv('inPreVivBrena')||475};
+      habViv:gv('inHabPorViv'),trabViv:gv('inTrabPorViv'),m2EmpleoCom:Math.max(1,gv('inM2EmpleoCom')),gastoFam:gv('inGastoFamMes'),nivelesViv:Math.max(1,gv('inNivelesViv')||1),modoViv:gv('inModoViv')||0,lotesPorMacroViv:Math.max(1,gv('inLotesPorMacroViv')||400),preVivBrena:gv('inPreVivBrena')||475};
     const fP=1+p.varPrecios,fC=1+p.varCostos;
     // 1-3) terreno y cuadro de áreas
     const superficie=p.frente*p.fondo,perimetro=2*(p.frente+p.fondo),sumaCesiones=p.pctVial+p.pctBanq+p.pctVerdes+p.pctEquip+p.pctRet+p.pctDDV,vendiblePct=Math.max(0,1-sumaCesiones),vendible=superficie*vendiblePct,m2Vial=superficie*p.pctVial,m2Banq=superficie*p.pctBanq,m2Verdes=superficie*p.pctVerdes,m2Equip=superficie*p.pctEquip,m2Ret=superficie*p.pctRet,m2DDV=superficie*p.pctDDV,mlVial=m2Vial/p.anchoVial,luminarias=Math.ceil(mlVial/p.sepLum);
@@ -1160,7 +1163,8 @@
     const uNaves=loteNaves?nNavesLote:nNaves,finVentaNaves=p.inicioVentas+(uNaves?uNaves/p.absNaves:0),finNaves=rentaN?finVentaNaves+p.mesesEntregaNave+p.mesesSalida+1:(loteNaves?finVentaNaves+p.mesesSaldoLote:finVentaNaves+p.mesesEntregaNave);
     const finMacro=p.inicioVentas+(nMacro?nMacro/p.absMacro:0)+p.mesesSaldoLote;
     const finCom=rentaC?p.inicioVentas+(nCom?nCom/p.absCom:0)+1+p.mesesSalida+1:p.inicioVentas+(nCom?nCom/p.absCom:0)+p.mesesSaldoLote;
-    const finViv=p.inicioVentas+(nViv?nViv/p.absViv:0)+p.mesesSaldoLote;
+    const uViv=brena?Math.max(1,Math.ceil(nViv/p.lotesPorMacroViv)):nViv;   // en breña se vende como macroparcela, no lote por lote
+    const finViv=p.inicioVentas+(uViv?uViv/(brena?p.absMacro:p.absViv):0)+p.mesesSaldoLote;
     const mesesNecesarios=Math.ceil(Math.max(mesesUrb,finNaves,finMacro,finCom,finViv))+1,totalMonths=Math.min(240,Math.max(6,mesesNecesarios)),ventasTruncadas=mesesNecesarios>240;
     const rev=Array(totalMonths).fill(0),cost=Array(totalMonths).fill(0),constSerie=Array(totalMonths).fill(0),urbSerie=Array(totalMonths).fill(0);
     // tierra al cierre inicial
@@ -1185,7 +1189,8 @@
     ventaSerie(nMacro,p.absMacro,precioMacroU,p.engLote,p.mesesSaldoLote,false);
     if(rentaC)rentasCom=rentaSerie(nCom,p.absCom,p.m2LoteCom,p.rentaCom*fP,1,false,terminalCom);
     else ventaSerie(nCom,p.absCom,precioComU,p.engLote,p.mesesSaldoLote,false);
-    ventaSerie(nViv,p.absViv,precioVivU,p.engLote,p.mesesSaldoLote,false);
+    if(brena)ventaSerie(uViv,p.absMacro,ingViv/Math.max(1,uViv),p.engLote,p.mesesSaldoLote,false);
+    else ventaSerie(nViv,p.absViv,precioVivU,p.engLote,p.mesesSaldoLote,false);
     // ingresos por producto (venta o renta+salida) — ya con el calendario resuelto
     const ingNaves=rentaN?rentasNaves+terminalNaves:(loteNaves?m2NavesLoteVend*p.preNaveLote*fP:m2NavesConst*p.preNave*fP);
     const ingCom=rentaC?rentasCom+terminalCom:m2ComVend*p.preCom*fP;
@@ -1223,7 +1228,9 @@
     // financieros (el crédito puente es del developer); con deuda cero ambas bases coinciden.
     // P0 FIX reparto: base post-financiera consistente (utilidadFinal, no utilidadPre) + TOPE a la caja distribuible (el dueño nunca recibe más que la caja real). Con aporte, tierraPago=0 → el terreno se cuenta UNA sola vez (solo su % de utilidad).
     const distribuible=debt<1&&fundingGap<1?Math.max(0,cash):0;
-    const duenoUtilidad=Math.min(Math.max(0,utilidadFinal)*p.pctDueno,distribuible),ownerTotal=tierraPago+duenoUtilidad;
+    // Reparto (V17): 0 = % de la UTILIDAD al cierre · 1 = % de cada VENTA COBRADA (trato La Cercada, 24-jul-2026)
+    const duenoVenta=p.modoReparto===1?ingresos*p.pctDuenoVenta:0;
+    const duenoUtilidad=p.modoReparto===1?duenoVenta:Math.min(Math.max(0,utilidadFinal)*p.pctDueno,distribuible),ownerTotal=tierraPago+duenoUtilidad;
     const devDist=Math.max(0,distribuible-duenoUtilidad);
     devFlows[devFlows.length-1]+=devDist;const devIrr=irr(devFlows),devMoic=equityUsed?devDist/equityUsed:null;
     const valorTerrenoM2=superficie?ownerTotal/superficie:0;
@@ -1236,7 +1243,7 @@
     const colas=[['naves',finNaves,nNaves],['macro-lotes',finMacro,nMacro],['comercial',finCom,nCom],['vivienda',finViv,nViv]].filter(c=>c[2]>0);
     const cola=colas.length?colas.reduce((a,b)=>b[1]>a[1]?b:a):['—',0,0],colaProducto=cola[0],colaMes=Math.ceil(cola[1]);
     return {p,superficie,perimetro,sumaCesiones,vendiblePct,vendible,m2Vial,m2Banq,m2Verdes,m2Equip,m2Ret,m2DDV,mlVial,luminarias,mixTotal,mixValid,valido:mixValid&&sumaCesiones<=1.0001&&vendible>0,
-      terrNaves,nNaves,m2NavesConst,ingNaves,loteNaves,nNavesLote,m2NavesLoteVend,supLoteNave,terrMacro,nMacro,m2MacroVend,ingMacro,terrCom,nCom,m2ComVend,ingCom,terrViv,nViv,m2VivVend,ingViv,ingresos,
+      terrNaves,nNaves,m2NavesConst,ingNaves,loteNaves,nNavesLote,m2NavesLoteVend,supLoteNave,duenoVenta,uViv,terrMacro,nMacro,m2MacroVend,ingMacro,terrCom,nCom,m2ComVend,ingCom,terrViv,nViv,m2VivVend,ingViv,ingresos,
       obraFija,urbVariable,urbanizacion,construccion,directo,blandosDirecto,blandosIngresos,blandos,tierraPago,costoProyecto,utilidadPre,margenPre,
       mesesUrb,totalMonths,flows,urbSerie,constSerie,debtCap,peak,peakMonth,fundingGap,interest,cashInterest,feeDebt,debt,cash,equityUsed,debtDraws,debtRepayments,revTotal,costTotal,cashSourceTotal,cashUsesTotal,cashReconciliation,
       utilidadFinal,margenFinal,duenoUtilidad,ownerTotal,devDist,devIrr,devMoic,valorTerrenoM2,distribuible,
@@ -1379,6 +1386,7 @@
     txt('lblCom',r.rentaC?fmtN(r.nCom)+' en renta de suelo · flujo neto (NOI) '+fmtM(r.noiEstabCom)+'/año · sale '+fmtM(r.terminalCom):fmtN(r.nCom)+' → '+fmtM(r.ingCom));
     txt('lblViv',fmtN(r.nViv)+' → '+fmtM(r.ingViv));txt('lblIngresoM2',fmtMoney(r.vendible?r.ingresos/r.vendible:0)+' /m²');
     document.querySelectorAll('.estr-btn').forEach(b=>{const v=b.dataset.estr==='naves'?r.p.estrNaves:r.p.estrCom;b.classList.toggle('on',Number(b.dataset.val)===v)});
+    document.querySelectorAll('.rep-btn').forEach(b=>b.classList.toggle('on',Number(b.dataset.rep)===r.p.modoReparto));
     {const bt=$('btnSoloLotes');if(bt)bt.classList.toggle('on',r.p.estrNaves===2&&r.p.estrCom===0)}
     const rp=$('readPolo');if(rp)rp.innerHTML=r.nViv>0?`<b>Demografía del polo:</b> ${fmtN(r.habitantes)} habitantes en ${fmtN(r.viviendasTot)} viviendas · PEA ${fmtN(r.pea)} vs ${fmtN(r.empleos)} empleos (ratio ${r.ratioEmpleoPea===null?'—':r.ratioEmpleoPea.toFixed(2)}: ${r.ratioEmpleoPea>=0.9&&r.ratioEmpleoPea<=1.15?'polo equilibrado — vive y trabaja aquí':'desequilibrado'}) · ${fmtN(r.vehiculos)} vehículos · OMS ${r.omsM2Hab===null?'—':r.omsM2Hab.toFixed(1)+' m² verdes/hab (recomendado 9+)'}. <b>Comercio:</b> gasto interno ${fmtM(r.gastoInternoAnual)}/año → ${r.demandaComM2===null?'—':fmtMoney(r.demandaComM2)+'/m² comercial de demanda'} ${r.demandaComM2===null?'':r.demandaComM2>=20000?'(el retail se sostiene solo con el polo ✓)':r.demandaComM2>=10000?'(justo: necesita algo de carretera)':'(el retail dependerá del tráfico de la carretera)'}`:`<b>Sin vivienda en la mezcla:</b> los ${fmtN(r.empleos)} empleos y ${fmtN(r.vehiculos)} vehículos vienen de naves y comercio; el retail (${fmtN(r.m2ComVend)} m²) depende 100% del tráfico de la Carr. a Kino. Sube el % de vivienda para ver demografía y demanda interna.`;
     txt('lblUrbTotal',fmtM(r.urbanizacion));txt('lblUrbM2',fmtMoney(r.vendible?r.urbanizacion/r.vendible:0));txt('lblLumBarda',fmtN(r.luminarias)+' · '+fmtN(r.perimetro)+' ml');txt('lblObraFija',fmtM(r.obraFija));
@@ -1831,6 +1839,7 @@
   controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installGiros();installFactorHelp();installMetricHelp();
   setTimeout(()=>{if(clave&&!modoLocal)cargarCatalogo()},0);
   document.querySelectorAll('.gate-mode').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();gateAgua=Number(b.dataset.gate);calculate();pintaCaso()}));
+  document.querySelectorAll('.rep-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();modoReparto=Number(b.dataset.rep);calculate();pintaCaso&&pintaCaso()}));
   $('btnSoloLotes').addEventListener('click',e=>{e.stopPropagation();const todoLotes=estrNaves===2&&estrCom===0;estrNaves=todoLotes?0:2;estrCom=0;calculate();pintaCaso&&pintaCaso()});
   document.querySelectorAll('.estr-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();if(b.dataset.estr==='naves')estrNaves=Number(b.dataset.val);else estrCom=Number(b.dataset.val);calculate()}));
   $('btnGuardar').onclick=()=>{if(modoLocal){toast('Estás sin nube: entra con la clave para guardar');return}$('gNombre').value=caso.nombre_caso||'';$('gPalabra').value=caso.palabra||'';$('gCorreo').value=caso.correo||'';$('gNotas').value=caso.notas_caso||'';abrirOverlay('ovGuardar')};
