@@ -134,6 +134,14 @@
   .kpi-val{font-size:14px;font-weight:800;letter-spacing:-.3px}
   .drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease;background:#f6f3ed;margin:0 -16px -16px;padding:0 16px}
   .rep-btn{}
+  .sello-congelado{display:none;margin:0 0 12px;padding:11px 14px;border-radius:12px;border:1px solid var(--gold);background:rgba(185,139,60,.10)}
+  .sello-congelado.on{display:block}
+  .sello-congelado b{display:block;font-size:12.5px;margin-bottom:3px;color:var(--text)}
+  .sello-congelado .sc-sub{font-size:11px;color:var(--muted);line-height:1.5}
+  .sello-congelado .sc-chk{margin-top:7px;font-size:11px;font-weight:800;letter-spacing:.02em}
+  .sello-congelado .sc-ok{color:#3F7A52}.sello-congelado .sc-mod{color:#B4453C}
+  .sello-congelado ul{margin:8px 0 0;padding-left:16px}
+  .sello-congelado li{font-size:10.5px;color:var(--muted);line-height:1.5;margin:2px 0}
   .modo-lotes{margin:2px 0 10px}
   .modo-lotes button{width:100%;display:block;text-align:left;background:rgba(35,29,20,.04);border:1px dashed var(--linea);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.18s;font-family:inherit;color:var(--text)}
   .modo-lotes button:hover{border-color:var(--gold);background:rgba(185,139,60,.08)}
@@ -399,11 +407,18 @@
   <div class="breadcrumb"><a href="./">← Planificador de Potencial Inmobiliario</a></div>
   <div class="clave-banner" id="modoLocalBanner">Estás <b>sin conexión a la nube</b>: los cambios viven solo en este navegador. Entra con la clave del board para guardar y compartir casos.</div>
 
+  <div class="sello-congelado" id="selloCongelado">
+    <b>🔒 Instantánea congelada · lo que se le presentó al propietario</b>
+    <div class="sc-sub" id="scSub"></div>
+    <div class="sc-chk" id="scChk"></div>
+    <ul id="scReservas"></ul>
+  </div>
   <div class="caso-bar">
     <div class="caso-activo">Caso de trabajo<b id="casoNombreBar">Caso nuevo (sin guardar)</b><span class="sync-dot" id="syncDot"></span></div>
     <div class="caso-actions">
       <button class="small-btn secondary" id="btnMisCasos"><i class="ti ti-folder"></i>Mis casos</button>
       <button class="small-btn secondary" id="btnNuevo"><i class="ti ti-plus"></i>Nuevo</button>
+      <button class="small-btn secondary" id="btnPresentado" title="Cargar lo que se le presentó al propietario el 24-jul-2026"><i class="ti ti-lock"></i>Presentado 24-jul</button>
       <button class="small-btn secondary" id="btnSeguimiento"><i class="ti ti-list-check"></i>Seguimiento</button>
       <button class="small-btn secondary" id="btnReuniones"><i class="ti ti-calendar-event"></i>Reuniones</button>
       <button class="small-btn secondary" id="btnWhats"><i class="ti ti-brand-whatsapp"></i>WhatsApp</button>
@@ -710,6 +725,41 @@
   const fmtN=n=>Math.round(n||0).toLocaleString('en-US'); const fmtM=n=>'$'+((n||0)/1e6).toFixed(1)+' M'; const fmtMoney=n=>'$'+Math.round(n||0).toLocaleString('en-US'); const pct=(n,d=1)=>Number(n||0).toFixed(d)+'%'; const sM=n=>(n<0?'−':'+')+fmtM(Math.abs(n||0)); const fmtHa=n=>((n||0)/10000).toFixed(1)+' ha';
   // Prellenado oficial: La Cercada v4 (PPP corregido 30-jun-2026)
   const PRELLENADO={inFrente:500,inFondo:1000,inAnchoVialidad:12,inSepLuminarias:30,inPctVialidades:15,inPctBanquetas:4,inPctVerdes:12,inPctEquipamiento:3,inPctRetencion:3,inPctDDV:2,inMixNaves:50,inMixMacro:30,inMixCom:20,inMixViv:0,inCosNaves:47.5,inEfSubdiv:92,inM2Nave:250,inM2Macro:5000,inM2LoteCom:2000,inM2LoteViv:160,inPreNave:14000,inPreMacro:2200,inPreCom:4500,inPreVivLote:1800,inPuDespalme:20,inPuTerracerias:45,inPuPavimento:450,inPuGuarniciones:350,inPuRedAgua:900,inPuDrenaje:1200,inPuPluvial:800,inPuMT:1100,inPuFibra:300,inPuAlumbrado:18000,inPuJardineria:180,inPuBarda:1500,inPuPtar:3500000,inPuSubestacion:4000000,inPuDerechosAgua:2500000,inPuCisterna:1800000,inPuCaseta:800000,inPuSenaletica:400000,inCostoNave:7800,inEstudios:5,inLicencias:3,inSupervision:4,inLegalPct:2,inAdminPct:3,inComisionPct:4,inMktPct:2,inImprevistos:12,inEtapas:3,inMesesUrbEtapa:10,inInicioVentas:4,inAbsNaves:6,inAbsMacro:0.5,inAbsCom:1,inAbsViv:4,inEngNave:30,inMesesEntregaNave:8,inEngLote:50,inMesesSaldoLote:6,inEquity:80000000,inMaxDeuda:400000000,inLTC:60,inPIK:14,inFeeDeuda:1.5,inTirObjetivo:25,inValorTierraM2:150,inAporteTierra:100,inPctDueno:25,inGateAgua:0,inVarPrecios:0,inVarCostos:0,inM2Empleo:40,inAguaM2Const:1.5,inWm2Const:50,inFactorDemanda:85,inVaMacro:60,inVaCom:60,inCosMacro:60,inCosCom:40,inDpeaVial:0.6,inFactorCoinc:90,inReservaElec:20,inPuKvaCFE:2450,inLTrabajador:80,inLm2Com:6,inLm2Riego:4,inPctVerdeRiego:30,inLHab:200,inCVD:1.4,inCVH:1.5,inReservaCI:114,inDiasCisterna:1,inIntensidadLluvia:60,inCNatural:40,inCTecho:95,inCPavimento:90,inCVerde:20,inDuracionTormenta:60,inProfRetencion:1.5,inViajesNave:7,inViajesMacro:5,inViajesCom:41,inViajesViv:1,inPctPesados:15,inPCEPesado:2,inRepartoDir:60,inCapCarril:1900,inCarrilesAcceso:2,inM2XCajonNave:400,inM2XCajonMacro:500,inM2XCajonCom:200,inM2Cajon:25,inM2XCamion:200,inM2Camion:120,inPctRetorno:75,inCoefPicoSan:3,inPctReuso:100,inKgEmpleado:0.5,inKgM2Com:0.05,inDiasAcopio:3,inDensResiduo:200,inAlturaAcopio:2,inPctVerdeNMX:3,inPctVerdeLote:5,inPuLsPtar:675000,inPuM3Cisterna:2535,inPuM3Derechos:11.5,inPuM3Vaso:150,inPuM2Acopio:3500,inPctEstacDev:100,inEstrNaves:0,inEstrCom:0,inRentaNave:95,inRentaCom:35,inVacancia:5,inOpex:15,inCapRate:9,inMesesSalida:12,inHabPorViv:3.5,inTrabPorViv:1.2,inM2EmpleoCom:50,inGastoFamMes:8000,inNivelesViv:1,inModoViv:0,inPreVivBrena:475};
+  /* ══════════════════════════════════════════════════════════════════════
+     INSTANTÁNEA CONGELADA · lo que se le presentó al propietario el 24-jul-2026.
+     Es un REGISTRO HISTÓRICO, no configuración: no se edita ni se recalcula.
+     Reproduce al peso la lámina V6 y el Sheet "Venta de Tierra · Modelo para
+     Clientes": $470,900,000 de ventas, 106 lotes PyME + 3 macro + 20 comerciales
+     + 1 macroparcela, $70,635,000 del 15% y 79 meses.
+     Se descongela cuando el propietario decida y quede un acuerdo firmado.
+     ══════════════════════════════════════════════════════════════════════ */
+  const PRESENTADO={
+    nombre:'La Cercada · presentado al propietario',
+    fecha:'24 de julio de 2026',
+    estado:'CONGELADO · esperando decisión del propietario',
+    esperado:{ingresos:470900000,dueno:70635000,meses:79,nNavesLote:106,nMacro:3,nCom:20},
+    vals:{
+      inFrente:500,inFondo:1000,
+      inPctVialidades:15,inPctBanquetas:4,inPctVerdes:12,inPctEquipamiento:3,inPctRetencion:3,inPctDDV:2,
+      inMixNaves:35,inMixMacro:12,inMixCom:17,inMixViv:36,
+      inEstrNaves:2,inEstrCom:0,inEfSubdiv:100,inModoViv:1,
+      inM2Nave:600,inCosNaves:60,inM2Macro:10000,inM2LoteCom:2500,
+      inPreNaveLote:2000,inPreMacro:1800,inPreCom:3000,inPreVivBrena:500,
+      inModoReparto:1,inPctDuenoVenta:15,inPctDueno:0,inLotesPorMacroViv:700,
+      inAporteTierra:100,inValorTierraM2:80,
+      inAbsNaves:1.5,inAbsMacro:0.33,inAbsCom:0.5,inAbsViv:1,
+      inInicioVentas:1,inAnchoVialidad:20,inSepLuminarias:30,
+      inPuPavimento:800,inPuSubestacion:17500000
+    },
+    // lo que quedó por resolver y que mueve este número
+    reservas:[
+      'Pavimento a $800/m² y subestación a $17.5 M vienen del Sheet y los dos dicen "Cotizar": $39.8 M sin cotización firme.',
+      'Los 79 meses salen de vender desde el mes 1. En la junta se dijo "primeras preventas en el mes 14". Con eso el plazo sube y el valor presente del 15% baja.',
+      'La eficiencia de subdivisión va al 100%: supone lotificar sin perder un metro en retornos ni remates. El master plan lo arbitra.',
+      'El precio industrial de $2,000/m² contra la competencia visible (NEPO $650–1,050/m²) es el supuesto que carga el 45% de las ventas.',
+      'La breña descuenta obra de cabecera de forma distinta en el board y en el Sheet: ≈$47 M de diferencia. Es negociación con Infonavit.'
+    ]
+  };
   const DEFAULTS=Object.assign(Object.fromEntries(controls.map(c=>[c.id,Number(c.value)])),{inModoReparto:0,inEstrNaves:0,inEstrCom:0},PRELLENADO);
   Object.entries(DEFAULTS).forEach(([id,v])=>{const c=$(id);if(c)c.value=v});
   let gateAgua=PRELLENADO.inGateAgua,estrNaves=PRELLENADO.inEstrNaves,estrCom=PRELLENADO.inEstrCom,modoReparto=Number(PRELLENADO.inModoReparto)||0;
@@ -1391,6 +1441,7 @@
     document.querySelectorAll('.estr-btn').forEach(b=>{const v=b.dataset.estr==='naves'?r.p.estrNaves:r.p.estrCom;b.classList.toggle('on',Number(b.dataset.val)===v)});
     document.querySelectorAll('.rep-btn').forEach(b=>b.classList.toggle('on',Number(b.dataset.rep)===r.p.modoReparto));
     {const bt=$('btnSoloLotes');if(bt)bt.classList.toggle('on',r.p.estrNaves===2&&r.p.estrCom===0)}
+    pintaSello(r);
     const rp=$('readPolo');if(rp)rp.innerHTML=r.nViv>0?`<b>Demografía del polo:</b> ${fmtN(r.habitantes)} habitantes en ${fmtN(r.viviendasTot)} viviendas · PEA ${fmtN(r.pea)} vs ${fmtN(r.empleos)} empleos (ratio ${r.ratioEmpleoPea===null?'—':r.ratioEmpleoPea.toFixed(2)}: ${r.ratioEmpleoPea>=0.9&&r.ratioEmpleoPea<=1.15?'polo equilibrado — vive y trabaja aquí':'desequilibrado'}) · ${fmtN(r.vehiculos)} vehículos · OMS ${r.omsM2Hab===null?'—':r.omsM2Hab.toFixed(1)+' m² verdes/hab (recomendado 9+)'}. <b>Comercio:</b> gasto interno ${fmtM(r.gastoInternoAnual)}/año → ${r.demandaComM2===null?'—':fmtMoney(r.demandaComM2)+'/m² comercial de demanda'} ${r.demandaComM2===null?'':r.demandaComM2>=20000?'(el retail se sostiene solo con el polo ✓)':r.demandaComM2>=10000?'(justo: necesita algo de carretera)':'(el retail dependerá del tráfico de la carretera)'}`:`<b>Sin vivienda en la mezcla:</b> los ${fmtN(r.empleos)} empleos y ${fmtN(r.vehiculos)} vehículos vienen de naves y comercio; el retail (${fmtN(r.m2ComVend)} m²) depende 100% del tráfico de la Carr. a Kino. Sube el % de vivienda para ver demografía y demanda interna.`;
     txt('lblUrbTotal',fmtM(r.urbanizacion));txt('lblUrbM2',fmtMoney(r.vendible?r.urbanizacion/r.vendible:0));txt('lblLumBarda',fmtN(r.luminarias)+' · '+fmtN(r.perimetro)+' ml');txt('lblObraFija',fmtM(r.obraFija));
     txt('lblConstNaves',fmtM(r.construccion));txt('lblBlandos',fmtM(r.blandos));txt('lblCostoTotal',fmtM(r.costoProyecto)+' · '+fmtMoney(r.costoM2)+'/m²');
@@ -1838,6 +1889,37 @@
   function cerrarOverlays(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('on'))}
   /* ================== ARRANQUE ================== */
   ['inModoReparto','inEstrNaves','inEstrCom'].forEach(k=>{if(!(k in PRELLENADO))PRELLENADO[k]=0});
+
+  /* ── Instantánea congelada: cargar, sellar y vigilar ── */
+  let congelado=false;
+  function cargarPresentado(){
+    Object.entries(PRESENTADO.vals).forEach(([id,v])=>setControl(id,v));
+    congelado=true; calculate(); pintaCaso&&pintaCaso();
+    $('selloCongelado').classList.add('on');
+    $('scReservas').innerHTML=PRESENTADO.reservas.map(r=>'<li>'+r+'</li>').join('');
+    setTimeout(()=>$('selloCongelado').scrollIntoView({behavior:'smooth',block:'center'}),120);
+  }
+  function pintaSello(r){
+    if(!congelado)return;
+    const e=PRESENTADO.esperado, fM=n=>'$'+(n/1e6).toFixed(1)+' M';
+    $('scSub').innerHTML='<b style="display:inline">'+PRESENTADO.nombre+'</b> · '+PRESENTADO.fecha+
+      ' · <span style="color:var(--gold);font-weight:800">'+PRESENTADO.estado+'</span><br>'+
+      'Ventas '+fM(e.ingresos)+' · al propietario '+fM(e.dueno)+' (15% de cada venta cobrada) · '+
+      e.nNavesLote+' lotes PyME + '+e.nMacro+' macro + '+e.nCom+' comerciales + 1 macroparcela · '+e.meses+' meses.';
+    /* ¿sigue igual a lo presentado? */
+    const dif=[];
+    if(Math.abs(r.ingresos-e.ingresos)>50000)      dif.push('ventas '+fM(r.ingresos));
+    if(Math.abs(r.duenoUtilidad-e.dueno)>50000)    dif.push('al propietario '+fM(r.duenoUtilidad));
+    if(r.totalMonths!==e.meses)                    dif.push('plazo '+r.totalMonths+' meses');
+    if(r.nNavesLote!==e.nNavesLote)                dif.push(r.nNavesLote+' lotes PyME');
+    if(r.nMacro!==e.nMacro)                        dif.push(r.nMacro+' macro');
+    if(r.nCom!==e.nCom)                            dif.push(r.nCom+' comerciales');
+    $('scChk').className='sc-chk '+(dif.length?'sc-mod':'sc-ok');
+    $('scChk').textContent=dif.length
+      ? '⚠ MODIFICADO respecto a lo presentado: '+dif.join(' · ')+'. Vuelve a cargarlo con el botón "Presentado 24-jul" para recuperar la referencia.'
+      : '✓ Idéntico a lo que se presentó el 24 de julio. Verificado contra la lámina y el Sheet.';
+  }
+  $('btnPresentado').addEventListener('click',e=>{e.stopPropagation();cargarPresentado()});
   document.querySelectorAll('.card[data-card]').forEach(c=>c.onclick=e=>{if(e.target.closest('.drawer'))return;toggleDrawer(c)});
   agruparTemas();
   controls.forEach(c=>{updateColor(c);c.addEventListener('input',calculate)});readPills();installGiros();installFactorHelp();installMetricHelp();
@@ -1852,7 +1934,7 @@
   $('casosCerrar').onclick=cerrarOverlays;
   $('btnAbrirPalabra').onclick=()=>abrirPorPalabra($('abrirPalabra').value);
   $('abrirPalabra').addEventListener('keydown',e=>{if(e.key==='Enter')abrirPorPalabra($('abrirPalabra').value)});
-  $('btnNuevo').onclick=()=>{Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));gateAgua=PRELLENADO.inGateAgua;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};escInicial('Base');calculate();pintaCaso();toast('Caso nuevo: supuestos de La Cercada v4')};
+  $('btnNuevo').onclick=()=>{congelado=false;$('selloCongelado').classList.remove('on');Object.entries(DEFAULTS).forEach(([id,v])=>setControl(id,v));gateAgua=PRELLENADO.inGateAgua;caso={caso_id:'',palabra:'',correo:caso.correo,nombre_caso:'',estado:'EXPLORACIÓN',siguiente_paso:'',notas_seguimiento:'',notas_caso:'',version:0};escInicial('Base');calculate();pintaCaso();toast('Caso nuevo: supuestos de La Cercada v4')};
   $('btnSeguimiento').onclick=()=>$('segPanel').classList.toggle('on');
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
