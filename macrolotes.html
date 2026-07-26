@@ -1881,7 +1881,6 @@
       if(p.length<4)return;
       marcas[(p[0]||'').trim()+'|'+(p[1]||'').trim()+'|'+(p[2]||'').trim()]={hecha:String(p[3]).trim()==='1',quien:(p[4]||'').trim(),cuando:(p[5]||'').trim()};
     });
-    const seen={};
     return src.filter(l=>l.indexOf('\u{1F4C5}')>=0).map(l=>{
       const p=l.slice(l.indexOf('\u{1F4C5}')).replace(/^\u{1F4C5}\s*/u,'').split(' ¦ ');
       const fecha=(p[0]||'').trim(), titulo=(p[1]||'').trim();
@@ -1891,7 +1890,14 @@
         return {txt,i,hecha:!!m.hecha,quien:m.quien||'',cuando:m.cuando||''};
       });
       return{fecha,titulo,resumen:(p[2]||'').trim(),minuta:(p[3]||'').replace(/^MIN:/,'').trim(),transcripcion:(p[4]||'').replace(/^TRANS:/,'').trim(),responsables:(p[5]||'').trim(),tareas};
-    }).filter(r=>{const k=r.fecha+'|'+r.titulo;if(seen[k])return false;seen[k]=1;return true})
+    }).reduce((acc,r)=>{
+      /* una reunión por FECHA: si se capturó dos veces, se fusiona quedándose con lo más completo */
+      const prev=acc.find(x=>x.fecha===r.fecha);
+      if(!prev){acc.push(r);return acc}
+      if(r.tareas.length>prev.tareas.length){prev.tareas=r.tareas;prev.titulo=r.titulo}
+      ['resumen','minuta','transcripcion','responsables'].forEach(k=>{if(!prev[k]&&r[k])prev[k]=r[k]});
+      return acc;
+    },[])
       .sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
   }
 
