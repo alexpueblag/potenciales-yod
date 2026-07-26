@@ -1876,8 +1876,8 @@
     const src=(caso.notas_seguimiento||'').split('\n').map(l=>l.trim());
     /* eventos de marcado: ✔ fecha ¦ titulo ¦ #i ¦ 1|0 ¦ quien ¦ cuando  (append-only) */
     const marcas={};
-    src.filter(l=>l.startsWith('\u2714')).forEach(l=>{
-      const p=l.replace(/^\u2714\s*/,'').split(' ¦ ');
+    src.filter(l=>l.indexOf('\u2714')>=0).forEach(l=>{
+      const p=l.slice(l.indexOf('\u2714')).replace(/^\u2714\s*/,'').split(' ¦ ');
       if(p.length<4)return;
       marcas[(p[0]||'').trim()+'|'+(p[1]||'').trim()+'|'+(p[2]||'').trim()]={hecha:String(p[3]).trim()==='1',quien:(p[4]||'').trim(),cuando:(p[5]||'').trim()};
     });
@@ -1933,7 +1933,7 @@
   /* El marcado se guarda como EVENTO (la nube sólo agrega renglones, no reescribe). */
   function marcarTarea(reu,idx,hecha){
     if(!reu)return;
-    const hoy=new Date().toISOString().slice(0,10);
+    const hoy=(d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'))(new Date());
     const quien=(caso.correo||'').split('@')[0]||'equipo';
     const linea='\u2714 '+[reu.fecha,reu.titulo,'#'+idx,hecha?'1':'0',quien,hoy].join(' ¦ ');
     caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+linea;
