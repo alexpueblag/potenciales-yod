@@ -1901,6 +1901,7 @@
       .sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
   }
 
+  let reuAbiertas=new Set();
   function renderReuniones(){
     const box=$('reuLog');if(!box)return;
     const rs=parseReuniones();
@@ -1914,9 +1915,9 @@
         <label class="reu-t${t.hecha?' on':''}">
           <input type="checkbox" data-reu="${i}" data-t="${t.i}"${t.hecha?' checked':''}>
           <span class="reu-tx">${esc(t.txt)}</span>
-          ${t.hecha&&t.cuando?`<span class="reu-when">${esc(t.cuando)}</span>`:''}
+          ${t.hecha?`<span class="reu-when">${esc([t.quien,t.cuando].filter(Boolean).join(' · '))}</span>`:''}
         </label>`).join('')}</div>` : '';
-      return `<div class="reu-card"><div class="reu-head" data-i="${i}"><b>${esc(r.fecha)}</b> · ${esc(r.titulo)}${pill}<span class="reu-chev">▸</span></div>
+      return `<div class="reu-card" data-fecha="${esc(r.fecha)}"><div class="reu-head" data-i="${i}"><b>${esc(r.fecha)}</b> · ${esc(r.titulo)}${pill}<span class="reu-chev">▸</span></div>
       <div class="reu-body" id="reuBody${i}">
         ${r.resumen?`<p>${esc(r.resumen)}</p>`:''}
         ${r.responsables?`<p class="note">Asistentes / responsables: ${esc(r.responsables)}</p>`:''}
@@ -1924,7 +1925,21 @@
         <div class="reu-links">${r.minuta?`<a class="small-btn" href="${esc(r.minuta)}" target="_blank" rel="noopener">Ver minuta · lo que se propuso</a>`:''}${r.transcripcion?`<a class="small-btn secondary" href="${esc(r.transcripcion)}" target="_blank" rel="noopener">Transcripción</a>`:''}</div>
       </div></div>`;
     }).join('');
-    box.querySelectorAll('.reu-head').forEach(hd=>hd.onclick=()=>{const b=$('reuBody'+hd.dataset.i),c=hd.querySelector('.reu-chev');if(b)b.classList.toggle('open');if(c)c.classList.toggle('open')});
+    /* restaurar el despliegue: marcar una tarea no debe cerrar la junta */
+    box.querySelectorAll('.reu-card').forEach(card=>{
+      const f=card.dataset.fecha;
+      if(reuAbiertas.has(f)){
+        card.querySelector('.reu-body')?.classList.add('open');
+        card.querySelector('.reu-chev')?.classList.add('open');
+      }
+    });
+    box.querySelectorAll('.reu-head').forEach(hd=>hd.onclick=()=>{
+      const card=hd.closest('.reu-card'), f=card?.dataset.fecha;
+      const b=card?.querySelector('.reu-body'), c=hd.querySelector('.reu-chev');
+      const abre=!(b&&b.classList.contains('open'));
+      if(b)b.classList.toggle('open',abre); if(c)c.classList.toggle('open',abre);
+      if(f){abre?reuAbiertas.add(f):reuAbiertas.delete(f)}
+    });
     box.querySelectorAll('.reu-tareas input[type=checkbox]').forEach(cb=>cb.addEventListener('change',ev=>{
       ev.stopPropagation();
       marcarTarea(rs[+cb.dataset.reu], +cb.dataset.t, cb.checked);
@@ -1935,8 +1950,10 @@
     if(!reu)return;
     const hoy=(d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'))(new Date());
     const quien=(caso.correo||'').split('@')[0]||'equipo';
-    const linea='\u2714 '+[reu.fecha,reu.titulo,'#'+idx,hecha?'1':'0',quien,hoy].join(' ¦ ');
+    const txtT=((reu.tareas[idx]||{}).txt||'').slice(0,90);
+    const linea='\u2714 '+[reu.fecha,reu.titulo,'#'+idx,hecha?'1':'0',quien,hoy,txtT].join(' ¦ ');
     caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+linea;
+    reuAbiertas.add(reu.fecha);
     renderReuniones(); guardarDraft();
     const t=(reu.tareas[idx]||{}).txt||'';
     if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:linea,request_id:nuevoRequestId()},(hecha?'Cerrada: ':'Reabierta: ')+t.slice(0,48));
