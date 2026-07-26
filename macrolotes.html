@@ -134,6 +134,19 @@
   .kpi-val{font-size:14px;font-weight:800;letter-spacing:-.3px}
   .drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease;background:#f6f3ed;margin:0 -16px -16px;padding:0 16px}
   .rep-btn{}
+  .reu-global{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-size:11.5px;color:var(--muted)}
+  .reu-global b{color:var(--gold);font-size:13px}
+  .reu-bar{flex:1;height:6px;border-radius:4px;background:rgba(35,29,20,.10);overflow:hidden}
+  .reu-bar i{display:block;height:100%;background:var(--gold);transition:width .3s}
+  .reu-pill{margin-left:8px;font-size:9.5px;font-weight:800;padding:1px 7px;border-radius:20px;background:rgba(35,29,20,.09);color:var(--muted)}
+  .reu-pill.full{background:#3F7A52;color:#fff}
+  .reu-tareas{margin:8px 0 10px;display:flex;flex-direction:column;gap:1px}
+  .reu-t{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;transition:background .15s}
+  .reu-t:hover{background:rgba(35,29,20,.045)}
+  .reu-t input{margin:2px 0 0;flex:0 0 auto;width:15px;height:15px;accent-color:var(--gold);cursor:pointer}
+  .reu-tx{flex:1;font-size:11.5px;line-height:1.5;color:var(--text)}
+  .reu-t.on .reu-tx{text-decoration:line-through;color:var(--muted)}
+  .reu-when{flex:0 0 auto;font-size:9px;color:var(--muted);font-weight:700}
   .modo-lotes{margin:2px 0 10px}
   .modo-lotes button{width:100%;display:block;text-align:left;background:rgba(35,29,20,.04);border:1px dashed var(--linea);border-radius:11px;padding:10px 12px;cursor:pointer;transition:.18s;font-family:inherit;color:var(--text)}
   .modo-lotes button:hover{border-color:var(--gold);background:rgba(185,139,60,.08)}
@@ -431,8 +444,9 @@
     <div class="seg-row"><input id="reuFecha" type="date" style="max-width:160px"><input id="reuTitulo" placeholder="Título de la reunión"></div>
     <div class="seg-row"><input id="reuResumen" placeholder="Qué se propuso / acuerdos clave"></div>
     <div class="seg-row"><input id="reuMin" placeholder="Link a la minuta (Google Doc)"><input id="reuTrans" placeholder="Link a la transcripción"></div>
-    <div class="seg-row"><input id="reuResp" placeholder="Asistentes / responsables"><button class="small-btn" id="btnReuAdd"><i class="ti ti-calendar-plus"></i>Agregar al track</button></div>
-    <p class="note">Las reuniones se guardan en el seguimiento del caso (columna del Sheet). Al abrir una, se ve el resumen y se enlaza la minuta y la transcripción.</p>
+    <div class="seg-row"><textarea id="reuTareas" rows="4" placeholder="Decisiones y compromisos, uno por renglón (salen del checklist)"></textarea></div>
+        <div class="seg-row"><input id="reuResp" placeholder="Asistentes / responsables"><button class="small-btn" id="btnReuAdd"><i class="ti ti-calendar-plus"></i>Agregar al track</button></div>
+    <p class="note">Las reuniones se guardan en el seguimiento del caso (columna del Sheet). Al abrir una se ve el resumen, se enlaza la minuta y la transcripción, y aparece el <b>checklist de decisiones</b>: cada palomita queda registrada con quién y cuándo, para ir cerrando lo que se acordó.</p>
   </section>
 
   <section class="hero">
@@ -1858,10 +1872,74 @@
   $('btnSegPaso').onclick=()=>{const v=$('segSiguiente').value.trim();caso.siguiente_paso=v;pintaCaso();guardarDraft();if(caso.caso_id&&!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,siguiente_paso:v,request_id:nuevoRequestId()},'Siguiente paso fijado')};
   $('btnSegNota').onclick=()=>{const v=$('segNota').value.trim();if(!v)return;if(!caso.caso_id){toast('Guarda el caso primero');return}const sello=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit'});caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+sello+' · '+v;$('segNota').value='';pintaCaso();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:v,request_id:nuevoRequestId()},'Nota registrada')};
   // ---- Track de reuniones del PPP (se persiste en notas_seguimiento del caso) ----
-  function parseReuniones(){const seen={};return (caso.notas_seguimiento||'').split('\n').map(l=>l.trim()).filter(l=>l.indexOf('\u{1F4C5}')>=0).map(l=>{const p=l.slice(l.indexOf('\u{1F4C5}')).replace(/^\u{1F4C5}\s*/u,'').split(' ¦ ');return{fecha:(p[0]||'').trim(),titulo:(p[1]||'').trim(),resumen:(p[2]||'').trim(),minuta:(p[3]||'').replace(/^MIN:/,'').trim(),transcripcion:(p[4]||'').replace(/^TRANS:/,'').trim(),responsables:(p[5]||'').trim()}}).filter(r=>{const k=r.fecha+'|'+r.titulo;if(seen[k])return false;seen[k]=1;return true}).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)))}
-  function renderReuniones(){const box=$('reuLog');if(!box)return;const rs=parseReuniones();if(!rs.length){box.innerHTML='<p class="note">Aún no hay reuniones registradas. Agrega la primera abajo.</p>';return}box.innerHTML=rs.map((r,i)=>`<div class="reu-card"><div class="reu-head" data-i="${i}"><b>${esc(r.fecha)}</b> · ${esc(r.titulo)}<span class="reu-chev">▸</span></div><div class="reu-body" id="reuBody${i}">${r.resumen?`<p>${esc(r.resumen)}</p>`:''}${r.responsables?`<p class="note">Asistentes / responsables: ${esc(r.responsables)}</p>`:''}<div class="reu-links">${r.minuta?`<a class="small-btn" href="${esc(r.minuta)}" target="_blank" rel="noopener">Ver minuta · lo que se propuso</a>`:''}${r.transcripcion?`<a class="small-btn secondary" href="${esc(r.transcripcion)}" target="_blank" rel="noopener">Transcripción</a>`:''}</div></div></div>`).join('');box.querySelectorAll('.reu-head').forEach(h=>h.onclick=()=>{const b=$('reuBody'+h.dataset.i),c=h.querySelector('.reu-chev');if(b)b.classList.toggle('open');if(c)c.classList.toggle('open')})}
+  function parseReuniones(){
+    const src=(caso.notas_seguimiento||'').split('\n').map(l=>l.trim());
+    /* eventos de marcado: ✔ fecha ¦ titulo ¦ #i ¦ 1|0 ¦ quien ¦ cuando  (append-only) */
+    const marcas={};
+    src.filter(l=>l.startsWith('\u2714')).forEach(l=>{
+      const p=l.replace(/^\u2714\s*/,'').split(' ¦ ');
+      if(p.length<4)return;
+      marcas[(p[0]||'').trim()+'|'+(p[1]||'').trim()+'|'+(p[2]||'').trim()]={hecha:String(p[3]).trim()==='1',quien:(p[4]||'').trim(),cuando:(p[5]||'').trim()};
+    });
+    const seen={};
+    return src.filter(l=>l.indexOf('\u{1F4C5}')>=0).map(l=>{
+      const p=l.slice(l.indexOf('\u{1F4C5}')).replace(/^\u{1F4C5}\s*/u,'').split(' ¦ ');
+      const fecha=(p[0]||'').trim(), titulo=(p[1]||'').trim();
+      const chk=(p.find(x=>/^CHK:/.test(x.trim()))||'').replace(/^\s*CHK:/,'');
+      const tareas=chk.split('|').map(t=>t.trim()).filter(Boolean).map((txt,i)=>{
+        const m=marcas[fecha+'|'+titulo+'|#'+i]||{};
+        return {txt,i,hecha:!!m.hecha,quien:m.quien||'',cuando:m.cuando||''};
+      });
+      return{fecha,titulo,resumen:(p[2]||'').trim(),minuta:(p[3]||'').replace(/^MIN:/,'').trim(),transcripcion:(p[4]||'').replace(/^TRANS:/,'').trim(),responsables:(p[5]||'').trim(),tareas};
+    }).filter(r=>{const k=r.fecha+'|'+r.titulo;if(seen[k])return false;seen[k]=1;return true})
+      .sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
+  }
+
+  function renderReuniones(){
+    const box=$('reuLog');if(!box)return;
+    const rs=parseReuniones();
+    if(!rs.length){box.innerHTML='<p class="note">Aún no hay reuniones registradas. Agrega la primera abajo.</p>';return}
+    const tot=rs.reduce((a,r)=>a+r.tareas.length,0), hechas=rs.reduce((a,r)=>a+r.tareas.filter(t=>t.hecha).length,0);
+    const cab = tot ? `<div class="reu-global"><b>${hechas} de ${tot}</b> decisiones cerradas<div class="reu-bar"><i style="width:${Math.round(hechas/tot*100)}%"></i></div></div>` : '';
+    box.innerHTML = cab + rs.map((r,i)=>{
+      const h2=r.tareas.filter(t=>t.hecha).length, n2=r.tareas.length;
+      const pill = n2 ? `<span class="reu-pill${h2===n2?' full':''}">${h2}/${n2}</span>` : '';
+      const lista = n2 ? `<div class="reu-tareas">${r.tareas.map(t=>`
+        <label class="reu-t${t.hecha?' on':''}">
+          <input type="checkbox" data-reu="${i}" data-t="${t.i}"${t.hecha?' checked':''}>
+          <span class="reu-tx">${esc(t.txt)}</span>
+          ${t.hecha&&t.cuando?`<span class="reu-when">${esc(t.cuando)}</span>`:''}
+        </label>`).join('')}</div>` : '';
+      return `<div class="reu-card"><div class="reu-head" data-i="${i}"><b>${esc(r.fecha)}</b> · ${esc(r.titulo)}${pill}<span class="reu-chev">▸</span></div>
+      <div class="reu-body" id="reuBody${i}">
+        ${r.resumen?`<p>${esc(r.resumen)}</p>`:''}
+        ${r.responsables?`<p class="note">Asistentes / responsables: ${esc(r.responsables)}</p>`:''}
+        ${lista}
+        <div class="reu-links">${r.minuta?`<a class="small-btn" href="${esc(r.minuta)}" target="_blank" rel="noopener">Ver minuta · lo que se propuso</a>`:''}${r.transcripcion?`<a class="small-btn secondary" href="${esc(r.transcripcion)}" target="_blank" rel="noopener">Transcripción</a>`:''}</div>
+      </div></div>`;
+    }).join('');
+    box.querySelectorAll('.reu-head').forEach(hd=>hd.onclick=()=>{const b=$('reuBody'+hd.dataset.i),c=hd.querySelector('.reu-chev');if(b)b.classList.toggle('open');if(c)c.classList.toggle('open')});
+    box.querySelectorAll('.reu-tareas input[type=checkbox]').forEach(cb=>cb.addEventListener('change',ev=>{
+      ev.stopPropagation();
+      marcarTarea(rs[+cb.dataset.reu], +cb.dataset.t, cb.checked);
+    }));
+  }
+  /* El marcado se guarda como EVENTO (la nube sólo agrega renglones, no reescribe). */
+  function marcarTarea(reu,idx,hecha){
+    if(!reu)return;
+    const hoy=new Date().toISOString().slice(0,10);
+    const quien=(caso.correo||'').split('@')[0]||'equipo';
+    const linea='\u2714 '+[reu.fecha,reu.titulo,'#'+idx,hecha?'1':'0',quien,hoy].join(' ¦ ');
+    caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+linea;
+    renderReuniones(); guardarDraft();
+    const t=(reu.tareas[idx]||{}).txt||'';
+    if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:linea,request_id:nuevoRequestId()},(hecha?'Cerrada: ':'Reabierta: ')+t.slice(0,48));
+    else toast((hecha?'Cerrada: ':'Reabierta: ')+t.slice(0,48));
+  }
+
   $('btnReuniones').onclick=()=>{const p=$('reuPanel');p.classList.toggle('on');if(p.classList.contains('on'))renderReuniones()};
-  $('btnReuAdd').onclick=()=>{if(!caso.caso_id){toast('Guarda el caso primero');return}const f=$('reuFecha').value.trim(),t=$('reuTitulo').value.trim(),s=$('reuResumen').value.trim(),m=$('reuMin').value.trim(),tr=$('reuTrans').value.trim(),re=$('reuResp').value.trim();if(!f||!t){toast('Pon al menos fecha y título');return}const linea='\u{1F4C5} '+[f,t,s,'MIN:'+m,'TRANS:'+tr,re].join(' ¦ ');caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+linea;['reuFecha','reuTitulo','reuResumen','reuMin','reuTrans','reuResp'].forEach(id=>{const e=$(id);if(e)e.value=''});renderReuniones();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:linea,request_id:nuevoRequestId()},'Reunión agregada al track')};
+  $('btnReuAdd').onclick=()=>{if(!caso.caso_id){toast('Guarda el caso primero');return}const f=$('reuFecha').value.trim(),t=$('reuTitulo').value.trim(),s=$('reuResumen').value.trim(),m=$('reuMin').value.trim(),tr=$('reuTrans').value.trim(),re=$('reuResp').value.trim();if(!f||!t){toast('Pon al menos fecha y título');return}const tar=($('reuTareas')?$('reuTareas').value:'').split('\n').map(x=>x.trim()).filter(Boolean).join('|');
+    const linea='\u{1F4C5} '+[f,t,s,'MIN:'+m,'TRANS:'+tr,re,'CHK:'+tar].join(' ¦ ');caso.notas_seguimiento=(caso.notas_seguimiento?caso.notas_seguimiento+'\n':'')+linea;['reuFecha','reuTitulo','reuResumen','reuMin','reuTrans','reuResp','reuTareas'].forEach(id=>{const e=$(id);if(e)e.value=''});renderReuniones();guardarDraft();if(!modoLocal)postSeguimiento({tipo:'estado',caso_id:caso.caso_id,nota:linea,request_id:nuevoRequestId()},'Reunión agregada al track')};
   $('btnWhats').onclick=whatsApp;
   $('refreshJson').onclick=refreshJson;$('applyJson').onclick=applyJson;$('exportJson').onclick=exportJson;
   $('gateBtn').onclick=intentarEntrar;$('gateClave').addEventListener('keydown',e=>{if(e.key==='Enter')intentarEntrar()});
