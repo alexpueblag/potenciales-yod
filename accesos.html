@@ -136,7 +136,7 @@
     <div class="leyenda">
       <b>12jul·09:14·MA●</b> — día · hora · board · entrada &nbsp;|&nbsp; Boards: <b>PT</b> portal · <b>MP</b> mapa · <b>MA</b> macrolotes · <b>MX</b> mixto · <b>UN</b> unifamiliar · <b>RE</b> residencial · <b>PA</b> patrimonial · <b>TA</b>/<b>TM</b>/<b>TC</b> tracks · <b>AC</b> accesos · <b>MR</b>/<b>MT</b>/<b>MD</b>/<b>ME</b>/<b>MC</b> Miramar (inicio/trámites/dirección/evidencia/cuentas)<br>
       <b>◉</b> abrió un caso · <b>✎</b> guardó · <b>⚑</b> cambió estado · <b>☎</b> WhatsApp · <b>⤓</b> exportó · <b>∅</b> caso nuevo · <b>↦</b> la visita continúa en la celda siguiente<br>
-      <b>(28m ×7)</b> — al cerrar: minutos de la visita × eventos totales &nbsp;|&nbsp; renglón lleno (60 visitas) → renglón nuevo "correo <b>·cont2</b>"<br><b>Permisos por tablero</b>: el campo <b>boards</b> de cada usuario acepta <b>*</b> (ve todos) o los códigos de la matriz de arriba separados por coma — <b>PT</b> Potenciales · <b>CO</b> Codesarrollos · <b>RM</b> Miramar · <b>TA</b> Operación · <b>FL</b> Flujo · <b>IN</b> Interiores · <b>IV</b> Inversionistas · <b>MK</b> Métricas. Ej.: alguien que solo ve Flujo y Miramar = "FL,RM". <br><span style="color:var(--muted)">Nota: hoy filtran de verdad <b>Flujo, Interiores, Miramar y Operación</b>; los otros 4 abren para cualquier sesión válida hasta que su backend mande su código (te dejo esa línea aparte).</span>
+      <b>(28m ×7)</b> — al cerrar: minutos de la visita × eventos totales &nbsp;|&nbsp; renglón lleno (60 visitas) → renglón nuevo "correo <b>·cont2</b>"<br><b>Permisos por tablero</b>: el campo <b>boards</b> de cada usuario acepta <b>*</b> (ve todos) o los códigos de la matriz de arriba separados por coma — <b>PT</b> Potenciales · <b>CO</b> Codesarrollos · <b>RM</b> Miramar · <b>TA</b> Operación · <b>FL</b> Flujo · <b>IN</b> Interiores · <b>IV</b> Inversionistas · <b>MK</b> Métricas · <b>OB</b> Obra. Ej.: alguien que solo ve Flujo y Miramar = "FL,RM". <br><span style="color:var(--muted)">Nota: hoy filtran de verdad <b>Flujo, Interiores, Miramar y Operación</b>; los otros 4 abren para cualquier sesión válida hasta que su backend mande su código (te dejo esa línea aparte).</span>
     </div>
   </section>
 </main>
@@ -191,7 +191,7 @@
 
   // Los 8 tableros de YOD OS (mismo orden que la barra lateral). Palomear
   // un tablero = esa persona puede verlo. '*' = ve todos.
-  const CODES=[['*','Todo'],['PT','Potenciales'],['CO','Codesarrollos'],['RM','Miramar'],['TA','Operación'],['FL','Flujo'],['IN','Interiores'],['IV','Inversion.'],['MK','Métricas']];
+  const CODES=[['*','Todo'],['PT','Potenciales'],['CO','Codesarrollos'],['RM','Miramar'],['TA','Operación'],['FL','Flujo'],['IN','Interiores'],['IV','Inversion.'],['MK','Métricas'],['OB','Obra']];
   function boardsDe(u){const b=String(u.boards||'*').trim();return b===''?'*':b}
   function tieneCode(b,c){if(b==='*')return true;return b.toUpperCase().split(/[,|; ]+/).indexOf(c)>-1}
   function renderMatriz(usuarios){
@@ -199,7 +199,7 @@
     tb.innerHTML='<thead><tr><th>Usuario</th>'+CODES.map(c=>'<th class="'+(c[0]==='*'?'todo':'')+'" title="'+esc(c[1])+'">'+esc(c[1])+'</th>').join('')+'</tr></thead><tbody>'+
       usuarios.map(u=>{
         const b=boardsDe(u),todo=b==='*',rev=u.estado!=='activo';
-        return '<tr class="'+(rev?'rev':'')+'" data-correo="'+esc(u.correo)+'"><td class="u">'+esc(u.nombre||u.correo)+'<small>'+esc(u.correo)+(rev?' · revocado':'')+'</small></td>'+
+        return '<tr class="'+(rev?'rev':'')+'" data-correo="'+esc(u.correo)+'" data-boards="'+esc(b)+'"><td class="u">'+esc(u.nombre||u.correo)+'<small>'+esc(u.correo)+(rev?' · revocado':'')+'</small></td>'+
           CODES.map(c=>{const es=c[0]==='*'?todo:tieneCode(b,c[0]);
             return '<td class="'+(c[0]==='*'?'todo':'')+'"><input type="checkbox" data-code="'+c[0]+'" '+(es?'checked':'')+(rev||(todo&&c[0]!=='*')?' disabled':'')+'></td>'}).join('')+'</tr>'}).join('')+'</tbody>';
     tb.querySelectorAll('input[type=checkbox]').forEach(ch=>ch.onchange=async()=>{
@@ -210,7 +210,12 @@
         const activos=[...tr.querySelectorAll('input[type=checkbox]')].filter(x=>x.dataset.code!=='*'&&x.checked).map(x=>x.dataset.code);
         // Nunca dejar a alguien "sin tableros" con un código fantasma: si quedó vacío, se avisa y se revierte.
         if(!activos.length){ch.checked=was;toast('Debe tener al menos un tablero. Para quitarle todo el acceso, usa Revocar.','err');return}
-        boards=activos.join(',')
+        /* La matriz solo dibuja los códigos de CODES. Si el usuario tenía otros
+           (p.ej. OB, MA, MX, TM…), NO deben borrarse por palomear aquí: se conservan. */
+        const conocidos=CODES.map(c=>c[0]);
+        const previos=String(tr.dataset.boards||'').toUpperCase().split(/[,|; ]+/).filter(Boolean);
+        const conservar=previos.filter(x=>conocidos.indexOf(x)<0);
+        boards=activos.concat(conservar).join(',')
       }
       ch.disabled=true;mMsg.className='msg';mMsg.textContent='Guardando '+correo+'…';
       try{
