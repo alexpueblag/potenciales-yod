@@ -25,6 +25,7 @@
   header .brand{display:flex;align-items:center;gap:12px}
   header img{height:22px;filter:brightness(0) invert(.92)}
   .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  [data-tema="claro"] .kick{color:var(--goldc)}
   header .full{color:var(--goldc);font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap}
   /* ===== Mapa: la primera pantalla ===== */
   #mapWrap{position:relative;height:min(62vh,560px);border-bottom:1px solid var(--linea)}
@@ -44,7 +45,7 @@
   .panel .sub2{font-size:10px;color:var(--muted);margin:2px 0 8px;line-height:1.4}
   .chips{display:flex;flex-wrap:wrap;gap:5px}
   .chip{border:1px solid var(--lineaf);background:transparent;color:var(--suave);border-radius:9px;padding:5px 9px;font-size:9.5px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px}
-  .chip:not(.off){background:rgba(154,123,63,.2);color:#F6F3ED;border-color:transparent}
+  .chip:not(.off){background:rgba(154,123,63,.2);color:var(--text);border-color:transparent}
   .chip i:not(.ti){width:7px;height:7px;border-radius:50%;display:inline-block}
   .chip i.ti{font-size:12px}
   .chip .n{background:#ffffff14;border-radius:8px;padding:0 5px;font-size:9px;color:var(--goldc)}
