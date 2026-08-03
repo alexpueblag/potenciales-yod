@@ -245,6 +245,7 @@
   [data-tema="claro"] #porteroGate{background:rgba(244,241,233,.96)}
   [data-tema="claro"] #mapGate{background:rgba(244,241,233,.88)}
   [data-tema="claro"] #gate{background:var(--bg)}
+  [data-tema="claro"] .pg-alt2{color:#7d5f1e!important}
   [data-tema="claro"] .gate-box img,[data-tema="claro"] .brandrow img,[data-tema="claro"] header img{filter:brightness(0) opacity(.82)!important}
   [data-tema="claro"] .viz-card{background:#14141a!important;border-color:#2c2c34!important}
   [data-tema="claro"] .viz-card .k{color:#9a958a!important}
