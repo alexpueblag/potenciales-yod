@@ -85,7 +85,7 @@
         background:radial-gradient(720px 400px at 78% 6%,rgba(176,124,46,.14),transparent 60%),#14110cf7}
       #porteroGate *{box-sizing:border-box}
       .pg-box{width:min(388px,94vw);text-align:left;background:#F6F3ED;border:1px solid #E7E1D6;border-radius:18px;padding:32px 30px;color:#2C2718;box-shadow:0 30px 80px rgba(0,0,0,.5)}
-      .pg-eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#9A7B3F;font-weight:600;margin-bottom:13px}
+      .pg-eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#7d5f1e;font-weight:600;margin-bottom:13px}
       .pg-box h2{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:31px;line-height:1.04;margin:0 0 9px;color:#2C2718}
       .pg-box p{color:#57503F;font-size:13px;margin:0 0 18px;line-height:1.55}
       .pg-box p b{color:#2C2718;font-weight:600}
@@ -96,9 +96,9 @@
       .pg-btn:hover{filter:brightness(1.4)}
       .pg-btn.ws{background:#25D366;color:#08361c;display:none}
       #pgGoogle{margin-top:10px;display:flex;justify-content:center}
-      .pg-msg{font-size:12.5px;font-weight:600;min-height:18px;margin-top:12px;color:#9A7B3F;line-height:1.4}
+      .pg-msg{font-size:12.5px;font-weight:600;min-height:18px;margin-top:12px;color:#7d5f1e;line-height:1.4}
       .pg-sep{height:1px;background:#E7E1D6;margin:17px 0 3px}
-      .pg-alt{font-size:11.5px;color:#9A7B3F;background:none;border:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-family:inherit;padding:0}
+      .pg-alt{font-size:11.5px;color:#7d5f1e;background:none;border:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-family:inherit;padding:0}
     </style>
     <div class="pg-box">
       <div class="pg-eyebrow">Sistema interno · YOD OS</div>

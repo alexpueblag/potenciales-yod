@@ -14,8 +14,8 @@
   (function(){var q=new URLSearchParams(location.search);var id=q.get('open');if(id){var t=q.get('t')||'mixto';var pag={mixto:'mixto.html',vertical:'mixto.html',macrolotes:'macrolotes.html'}[t]||'mixto.html';location.replace(pag+'?open='+encodeURIComponent(id))}})();
 </script>
 <style>
-  :root{--bg:#f6f3ed;--card:#ffffff;--text:#231d14;--muted:#766f62;--suave:#8a8272;--linea:#e1dacb;--lineaf:#d8cfbb;
-    --gold:#9a7b3f;--goldc:#b98b3c;--blue:#3e6484;--teal:#2f7d8f;--purple:#5f5ab0;--green:#39744b;--orange:#9a6a1e;--red:#a94438}
+  :root{--bg:#f6f3ed;--card:#ffffff;--text:#231d14;--muted:#6d6455;--suave:#5f594e;--linea:#e1dacb;--lineaf:#d8cfbb;
+    --gold:#9a7b3f;--goldc:#7d5f1e;--gold-fill:#9a7b3f;--ink:#17140f;--blue:#3e6484;--teal:#2f7d8f;--purple:#5f5ab0;--green:#39744b;--orange:#9a6a1e;--red:#a94438}
   *{box-sizing:border-box}
   body{font-family:'Instrument Sans','Manrope',sans-serif;color:var(--text);margin:0;min-height:100vh;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;
     background:linear-gradient(rgba(35,29,20,.02) 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,rgba(35,29,20,.02) 1px,transparent 1px) 0 0/60px 60px,var(--bg)}
@@ -23,8 +23,8 @@
   /* ===== Encabezado compacto ===== */
   header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid #B98B3C59;background:rgba(246,243,237,.94)}
   header .brand{display:flex;align-items:center;gap:12px}
-  header img{height:22px;filter:brightness(0) invert(.92)}
-  .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+  header img{height:22px;filter:brightness(0) opacity(.82)}
+  .kick{font-size:9px;font-weight:800;letter-spacing:.24em;color:var(--goldc);text-transform:uppercase}
   [data-tema="claro"] .kick{color:var(--goldc)}
   header .full{color:var(--goldc);font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap}
   /* ===== Mapa: la primera pantalla ===== */
@@ -34,12 +34,12 @@
   .leaflet-popup-content-wrapper{background:#ffffff;color:var(--text);border:1px solid var(--lineaf);border-radius:14px;box-shadow:0 12px 32px #000a}
   .leaflet-popup-tip{background:#ffffff}
   .pp-t{font-family:'Instrument Serif',Georgia,serif;font-size:17px;margin:0 0 2px}
-  .pp-badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:9px;padding:2px 8px;color:#17140F;margin-bottom:6px}
+  .pp-badge{display:inline-block;font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:9px;padding:2px 8px;color:var(--ink);margin-bottom:6px}
   .pp-l{font-size:10.5px;color:var(--muted);margin:0 0 7px}
   .pp-d{font-size:11px;color:var(--suave);line-height:1.5;margin:0 0 3px}
   .pp-d b{color:var(--goldc)}
-  .pp-a{display:inline-block;margin-top:8px;background:var(--gold);color:#17140F!important;font-size:10px;font-weight:800;border-radius:9px;padding:6px 10px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em}
-  .pin-emoji{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50% 50% 50% 4px;border:2px solid #17140F;box-shadow:0 4px 12px #000b;font-size:14px}
+  .pp-a{display:inline-block;margin-top:8px;background:var(--gold-fill);color:var(--ink)!important;font-size:10px;font-weight:800;border-radius:9px;padding:6px 10px;text-decoration:none;text-transform:uppercase;letter-spacing:.06em}
+  .pin-emoji{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50% 50% 50% 4px;border:2px solid var(--ink);box-shadow:0 4px 12px #000b;font-size:14px}
   .panel{position:absolute;z-index:1100;top:10px;left:10px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:14px;padding:10px 12px;max-width:250px}
   .panel h1{font-size:17px;margin:0}
   .panel .sub2{font-size:10px;color:var(--muted);margin:2px 0 8px;line-height:1.4}
@@ -71,10 +71,11 @@
   .mg-box p{color:var(--muted);font-size:11px;margin:0 0 14px;line-height:1.5}
   .mg-box input{width:100%;background:rgba(35,29,20,.05);border:1px solid var(--lineaf);border-radius:11px;padding:11px 12px;color:var(--text);font:inherit;font-size:14px;text-align:center;letter-spacing:.06em}
   .mg-box input:focus{outline:2px solid #B98B3C66;border-color:var(--gold)}
-  .mg-box button{width:100%;margin-top:9px;background:var(--gold);color:#17140F;border:0;border-radius:11px;padding:11px;font:inherit;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .mg-box button{width:100%;margin-top:9px;background:var(--gold-fill);color:var(--ink);border:0;border-radius:11px;padding:11px;font:inherit;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
   .mg-err{color:var(--red);font-size:11px;min-height:16px;margin-top:8px;font-weight:700}
   .mg-skip{margin-top:10px;font-size:10.5px;color:var(--muted)}
   .mg-skip a{color:var(--goldc)}
+  .mg-box .pg-alt2{color:var(--goldc)!important}
   /* ===== Botones de planificador (abajo) ===== */
   .wrap{max-width:880px;margin:0 auto;padding:26px 18px 40px;width:100%}
   .titulo-botones{text-align:center;margin-bottom:18px}
@@ -88,7 +89,7 @@
   .ppp h2{font-size:20px;margin:0 0 6px;font-weight:400}
   .ppp p{margin:0;font-size:11.5px;line-height:1.55;color:var(--muted)}
   .ppp .estado{display:inline-block;margin-top:13px;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;border-radius:12px;padding:5px 11px}
-  .ppp.on .estado{background:var(--gold);color:#17140F}
+  .ppp.on .estado{background:var(--gold-fill);color:var(--ink)}
   .ppp .flecha{position:absolute;right:20px;bottom:20px;color:var(--goldc);font-size:18px;opacity:0;transition:opacity .18s}
   .ppp.on:hover .flecha{opacity:1}
   .pie{text-align:center;font-size:10.5px;color:var(--muted);padding:18px;line-height:1.6}
@@ -250,7 +251,7 @@
   if(clave){cargar(clave).then(()=>{$('mapGate').classList.add('off');ajusta()}).catch(e=>{if(e==='clave'){localStorage.removeItem(LSK);$('mgErr').textContent='La clave cambió'}})}
 })();
 </script>
-<script src="portero.js?v=aa2"></script>
+<script src="portero.js?v=aa3"></script>
 <script src="https://alexpueblag.github.io/yod-portal/os/shell.js"></script>
 </body>
 </html>
