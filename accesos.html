@@ -139,11 +139,25 @@
       <b>(28m ×7)</b> — al cerrar: minutos de la visita × eventos totales &nbsp;|&nbsp; renglón lleno (60 visitas) → renglón nuevo "correo <b>·cont2</b>"<br><b>Permisos por tablero</b>: el campo <b>boards</b> de cada usuario acepta <b>*</b> (ve todos) o los códigos de la matriz de arriba separados por coma — <b>PT</b> Potenciales · <b>CO</b> Codesarrollos · <b>RM</b> Miramar · <b>TA</b> Operación · <b>FL</b> Flujo · <b>IN</b> Interiores · <b>IV</b> Inversionistas · <b>MK</b> Métricas · <b>OB</b> Obra. Ej.: alguien que solo ve Flujo y Miramar = "FL,RM". <br><span style="color:var(--muted)">Nota: hoy filtran de verdad <b>Flujo, Interiores, Miramar y Operación</b>; los otros 4 abren para cualquier sesión válida hasta que su backend mande su código (te dejo esa línea aparte).</span>
     </div>
   </section>
+<div id="avisoPortero" hidden style="margin:12px auto;max-width:900px;padding:10px 14px;border-radius:8px;
+  background:rgba(160,90,30,.12);border:1px solid rgba(160,90,30,.35);color:#8a5f18;font-size:13.5px">
+  Estás administrando en el <b>portero de respaldo</b> (cuenta personal). El de siempre no respondió —
+  normal mientras la cuenta de Google del dominio está suspendida. Todo lo que hagas aquí queda guardado.
+</div>
 </main>
 
 <script>
 (()=>{
-  const ENDPOINT='https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
+  /* Portero: el de siempre y el de respaldo. El original vive en el dominio
+     suspendido; si no contesta o rechaza la clave, se usa el respaldo (cuenta
+     personal) sin que nadie tenga que hacer nada. Al reactivar el dominio, el
+     original retoma solo. */
+  const PORTERO_ORIGINAL='https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
+  const PORTERO_RESPALDO='https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec';
+  const LSP='pyod_portero_activo';
+  let ENDPOINT = localStorage.getItem(LSP) || PORTERO_ORIGINAL;
+  function usarRespaldo(){ ENDPOINT = PORTERO_RESPALDO; try{localStorage.setItem(LSP, PORTERO_RESPALDO);}catch(e){}
+    const b=document.getElementById('avisoPortero'); if(b){b.hidden=false;} }
   const LSC='pyod_clave_v1';
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -232,7 +246,14 @@
   async function cargar(){
     const cont=$('lista');
     try{
-      const raw=await fetch(ENDPOINT+'?recurso=accesos-lista&k='+encodeURIComponent(k())).then(x=>x.text());
+      let raw=await fetch(ENDPOINT+'?recurso=accesos-lista&k='+encodeURIComponent(k())).then(x=>x.text()).catch(()=>'');
+      // Relevo: si el portero de siempre no contesta JSON o rechaza, probamos el respaldo.
+      if(ENDPOINT===PORTERO_ORIGINAL){
+        let malo=false;
+        try{ const t=JSON.parse(raw); if(!t.ok) malo=true; }catch(_){ malo=true; }
+        if(malo){ usarRespaldo();
+          raw=await fetch(ENDPOINT+'?recurso=accesos-lista&k='+encodeURIComponent(k())).then(x=>x.text()).catch(()=>''); }
+      }
       let r; try{r=JSON.parse(raw)}catch(_){throw new Error(/sign in|accounts\.google/i.test(raw)?'sesión de Google caducada':'respuesta inesperada')}
       if(!r.ok){cont.innerHTML='<p class="u-meta">'+(r.error==='admin'?'Necesitas sesión de administrador (o la clave maestra) para ver esto.':'Error: '+esc(r.error))+'</p>';$('matriz').innerHTML='<tbody><tr><td class="u">Solo administrador.</td></tr></tbody>';return}
       $('uCnt').textContent='· '+r.usuarios.length;
