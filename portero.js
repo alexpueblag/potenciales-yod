@@ -72,8 +72,7 @@
   /* 1b) liga de UN SOLO USO: ?liga=TOKEN → se intercambia por una sesión (la sesión NO queda en la URL) */
   const lg = q.get('liga');
   if (lg) {
-    fetch(ENDPOINT + '?recurso=activar&liga=' + encodeURIComponent(lg), { credentials: 'omit' })
-      .then(x => x.json())
+    pyodPide('?recurso=activar&liga=' + encodeURIComponent(lg))
       .then(r => { if (r && r.ok && r.token) { localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol'); } })
       .catch(() => {})
       .finally(() => { q.delete('liga'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); location.reload(); });
