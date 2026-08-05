@@ -5,7 +5,52 @@
  *   · ☎ WhatsApp · ⤓ export · (Nm ×E) minutos y eventos al cerrar.
  */
 (() => {
-  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
+  /* Dos porteros: el de siempre (dominio aurumarquitectos.com, hoy con la
+     suscripción suspendida) y el de respaldo (cuenta personal). Si el original
+     falla — no contesta, contesta HTML de login, o su OAuth de Google truena —
+     se usa el respaldo automáticamente. Al reactivar el dominio, basta borrar
+     'pyod_portero' del navegador para volver al original. */
+  const PORTERO_ORIGINAL = 'https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
+  const PORTERO_RESPALDO = 'https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec';
+  let ENDPOINT = (function(){ try { return localStorage.getItem('pyod_portero') || PORTERO_ORIGINAL; } catch(e){ return PORTERO_ORIGINAL; } })();
+  function pyodUsarRespaldo(){
+    if (ENDPOINT === PORTERO_RESPALDO) return false;
+    ENDPOINT = PORTERO_RESPALDO;
+    try { localStorage.setItem('pyod_portero', PORTERO_RESPALDO); } catch(e){}
+    return true;
+  }
+  /* Manda al portero y, si el original falla, reintenta con el respaldo. */
+  async function pyodManda(cuerpo){
+    async function intenta(base){
+      const r = await fetch(base, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        credentials:'omit', body: JSON.stringify(cuerpo) });
+      const t = await r.text();
+      try { return JSON.parse(t); } catch(e){ return { ok:false, error:'servidor' }; }
+    }
+    let j;
+    try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
+    const falloDuro = !j || (j.ok === false && (j.error === 'servidor' || j.error === 'clave' || j.error === 'recurso'));
+    if (falloDuro && pyodUsarRespaldo()) {
+      try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
+    }
+    return j;
+  }
+
+  /* Pide a un portero y, si el original falla, reintenta con el respaldo. */
+  async function pyodPide(qs){
+    async function intenta(base){
+      const r = await fetch(base + qs, { credentials: 'omit' });
+      const t = await r.text();
+      try { return JSON.parse(t); } catch(e){ return { ok:false, error:'servidor' }; }
+    }
+    let j;
+    try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
+    const falloDuro = !j || (j.ok === false && (j.error === 'servidor' || j.error === 'clave'));
+    if (falloDuro && pyodUsarRespaldo()) {
+      try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
+    }
+    return j;
+  }
   const LSC = 'pyod_clave_v1';
   const GCID = '920448126277-couctb56pjm4p5vm0tebsj1g592heka9.apps.googleusercontent.com';   // OAuth client_id (público) — 'PENDIENTE' oculta el botón de Google
   const pagina = (location.pathname.split('/').pop() || 'index.html').replace('.html', '') || 'index';
@@ -119,7 +164,7 @@
       if (!correo || correo.indexOf('@') < 1) { $('pgMsg').textContent = 'Escribe un correo válido'; return; }
       $('pgEnviar').disabled = true; $('pgMsg').textContent = 'Verificando…';
       try {
-        const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', body: JSON.stringify({ tipo: 'acceso-solicitar', correo, destino: location.href.split('#')[0], request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
+        const r = await pyodManda({ tipo: 'acceso-solicitar', correo, destino: location.href.split('#')[0], request_id: (crypto.randomUUID?.() || Date.now() + '') });
         if (r.ok && r.autorizado) { $('pgMsg').textContent = '📬 Liga enviada: revisa tu correo y ábrela en este dispositivo.'; }
         else if (r.ok && !r.autorizado) {
           $('pgMsg').textContent = 'Ese correo aún no tiene acceso — pídelo por WhatsApp:';
@@ -151,7 +196,7 @@
           google.accounts.id.initialize({ client_id: GCID, callback: async resp => {
             $('pgMsg').textContent = 'Verificando con Google…';
             try {
-              const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', body: JSON.stringify({ tipo: 'acceso-google', credential: resp.credential, request_id: (crypto.randomUUID?.() || Date.now() + '') }) }).then(x => x.json());
+              const r = await pyodManda({ tipo: 'acceso-google', credential: resp.credential, request_id: (crypto.randomUUID?.() || Date.now() + '') });
               if (r.ok && r.autorizado && r.token) { localStorage.setItem(LSC, r.token); sessionStorage.removeItem('pyod_rol'); $('pgMsg').textContent = '✓ Dentro — cargando…'; location.reload(); }
               else if (r.ok && !r.autorizado) { $('pgMsg').textContent = 'Tu cuenta de Google aún no tiene acceso — pídelo por WhatsApp:'; const ws = $('pgWs'); ws.style.display = 'block'; ws.onclick = () => window.open('https://wa.me/' + (r.whatsapp || '525518331100') + '?text=' + encodeURIComponent('Hola Alejandro, solicito acceso a los boards YOD (' + pagina + ').'), '_blank'); }
               else $('pgMsg').textContent = 'No se pudo con Google: ' + (r.error || 'reintenta');
@@ -196,7 +241,7 @@
       const cache = JSON.parse(sessionStorage.getItem('pyod_rol') || 'null');
       if (cache && cache.f === k.slice(0, 14)) rol = cache.rol;
       else {
-        const r = await fetch(ENDPOINT + '?recurso=canje&t=' + encodeURIComponent(k), { credentials: 'omit' }).then(x => x.json());
+        const r = await pyodPide('?recurso=canje&t=' + encodeURIComponent(k));
         if (r && r.ok) { rol = r.rol || 'vista'; sessionStorage.setItem('pyod_rol', JSON.stringify({ f: k.slice(0, 14), rol })); }
         else if (r && r.ok === false && r.error === 'liga') {
           localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol');
