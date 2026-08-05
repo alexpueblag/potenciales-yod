@@ -20,17 +20,25 @@
     return true;
   }
   /* Manda al portero y, si el original falla, reintenta con el respaldo. */
+  function pyodConLimite(p, ms){
+    return Promise.race([p, new Promise((_,rj)=>setTimeout(()=>rj(new Error('timeout')), ms||12000))]);
+  }
+  /* Éxito claro = el portero resolvió la entrada. Cualquier otra cosa (no
+     autorizado, error, HTML de login, tardanza) hace que se pruebe el respaldo:
+     el portero viejo puede contestar "no autorizado" con toda normalidad porque
+     su Sheet ya no conoce las credenciales nuevas. */
+  function pyodOk(j){ return !!(j && j.ok !== false && (j.autorizado || j.token || j.enviado)); }
+
   async function pyodManda(cuerpo){
     async function intenta(base){
-      const r = await fetch(base, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-        credentials:'omit', body: JSON.stringify(cuerpo) });
+      const r = await pyodConLimite(fetch(base, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        credentials:'omit', body: JSON.stringify(cuerpo) }));
       const t = await r.text();
       try { return JSON.parse(t); } catch(e){ return { ok:false, error:'servidor' }; }
     }
     let j;
     try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
-    const falloDuro = !j || (j.ok === false && (j.error === 'servidor' || j.error === 'clave' || j.error === 'recurso'));
-    if (falloDuro && pyodUsarRespaldo()) {
+    if (!pyodOk(j) && pyodUsarRespaldo()) {
       try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
     }
     return j;
@@ -39,14 +47,13 @@
   /* Pide a un portero y, si el original falla, reintenta con el respaldo. */
   async function pyodPide(qs){
     async function intenta(base){
-      const r = await fetch(base + qs, { credentials: 'omit' });
+      const r = await pyodConLimite(fetch(base + qs, { credentials: 'omit' }));
       const t = await r.text();
       try { return JSON.parse(t); } catch(e){ return { ok:false, error:'servidor' }; }
     }
     let j;
     try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
-    const falloDuro = !j || (j.ok === false && (j.error === 'servidor' || j.error === 'clave'));
-    if (falloDuro && pyodUsarRespaldo()) {
+    if (!(j && j.ok) && pyodUsarRespaldo()) {
       try { j = await intenta(ENDPOINT); } catch(e){ j = { ok:false, error:'servidor' }; }
     }
     return j;
